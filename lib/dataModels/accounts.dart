@@ -1,15 +1,15 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 class Account {
   static String table = 'accounts';
-  final String uuid;
-  final String name;
-  final double initialAmount;
-  Account({
-    this.uuid,
-    this.name,
-    this.initialAmount,
-  });
+  String uuid;
+  String name;
+  double initialAmount = 0;
+  double amount = 0;
+  Map<String, dynamic> icon;
+  Account({this.uuid, this.name, this.initialAmount, this.amount});
 
   Account copyWith({
     String uuid,
@@ -27,7 +27,10 @@ class Account {
     return {
       'uuid': uuid,
       'name': name,
-      'initialAmount': initialAmount,
+      'initialAmount': NumberFormat(
+        "###.0#",
+        "en_US",
+      ).format(initialAmount),
     };
   }
 

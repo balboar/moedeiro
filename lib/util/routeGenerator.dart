@@ -1,28 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:moneym/pages/mainPage.dart';
-import 'package:moneym/pages/transactionsPage.dart';
+import 'package:moedeiro/pages/accountsPage.dart';
+import 'package:moedeiro/pages/categoriesPage.dart';
+import 'package:moedeiro/pages/mainPage.dart';
+import 'package:moedeiro/pages/settingsPage.dart';
+import 'package:moedeiro/pages/transactionsPage.dart';
 
 class RouteGenerator {
-  static Route<dynamic> generateRoute(RouteSettings settings) {
+  static Route<Map<String, dynamic>> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
     final args = settings.arguments;
 
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => MainPage());
-      case '/accountDetailsPage':
-        return MaterialPageRoute(builder: (_) => AccountDetailsPage());
+      case '/accountTransactionsPage':
+        return MaterialPageRoute(builder: (_) => AccountTransactionsPage());
+      // Validation of correct data type
+      // if (args is Map<String, String>) {
+      //   return MaterialPageRoute(
+      //     builder: (_) => AccountDetailsPage(
+      //       data: args,
+      //     ),
+      //   );
+      // }
+      // If args is not of the correct type, return an error page.
+      // You can also throw an exception while in development.
+      //return _errorRoute();
+      case '/categoriesPage':
+        // return MaterialPageRoute(builder: (_) => CategoriesPage());
         // Validation of correct data type
-        // if (args is Map<String, String>) {
-        //   return MaterialPageRoute(
-        //     builder: (_) => AccountDetailsPage(
-        //       data: args,
-        //     ),
-        //   );
-        // }
+        if (args is String) {
+          return MaterialPageRoute(
+            builder: (_) => CategoriesPage(
+              data: args,
+            ),
+          );
+        } else
+          return MaterialPageRoute(
+            builder: (_) => CategoriesPage(),
+          );
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
-        return _errorRoute();
+        break;
+      case '/accountsPage':
+        return MaterialPageRoute(builder: (_) => AccountsPage());
+      case '/settingsPage':
+        return MaterialPageRoute(builder: (_) => SettingsPage());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();
