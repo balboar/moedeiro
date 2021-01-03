@@ -4,6 +4,7 @@ import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/moedeiro_widgets.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:moedeiro/ui/transactions/TransactionBottomSheetWidget.dart';
+import 'package:moedeiro/ui/transactions/transactionWidgets.dart';
 import 'package:provider/provider.dart';
 
 class TransactionsSliverList extends StatefulWidget {
@@ -26,24 +27,13 @@ class _TransactionsSliverListState extends State<TransactionsSliverList> {
         } else {
           return SliverGrid(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+              crossAxisCount: 1,
               childAspectRatio: 2,
             ),
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 Transaction _transaction = model.transactions[index];
-                return ListTile(
-                  onTap: () {
-                    showCustomModalBottomSheet(
-                        context, TransactionBottomSheet(_transaction));
-                  },
-                  title: Text(
-                    _transaction.name,
-                  ),
-                  trailing: Text(
-                    _transaction.amount.toString(),
-                  ),
-                );
+                return TransactionTile(_transaction);
               },
               childCount: model.transactions.length,
             ),

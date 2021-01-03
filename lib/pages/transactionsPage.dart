@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/dataModels/accounts.dart';
+import 'package:moedeiro/dataModels/transaction.dart';
 import 'package:moedeiro/models/mainModel.dart';
+import 'package:moedeiro/ui/MoneyMSliverList.dart';
 import 'package:moedeiro/ui/accounts/AccountsBottomSheetWidget.dart';
+import 'package:moedeiro/ui/moedeiro_widgets.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
+import 'package:moedeiro/ui/transactions/transactionWidgets.dart';
 import 'package:moedeiro/ui/transactions/transactionsSliverList.dart';
 import 'package:moedeiro/ui/MoneyMSliverAppBar.dart';
 import 'package:moedeiro/ui/transactions/transfersSliverList.dart';
@@ -52,6 +56,27 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
     ]);
   }
 
+  Widget buildTransactionsList() {
+    return Consumer<TransactionModel>(
+      builder: (BuildContext context, TransactionModel model, Widget child) {
+        return model.transactions.length == 0
+            ? SliverToBoxAdapter(
+                child: NoDataWidgetVertical(),
+              )
+            : SliverFixedExtentList(
+                itemExtent: 80.0,
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    Transaction _transaction = model.transactions[index];
+                    return TransactionTile(_transaction);
+                  },
+                  childCount: model.transactions.length,
+                ),
+              );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +87,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               MoneyMSliverOverlapAbsorberAppBar(
-                activeAccount != null ? activeAccount.name : 'Accounts',
+                activeAccount != null ? activeAccount.name : 'Transactions',
                 actions: buildActions(),
                 tabs: buildTabs(),
               )
@@ -71,7 +96,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
           body: TabBarView(
               // These are the contents of the tab views, below the tabs.
               children: <Widget>[
-                TransactionsSliverList(),
+                MoneyMSliverList('Transactions', buildTransactionsList()),
                 TransfersSliverList(),
               ]),
         ),

@@ -247,12 +247,14 @@ class _LockScreenState extends State<LockScreen> {
             children: <Widget>[
               _buildTitle(),
               Spacer(),
+              _buildSubtitle(),
               DotSecretUI(
                 validateStream: validateStreamController.stream,
                 dots: widget.digits,
                 config: widget.dotSecretConfig,
                 enteredLengthStream: enteredLengthStream.stream,
               ),
+              Spacer(),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: _columnMarginSize,
@@ -342,6 +344,16 @@ class _LockScreenState extends State<LockScreen> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
       child: Text(
+        'Moedeiro.',
+        style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _buildSubtitle() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      child: Text(
         _isConfirmation ? widget.confirmTitle : widget.title,
         style: TextStyle(fontSize: 20.0),
       ),
@@ -384,14 +396,7 @@ class _LockScreenState extends State<LockScreen> {
 
           return FlatButton(
             padding: EdgeInsets.all(0),
-            child: Text(
-              buttonText,
-              style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width * 0.055,
-              ),
-              softWrap: false,
-              textAlign: TextAlign.center,
-            ),
+            child: Icon(Icons.backspace),
             onPressed: () {
               if (snapshot.hasData && snapshot.data > 0) {
                 removedStreamController.sink.add(null);

@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:moedeiro/dataModels/transaction.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/accounts/accountWidgets.dart';
 import 'package:moedeiro/ui/moedeiro_widgets.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:moedeiro/ui/transactions/TransactionBottomSheetWidget.dart';
+import 'package:moedeiro/ui/transactions/transactionWidgets.dart';
 import 'package:provider/provider.dart';
+import 'package:quick_actions/quick_actions.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -22,6 +25,32 @@ class MainPageState extends State<MainPage> {
     Provider.of<CategoryModel>(context, listen: false).getCategories();
     Provider.of<TransactionModel>(context, listen: false).getTransactions();
     super.initState();
+
+    final QuickActions quickActions = QuickActions();
+    quickActions.initialize((String shortcutType) {
+      // AppLock.of(context).showLockScreen();
+      if (shortcutType == 'transaction') {
+        showCustomModalBottomSheet(
+                context,
+                TransactionBottomSheet(Transaction(
+                    timestamp: DateTime.now().millisecondsSinceEpoch)))
+            .then((value) {
+          Provider.of<AccountModel>(context, listen: false).getAccounts();
+          Provider.of<CategoryModel>(context, listen: false).getCategories();
+        });
+      }
+    });
+
+    quickActions.setShortcutItems(<ShortcutItem>[
+      // NOTE: This first action icon will only work on iOS.
+      // In a real world project keep the same file name for both platforms.
+      const ShortcutItem(
+        type: 'transaction',
+        localizedTitle: 'Transaction',
+        icon: 'add',
+      ),
+      // NOTE: This second action icon will only work on Android.
+    ]);
   }
 
   @override
@@ -221,7 +250,7 @@ class MainPageState extends State<MainPage> {
                           indent: 10.0,
                         ),
                         Text(
-                          'Last transactions',
+                          'Recent transactions',
                           style: TextStyle(fontSize: 20.0),
                         ),
                         Expanded(
@@ -258,36 +287,21 @@ class MainPageState extends State<MainPage> {
                     );
                   else
                     return Container(
-                      margin: EdgeInsets.only(left: 20.0),
+                      margin: EdgeInsets.symmetric(horizontal: 5.0),
                       child: Column(
                         children: model.transactions.length > 3
                             ? model.transactions
-                                .sublist(model.transactions.length - 2)
-                                .reversed
+                                .sublist(0, 3)
                                 .map((Transaction transaction) {
-                                return ListTile(
-                                  leading: Icon(Icons.ac_unit),
-                                  title: Text(
-                                    transaction.categoryName,
-                                  ),
-                                  subtitle: Text(
-                                    transaction.accountName,
-                                  ),
-                                  trailing:
-                                      Text(transaction.amount.toString() + '€'),
+                                return Container(
+                                  height: 80,
+                                  child: TransactionTile(transaction),
                                 );
                               }).toList()
                             : model.transactions.map((Transaction transaction) {
-                                return ListTile(
-                                  leading: Icon(Icons.ac_unit),
-                                  title: Text(
-                                    transaction.categoryName ?? '',
-                                  ),
-                                  subtitle: Text(
-                                    transaction.accountName ?? '',
-                                  ),
-                                  trailing:
-                                      Text(transaction.amount.toString() + '€'),
+                                return Container(
+                                  height: 80,
+                                  child: TransactionTile(transaction),
                                 );
                               }).toList(),
                       ),

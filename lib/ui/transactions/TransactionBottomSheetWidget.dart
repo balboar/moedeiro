@@ -23,6 +23,8 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   TextEditingController _timeController = TextEditingController();
   TextEditingController _categoryController = TextEditingController();
   TextEditingController _accountController = TextEditingController();
+  TextEditingController _amountController = TextEditingController();
+  bool isExpense = false;
 
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
 
     _categoryController.text = _data['categoryName'] ?? '';
     _accountController.text = _data['accountName'] ?? '';
+    _amountController.text = _data['amount'].toString() ?? '';
     super.initState();
   }
 
@@ -104,6 +107,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     void _submitForm(Function save) {
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
+        if (isExpense) _data['amount'] = -1 * _data['amount'];
         save(Transaction.fromMap(_data));
         Navigator.pop(context);
       }
@@ -116,7 +120,8 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+            padding:
+                EdgeInsets.only(right: 20.0, left: 20, top: 20, bottom: 10.0),
             child: Column(
               children: <Widget>[
                 Text(
@@ -134,7 +139,18 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   },
                 ),
                 TextFormField(
-                  initialValue: _data['amount'].toString() ?? '',
+                  controller: _amountController,
+                  onTap: () {
+                    if (double.tryParse(_amountController.text).round() == 0) {
+                      _amountController.text = '';
+                    }
+                  },
+                  validator: (value) {
+                    if (value.isEmpty || double.tryParse(value) == 0) {
+                      return 'Amount should be greater than 0';
+                    }
+                    return null;
+                  },
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     icon: Icon(Icons.attach_money_outlined),
@@ -150,6 +166,12 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                     icon: Icon(Icons.category_outlined),
                     labelText: 'Category',
                   ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please select a Category';
+                    }
+                    return null;
+                  },
                   onTap: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
                     Map<String, dynamic> result = await Navigator.pushNamed(
@@ -159,6 +181,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                       _data['category'] = result['uuid'];
                       _categoryController.text = result['name'];
                       _data['categoryName'] = result['name'];
+                      isExpense = result['type'] == 'E';
                     }
                   },
                 ),
@@ -168,6 +191,12 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                     icon: Icon(Icons.account_balance_wallet),
                     labelText: 'Account',
                   ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please select an Account';
+                    }
+                    return null;
+                  },
                   onTap: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
 
@@ -190,6 +219,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        readOnly: true,
                         controller: _dateController,
                         decoration: InputDecoration(
                           icon: Icon(Icons.calendar_today),
@@ -198,18 +228,21 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                         onTap: () {
                           FocusScope.of(context).requestFocus(FocusNode());
                           _selectDate(context).then((int value) {
-                            setState(() {
-                              _dateController.text = DateFormat.yMMMd().format(
-                                DateTime.fromMillisecondsSinceEpoch(value),
-                              );
-                              _data['timestamp'] = value;
-                            });
+                            if (value != null)
+                              setState(() {
+                                _dateController.text =
+                                    DateFormat.yMMMd().format(
+                                  DateTime.fromMillisecondsSinceEpoch(value),
+                                );
+                                _data['timestamp'] = value;
+                              });
                           });
                         },
                       ),
                     ),
                     Container(
                       child: TextFormField(
+                        readOnly: true,
                         controller: _timeController,
                         decoration: InputDecoration(
                           icon: Icon(Icons.hourglass_bottom_outlined),
@@ -218,11 +251,13 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                         onTap: () {
                           FocusScope.of(context).requestFocus(FocusNode());
                           _selectTime(context).then((int value) {
-                            setState(() {
-                              _timeController.text = DateFormat.Hm().format(
-                                DateTime.fromMillisecondsSinceEpoch(value),
-                              );
-                            });
+                            if (value != null)
+                              setState(() {
+                                _timeController.text = DateFormat.Hm().format(
+                                  DateTime.fromMillisecondsSinceEpoch(value),
+                                );
+                                _data['timestamp'] = value;
+                              });
                           });
                         },
                       ),
@@ -232,14 +267,15 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                 ),
                 Padding(
                   child: Container(),
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(5.0),
                 ),
                 ButtonBar(
-                  buttonHeight: 50.0,
+                  buttonHeight: 40.0,
                   buttonMinWidth: 140.0,
                   alignment: MainAxisAlignment.center,
                   children: [
                     Container(
+                      height: 40,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8.0),
                         gradient: LinearGradient(

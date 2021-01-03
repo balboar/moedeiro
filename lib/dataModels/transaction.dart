@@ -55,6 +55,19 @@ class Transaction {
       'category': category,
       'timestamp': timestamp,
       'account': account,
+      'categoryName': categoryName,
+      'accountName': accountName
+    };
+  }
+
+  Map<String, dynamic> toDbMap() {
+    return {
+      'name': name,
+      'uuid': uuid,
+      'amount': amount,
+      'category': category,
+      'timestamp': timestamp,
+      'account': account,
     };
   }
 

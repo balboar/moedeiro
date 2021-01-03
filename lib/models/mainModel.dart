@@ -27,7 +27,7 @@ class AccountModel extends ChangeNotifier {
           await DB.getAllIncomes(element['uuid']);
       var account = Account.fromMap(element);
       account.amount = double.parse(
-          (account.initialAmount - expenses[0]['amount'] + income[0]['amount'])
+          (account.initialAmount + expenses[0]['amount'] + income[0]['amount'])
               .toStringAsFixed(2));
 
       _accounts.add(account);
@@ -52,7 +52,7 @@ class AccountModel extends ChangeNotifier {
 
   Account get getActiveAccount => _activeAccount;
 
-  insertAccountIntoDb(Account accountData) async {
+  Future<int> insertAccountIntoDb(Account accountData) async {
     if (accountData.uuid == null) {
       accountData.uuid = _uuid.v4();
       await DB.insert(Account.table, accountData.toMap());
@@ -162,9 +162,9 @@ class TransactionModel extends ChangeNotifier {
   insertTransactiontIntoDb(Transaction data) async {
     if (data.uuid == null) {
       data.uuid = _uuid.v4();
-      await DB.insert(Transaction.table, data.toMap());
+      await DB.insert(Transaction.table, data.toDbMap());
     } else
-      await DB.update(Transaction.table, data.toMap());
+      await DB.update(Transaction.table, data.toDbMap());
     getTransactions();
   }
 }

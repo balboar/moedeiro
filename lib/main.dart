@@ -8,21 +8,33 @@ import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/lockScreen/lockScreen.dart';
 import 'package:moedeiro/util/routeGenerator.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
+  bool _lockApp = false;
+  SharedPreferences prefs;
   WidgetsFlutterBinding.ensureInitialized();
   await DB.init();
 
-  runApp(
-    AppLock(
-      builder: (args) => MyApp(),
-      lockScreen: LockScreen(
-        correctString: '0000',
-        canBiometric: true,
-        showBiometricFirst: true,
+  prefs = await SharedPreferences.getInstance();
+
+  _lockApp = prefs.getBool('lockApp') ?? false;
+
+  if (_lockApp) {
+    runApp(
+      AppLock(
+        builder: (args) => MyApp(),
+        lockScreen: LockScreen(
+          correctString: '0000',
+          canBiometric: true,
+          showBiometricFirst: true,
+        ),
       ),
-    ),
-  );
+    );
+  } else
+    runApp(
+      MyApp(),
+    );
 }
 
 class MyApp extends StatelessWidget {

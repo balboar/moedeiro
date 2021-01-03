@@ -12,8 +12,8 @@ class DotSecretConfig {
     this.dotSize = 13.0,
     this.dotBorderColor = Colors.black54,
     this.padding = const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
-    this.enabledColor = Colors.black54,
-    this.disabledColor = Colors.transparent,
+    this.enabledColor = Colors.black,
+    this.disabledColor = Colors.black26,
   });
 }
 
@@ -109,7 +109,6 @@ class _DotSecretUIState extends State<DotSecretUI>
         shape: BoxShape.circle,
         color:
             enabled ? widget.config.enabledColor : widget.config.disabledColor,
-        border: Border.all(width: 1, color: widget.config.dotBorderColor),
       ),
     );
   }
