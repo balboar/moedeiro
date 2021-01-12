@@ -43,6 +43,13 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
             padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
             child: Column(
               children: <Widget>[
+                Center(
+                  child: Text(
+                    'Account',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                  ),
+                ),
                 TextFormField(
                   initialValue: activeAccount.name,
                   decoration: InputDecoration(
@@ -79,7 +86,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                   initialValue: activeAccount.initialAmount.toString(),
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.monetization_on),
+                    icon: Icon(Icons.euro),
                     labelText: 'Cantidad Inicial',
                   ),
                   validator: (value) {

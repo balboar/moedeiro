@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/dataModels/accounts.dart';
 import 'package:moedeiro/models/mainModel.dart';
-import 'package:moedeiro/ui/MoneyMSliverAppBar.dart';
+import 'package:moedeiro/ui/moedeiroSliverAppBar.dart';
 import 'package:moedeiro/ui/accounts/AccountsBottomSheetWidget.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
+import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 
 class AccountsPage extends StatefulWidget {
@@ -47,7 +48,7 @@ class _AccountsPageState extends State<AccountsPage> {
                     ),
                   ),
                   Text(
-                    '${account.initialAmount}€',
+                    '${formatCurrency(context, account.amount)}',
                     style: TextStyle(color: Colors.white, fontSize: 16.0),
                   ),
                 ],
@@ -61,10 +62,8 @@ class _AccountsPageState extends State<AccountsPage> {
           onTap: () {
             Provider.of<AccountModel>(context, listen: false).setActiveAccount =
                 account.uuid;
-            Navigator.pushNamed(
-              context,
-              '/accountTransactionsPage',
-            );
+            Navigator.pushNamed(context, '/accountTransactionsPage',
+                arguments: false);
           }),
       width: 120.0,
       height: 200.0,
@@ -153,7 +152,7 @@ class _AccountsPageState extends State<AccountsPage> {
       body: CustomScrollView(
         primary: false,
         slivers: <Widget>[
-          MoneyMSliverAppBar(
+          MoedeiroSliverAppBar(
             'Accounts',
           ),
           _buildAccountsList(),

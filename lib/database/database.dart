@@ -11,13 +11,13 @@ class Helper {
 
   Database _db;
 
-  static int get _version => 9;
+  static int get _version => 13;
   final _lock = new Lock();
 
   static void _onCreate(Database db, int version) async {
     await db.transaction((txn) async {
       await txn.execute(
-        'CREATE TABLE accounts (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, initialAmount REAL, icon TEXT )',
+        'CREATE TABLE accounts (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, initialAmount REAL, icon TEXT,position INTEGER  )',
       );
 
       await txn.execute(
@@ -28,6 +28,12 @@ class Helper {
         'CREATE TABLE transactions (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, amount REAL, ' +
             ' category TEXT,account TEXT, timestamp INTEGER,FOREIGN KEY(account) REFERENCES accounts(uuid), ' +
             'FOREIGN KEY(category) REFERENCES category(uuid) )',
+      );
+
+      await txn.execute(
+        'CREATE TABLE transfers (uuid TEXT PRIMARY KEY NOT NULL,amount REAL, ' +
+            ' accountFrom TEXT,accountTo TEXT, timestamp INTEGER,FOREIGN KEY(accountFrom) REFERENCES accounts(uuid), ' +
+            'FOREIGN KEY(accountTo) REFERENCES accounts(uuid) )',
       );
       await txn.insert('category', {
         'uuid': '465c88a7-2234-4a69-804c-cddee611ee6d',
@@ -95,9 +101,10 @@ class Helper {
   static void _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // Database version is updated, alter the table
     await db.transaction((txn) async {
-      await txn.execute('DROP TABLE accounts');
       await txn.execute(
-        'CREATE TABLE accounts (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, initialAmount REAL, icon TEXT )',
+        'CREATE TABLE transfers (uuid TEXT PRIMARY KEY NOT NULL,amount REAL, ' +
+            ' accountFrom TEXT,accountTo TEXT, timestamp INTEGER,FOREIGN KEY(accountFrom) REFERENCES accounts(uuid), ' +
+            'FOREIGN KEY(accountTo) REFERENCES accounts(uuid) )',
       );
     });
   }
@@ -149,7 +156,8 @@ class DB {
       String table, String type) async {
     return await _db.transaction(
       (txn) async {
-        return await txn.query(table, where: 'type=?', whereArgs: [type]);
+        return await txn.query(table,
+            where: 'type=?', whereArgs: [type], orderBy: 'name');
       },
     );
   }
@@ -166,6 +174,43 @@ class DB {
     );
   }
 
+  static Future<List<Map<String, dynamic>>> getAccounts() async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            'select a.uuid,a.name,coalesce(a.initialAmount,0.0) initialAmount,a.position,coalesce(a.initialAmount,0.0)+ ' +
+                '(select coalesce(sum(bb.amount),0.0)  from accounts aa ' +
+                'left outer join transactions bb on bb.account=aa.uuid where aa.uuid=a.uuid ) + ' +
+                '(select coalesce(sum(amount),0.0) from transfers  where accountTo=a.uuid) ' +
+                '	-(select coalesce(sum(d.amount),0.0) from transfers d where d.accountFrom=a.uuid)  amount ' +
+                '	from accounts a   group by a.uuid,a.name,a.initialAmount,a.position ');
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getTransfers() async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+          'SELECT a.*,b.name accountFromName,c.name accountToName FROM transfers a ' +
+              'left outer join accounts b on b.uuid=a.accountFrom ' +
+              'left outer join accounts c on c.uuid=a.accountTo order by a.timestamp desc',
+        );
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getTransactionsPerWeek() async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+          'SELECT sum(abs(a.amount)) amount,a.account,strftime("%W",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS weekofyear  FROM transactions a ' +
+              'left outer join category c on c.uuid=a.category where c.type="E" group by 2,3 order by 2 desc',
+        );
+      },
+    );
+  }
+
   static Future<List<Map<String, dynamic>>> getAllExpenses(
       String uuidAccount) async {
     return await _db.transaction(
@@ -176,6 +221,61 @@ class DB {
                     '"' +
                 uuidAccount +
                 '"');
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getExpensesLastMonth(
+      String uuidAccount) async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            'SELECT coalesce(sum(amount),0) amount FROM transactions a ' +
+                'inner join category c on c.uuid=a.category and c.type="E" where ' +
+                ' date( substr(a.timestamp,1,10), "unixepoch")>= date("now","start of month") and a.account='
+                    '"' +
+                uuidAccount +
+                '"');
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getTrasactionsLast6MonthByAccount(
+      String uuidAccount) async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            '   SELECT sum(abs(a.amount)) amount,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
+                ' strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year,c.type   FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where a.account='
+                    '"' +
+                uuidAccount +
+                '" and date( substr(a.timestamp,1,10), "unixepoch") > date("now","-0.5 YEAR") ' +
+                ' group by 2,3,4 order by 3 ,2 ');
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getTrasactionsLast6Month() async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            '   SELECT sum(abs(a.amount)) amount,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
+                ' strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year,c.type   FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where date( substr(a.timestamp,1,10), "unixepoch") > date("now","-0.5 YEAR") ' +
+                ' group by 2,3,4 order by 3 ,2 ');
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>>
+      getTrasactionsLastMonthByCategory() async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            '   SELECT sum(abs(a.amount)) amount,c.name  FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where c.type="E" and date( substr(a.timestamp,1,10), "unixepoch") >= date("now","start of month")' +
+                ' group by 2 order by 2 ');
       },
     );
   }
@@ -198,8 +298,8 @@ class DB {
     return await _db.transaction(
       (txn) async {
         return await txn.rawQuery(
-            'SELECT  coalesce(sum(amount),0) amount,c.name,c.uuid FROM transactions a ' +
-                'inner join category c on c.uuid=a.category group by 2,3 order by 1 desc LIMIT 5');
+            'SELECT  coalesce(sum(ABS(amount)),0) amount,c.name,c.uuid FROM transactions a ' +
+                'inner join category c on c.uuid=a.category where c.type="E" group by 2,3 order by 1 desc LIMIT 5');
       },
     );
   }

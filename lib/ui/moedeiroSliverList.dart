@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class MoneyMSliverList extends StatelessWidget {
+class MoedeiroSliverList extends StatelessWidget {
   String title;
   Widget list;
-  MoneyMSliverList(this.title, this.list, {Key key}) : super(key: key);
+  MoedeiroSliverList(this.title, this.list, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

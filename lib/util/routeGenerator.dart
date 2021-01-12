@@ -14,18 +14,19 @@ class RouteGenerator {
       case '/':
         return MaterialPageRoute(builder: (_) => MainPage());
       case '/accountTransactionsPage':
-        return MaterialPageRoute(builder: (_) => AccountTransactionsPage());
-      // Validation of correct data type
-      // if (args is Map<String, String>) {
-      //   return MaterialPageRoute(
-      //     builder: (_) => AccountDetailsPage(
-      //       data: args,
-      //     ),
-      //   );
-      // }
-      // If args is not of the correct type, return an error page.
-      // You can also throw an exception while in development.
-      //return _errorRoute();
+        if (args is bool) {
+          return MaterialPageRoute(
+            builder: (_) => AccountTransactionsPage(
+              showAllTransactions: args,
+            ),
+          );
+        } else
+          return MaterialPageRoute(
+            builder: (_) => AccountTransactionsPage(),
+          );
+        // If args is not of the correct type, return an error page.
+        // You can also throw an exception while in development.
+        break;
       case '/categoriesPage':
         // return MaterialPageRoute(builder: (_) => CategoriesPage());
         // Validation of correct data type

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/models/mainModel.dart';
-import 'package:moedeiro/ui/MoneyMSliverList.dart';
-import 'package:moedeiro/ui/MoneyMSliverAppBar.dart';
+import 'package:moedeiro/ui/moedeiroSliverList.dart';
+import 'package:moedeiro/ui/moedeiroSliverAppBar.dart';
 import 'package:moedeiro/ui/categories/CategoryBottomSheetWidget.dart';
 import 'package:moedeiro/ui/moedeiro_widgets.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
@@ -100,11 +100,12 @@ class CategoriesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DefaultTabController(
+        initialIndex: 1,
         length: 2, // This is the number of tabs.
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              MoneyMSliverOverlapAbsorberAppBar(
+              MoedeiroSliverOverlapAbsorberAppBar(
                 'Categories',
                 tabs: buildTabs(),
               )
@@ -113,8 +114,8 @@ class CategoriesPage extends StatelessWidget {
           body: TabBarView(
               // These are the contents of the tab views, below the tabs.
               children: <Widget>[
-                MoneyMSliverList('Income', buildIncomeList()),
-                MoneyMSliverList('Expenses', buildExpensesList()),
+                MoedeiroSliverList('Income', buildIncomeList()),
+                MoedeiroSliverList('Expenses', buildExpensesList()),
               ]),
         ),
       ),

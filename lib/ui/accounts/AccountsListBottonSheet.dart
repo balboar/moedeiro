@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/models/mainModel.dart';
-import 'package:moedeiro/ui/accounts/accountWidgets.dart';
 import 'package:moedeiro/ui/moedeiro_widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +34,6 @@ class AccountListBottomSheet extends StatelessWidget {
                           onTap: () {
                             Navigator.pop(context, model.accounts[index].uuid);
                           },
-                          leading: Icon(Icons.ac_unit),
                           title: Text(
                             model.accounts[index].name,
                           ),

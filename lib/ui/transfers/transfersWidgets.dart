@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moedeiro/dataModels/transaction.dart';
+import 'package:moedeiro/dataModels/transfer.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
-import 'package:moedeiro/ui/transactions/transactionBottomSheetWidget.dart';
+import 'package:moedeiro/ui/transfers/transferBottomSheetWidget.dart';
 import 'package:moedeiro/util/utils.dart';
 
-class TransactionTile extends StatelessWidget {
-  final Transaction transaction;
-  const TransactionTile(this.transaction, {Key key}) : super(key: key);
+class TransferTile extends StatelessWidget {
+  final Transfer transfer;
+  final String activeAccount;
+  const TransferTile(this.transfer, {Key key, this.activeAccount})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +23,10 @@ class TransactionTile extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Transacción',
+                  'Transfer',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
                 ),
-                TransactionBottomSheet(transaction),
+                TransferBottomSheet(transfer),
               ],
             ),
             height: 440,
@@ -38,44 +40,30 @@ class TransactionTile extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          transaction.categoryName ?? '',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  .fontSize,
-                              color:
-                                  Theme.of(context).textTheme.subtitle1.color),
-                        ),
-                        Visibility(
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5),
-                            width: 1,
-                            height: 15,
-                            color: Colors.grey[500],
-                          ),
-                          visible: transaction.name.isNotEmpty,
-                        ),
-                        Text(
-                          transaction.name ?? '',
-                          overflow: TextOverflow.clip,
-                          maxLines: 1,
-                          style: TextStyle(
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .subtitle2
-                                  .fontSize,
-                              color:
-                                  Theme.of(context).textTheme.subtitle2.color),
-                        ),
-                      ],
+                    Row(children: [
+                      Icon(
+                        Icons.account_balance_wallet_outlined,
+                        size: 16,
+                      ),
+                      Container(
+                        width: 5,
+                      ),
+                      Text(
+                        transfer.accountFromName ?? '',
+                        overflow: TextOverflow.clip,
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontSize:
+                                Theme.of(context).textTheme.subtitle1.fontSize,
+                            color: Theme.of(context).textTheme.subtitle1.color),
+                      ),
+                    ]),
+                    Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      size: 20,
+                      color: Colors.blue,
                     ),
                     Row(
                       children: [
@@ -84,10 +72,12 @@ class TransactionTile extends StatelessWidget {
                           size: 16,
                         ),
                         Container(
-                          width: 10,
+                          width: 5,
                         ),
                         Text(
-                          transaction.accountName ?? '',
+                          transfer.accountToName ?? '',
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
                           style: TextStyle(
                               fontSize: Theme.of(context)
                                   .textTheme
@@ -103,7 +93,7 @@ class TransactionTile extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 110,
+              width: 100,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -111,16 +101,23 @@ class TransactionTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(formatCurrency(context, transaction.amount),
+                      Text(
+                          formatCurrency(
+                              context,
+                              (activeAccount != null) &&
+                                      (activeAccount == transfer.accountFrom)
+                                  ? transfer.amount * -1
+                                  : transfer.amount),
                           style: TextStyle(
                               fontSize: 18.0,
-                              color: transaction.amount > 0
-                                  ? Colors.green
-                                  : Colors.red)),
+                              color: (activeAccount != null) &&
+                                      (activeAccount == transfer.accountFrom)
+                                  ? Colors.red
+                                  : Colors.green)),
                       Text(
                         DateFormat.yMd().format(
                           DateTime.fromMillisecondsSinceEpoch(
-                              transaction.timestamp),
+                              transfer.timestamp),
                         ),
                         style: TextStyle(
                             fontSize:
@@ -137,7 +134,10 @@ class TransactionTile extends StatelessWidget {
                     margin: EdgeInsets.zero,
                     width: 7,
                     decoration: BoxDecoration(
-                      color: transaction.amount > 0 ? Colors.green : Colors.red,
+                      color: (activeAccount != null) &&
+                              (activeAccount == transfer.accountFrom)
+                          ? Colors.red
+                          : Colors.green,
                       borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(4),
                         topRight: Radius.circular(4),

@@ -1,15 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:moedeiro/dataModels/transaction.dart';
+import 'package:moedeiro/dataModels/transfer.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/accounts/accountWidgets.dart';
+import 'package:moedeiro/ui/charts/transactionsCharts.dart';
 import 'package:moedeiro/ui/moedeiro_widgets.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
-import 'package:moedeiro/ui/transactions/TransactionBottomSheetWidget.dart';
+import 'package:moedeiro/ui/transactionTransferBottomSheetWidget.dart';
+import 'package:moedeiro/ui/transactions/transactionBottomSheetWidget.dart';
 import 'package:moedeiro/ui/transactions/transactionWidgets.dart';
+import 'package:moedeiro/ui/transfers/transferBottomSheetWidget.dart';
+import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -18,12 +23,13 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  String _floatingButtonLabel = 'Transaction';
+  final controller = PageController(viewportFraction: 1);
   @override
   void initState() {
     Provider.of<AccountModel>(context, listen: false).getAccounts();
     Provider.of<CategoryModel>(context, listen: false).getCategories();
     Provider.of<TransactionModel>(context, listen: false).getTransactions();
+    Provider.of<TransfersModel>(context, listen: false).getTransfers();
     super.initState();
 
     final QuickActions quickActions = QuickActions();
@@ -34,6 +40,15 @@ class MainPageState extends State<MainPage> {
                 context,
                 TransactionBottomSheet(Transaction(
                     timestamp: DateTime.now().millisecondsSinceEpoch)))
+            .then((value) {
+          Provider.of<AccountModel>(context, listen: false).getAccounts();
+          Provider.of<CategoryModel>(context, listen: false).getCategories();
+        });
+      } else if (shortcutType == 'transfer') {
+        showCustomModalBottomSheet(
+                context,
+                TransferBottomSheet(
+                    Transfer(timestamp: DateTime.now().millisecondsSinceEpoch)))
             .then((value) {
           Provider.of<AccountModel>(context, listen: false).getAccounts();
           Provider.of<CategoryModel>(context, listen: false).getCategories();
@@ -49,6 +64,11 @@ class MainPageState extends State<MainPage> {
         localizedTitle: 'Transaction',
         icon: 'add',
       ),
+      const ShortcutItem(
+        type: 'transfer',
+        localizedTitle: 'Transfer',
+        icon: 'transfer',
+      ),
       // NOTE: This second action icon will only work on Android.
     ]);
   }
@@ -57,19 +77,17 @@ class MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           showCustomModalBottomSheet(
-                  context,
-                  TransactionBottomSheet(Transaction(
-                      timestamp: DateTime.now().millisecondsSinceEpoch)))
-              .then((value) {
+            context,
+            TransactionTransferBottomSheet(),
+          ).then((value) {
             Provider.of<AccountModel>(context, listen: false).getAccounts();
             Provider.of<CategoryModel>(context, listen: false).getCategories();
           });
         },
-        label: Text(_floatingButtonLabel),
-        icon: Icon(Icons.add_outlined),
+        child: Icon(Icons.add_outlined),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -88,15 +106,13 @@ class MainPageState extends State<MainPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/accountsPage');
+                  Navigator.pushNamed(
+                    context,
+                    '/accountsPage',
+                  );
                 },
                 child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
+                  margin: EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
                     child: Row(
                       children: [
@@ -104,10 +120,13 @@ class MainPageState extends State<MainPage> {
                         Divider(
                           indent: 10.0,
                         ),
-                        Text(
-                          'Accounts',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
+                        Consumer<AccountModel>(builder: (BuildContext context,
+                            AccountModel model, Widget child) {
+                          return Text(
+                            'Accounts ${formatCurrency(context, model.totalAmount)}',
+                            style: TextStyle(fontSize: 20.0),
+                          );
+                        }),
                         Expanded(
                           child: Align(
                             alignment: Alignment.centerRight,
@@ -126,25 +145,25 @@ class MainPageState extends State<MainPage> {
                     (BuildContext context, AccountModel model, Widget child) {
                   if (model.accounts == null)
                     return Container(
-                      height: 100,
+                      height: 120,
                       margin:
-                          EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
+                          EdgeInsets.only(left: 10.0, top: 2.0, bottom: 10.0),
                       child: Center(
                         child: CircularProgressIndicator(),
                       ),
                     );
                   else if (model.accounts.length == 0)
                     return Container(
-                      height: 100,
+                      height: 120,
                       margin:
-                          EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
+                          EdgeInsets.only(left: 10.0, top: 2.0, bottom: 10.0),
                       child: NoDataWidgetHorizontal(),
                     );
                   else
                     return Container(
-                      height: 100,
+                      height: 120,
                       margin:
-                          EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
+                          EdgeInsets.only(left: 10.0, top: 2.0, bottom: 10.0),
                       child: ListView.builder(
                         itemCount: model.accounts.length,
                         scrollDirection: Axis.horizontal,
@@ -160,21 +179,16 @@ class MainPageState extends State<MainPage> {
                   Navigator.pushNamed(context, '/categoriesPage');
                 },
                 child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
+                  margin: EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
                     child: Row(
                       children: [
-                        Icon(Icons.category_outlined),
+                        Icon(Icons.date_range_outlined),
                         Divider(
                           indent: 10.0,
                         ),
                         Text(
-                          'Expenses by category',
+                          'Movements',
                           style: TextStyle(fontSize: 20.0),
                         ),
                         Expanded(
@@ -190,58 +204,42 @@ class MainPageState extends State<MainPage> {
                   ),
                 ),
               ),
-              Consumer<CategoryModel>(
-                builder:
-                    (BuildContext context, CategoryModel model, Widget child) {
-                  if (model.top5Categories == null)
-                    return Container(
-                      height: 100,
-                      margin:
-                          EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  else if (model.top5Categories.length == 0)
-                    return Container(
-                      height: 100,
-                      margin:
-                          EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
-                      child: NoDataWidgetHorizontal(),
-                    );
-                  else
-                    return Container(
-                      margin: EdgeInsets.only(left: 20.0),
-                      child: Column(
-                        children: model.top5Categories
-                            .map((Map<String, dynamic> cat) {
-                          return ListTile(
-                            dense: true,
-                            leading: Icon(Icons.ac_unit),
-                            title: Text(
-                              cat['name'],
-                              style: TextStyle(fontSize: 17),
-                            ),
-                            trailing: Text(cat['amount'].toString() + '€'),
-                          );
-                        }).toList(),
-                      ),
-                    );
-                },
+              Container(
+                margin: EdgeInsets.only(
+                    left: 10.0, right: 10, top: 2.0, bottom: 2.0),
+                height: 200,
+                child: PageView(
+                  physics: BouncingScrollPhysics(),
+                  controller: controller,
+                  children: [
+                    TransactionChart(),
+                    ExpensesByMonthChart(),
+                    ExpensesByCategoryChart(),
+                  ],
+                  scrollDirection: Axis.horizontal,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 5.0),
+                child: SmoothPageIndicator(
+                  controller: controller,
+                  count: 3,
+                  effect: WormEffect(
+                      dotHeight: 7,
+                      activeDotColor: Colors.blue,
+                      dotWidth: 7,
+                      dotColor: Colors.grey),
+                ),
               ),
               GestureDetector(
                 onTap: () {
                   Provider.of<AccountModel>(context, listen: false)
                       .setActiveAccountNull();
-                  Navigator.pushNamed(context, '/accountTransactionsPage');
+                  Navigator.pushNamed(context, '/accountTransactionsPage',
+                      arguments: true);
                 },
                 child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
+                  margin: EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
                     child: Row(
                       children: [
@@ -272,8 +270,8 @@ class MainPageState extends State<MainPage> {
                   if (model.transactions == null)
                     return Container(
                       height: 100,
-                      margin:
-                          EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
+                      margin: EdgeInsets.only(
+                          left: 10.0, right: 10, top: 2.0, bottom: 10.0),
                       child: Center(
                         child: CircularProgressIndicator(),
                       ),
@@ -281,17 +279,18 @@ class MainPageState extends State<MainPage> {
                   else if (model.transactions.length == 0)
                     return Container(
                       height: 100,
-                      margin:
-                          EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
+                      margin: EdgeInsets.only(
+                          left: 10.0, right: 10, top: 2.0, bottom: 10.0),
                       child: NoDataWidgetHorizontal(),
                     );
                   else
                     return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      margin: EdgeInsets.only(
+                          left: 10.0, right: 10, top: 2.0, bottom: 10.0),
                       child: Column(
-                        children: model.transactions.length > 3
+                        children: model.transactions.length > 5
                             ? model.transactions
-                                .sublist(0, 3)
+                                .sublist(0, 5)
                                 .map((Transaction transaction) {
                                 return Container(
                                   height: 80,

@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moedeiro/dataModels/transaction.dart';
+import 'package:moedeiro/dataModels/transfer.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/accounts/AccountsListBottonSheet.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:provider/provider.dart';
 
-class TransactionBottomSheet extends StatefulWidget {
-  Transaction transaction;
-  TransactionBottomSheet(this.transaction);
+class TransferBottomSheet extends StatefulWidget {
+  Transfer transfer;
+  TransferBottomSheet(this.transfer);
   @override
   State<StatefulWidget> createState() {
-    return _TransactionBottomSheetState();
+    return _TransferBottomSheetState();
   }
 }
 
-class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
-  Transaction transaction;
+class _TransferBottomSheetState extends State<TransferBottomSheet> {
+  Transfer transfer;
   Map<String, dynamic> _data;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
-  TextEditingController _categoryController = TextEditingController();
-  TextEditingController _accountController = TextEditingController();
+  TextEditingController _accountFromController = TextEditingController();
+  TextEditingController _accountToController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
-  bool isExpense = false;
 
   @override
   void initState() {
-    _data = widget.transaction.toMap();
+    _data = widget.transfer.toMap();
     _dateController.text = _data['timestamp'] != null
         ? DateFormat.yMMMd().format(
             DateTime.fromMillisecondsSinceEpoch(_data['timestamp']),
@@ -41,8 +40,8 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
           )
         : '';
 
-    _categoryController.text = _data['categoryName'] ?? '';
-    _accountController.text = _data['accountName'] ?? '';
+    _accountFromController.text = _data['accountFromName'] ?? '';
+    _accountToController.text = _data['accountToName'] ?? '';
     _amountController.text = _data['amount'].toString() ?? '';
     super.initState();
   }
@@ -53,8 +52,8 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     // widget tree.
     _dateController.dispose();
     _timeController.dispose();
-    _categoryController.dispose();
-    _accountController.dispose();
+    _accountFromController.dispose();
+    _accountToController.dispose();
     super.dispose();
   }
 
@@ -107,8 +106,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     void _submitForm(Function save) {
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
-        if (isExpense) _data['amount'] = -1 * _data['amount'];
-        save(Transaction.fromMap(_data));
+        save(Transfer.fromMap(_data));
         Navigator.pop(context);
       }
     }
@@ -121,13 +119,13 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
           key: _formKey,
           child: Padding(
             padding:
-                EdgeInsets.only(right: 20.0, left: 20, top: 20, bottom: 10.0),
+                EdgeInsets.only(right: 20.0, left: 20, top: 5, bottom: 5.0),
             child: Column(
               children: <Widget>[
-                Text(
-                  'Transacción',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-                ),
+                // Text(
+                //   'Transfer',
+                //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                // ),
                 TextFormField(
                   initialValue: _data['name'] ?? '',
                   decoration: InputDecoration(
@@ -161,35 +159,40 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   },
                 ),
                 TextFormField(
-                  controller: _categoryController,
+                  controller: _accountFromController,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.category_outlined),
-                    labelText: 'Category',
+                    icon: Icon(Icons.account_balance_wallet),
+                    labelText: 'From',
                   ),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please select a Category';
+                      return 'Please select an Account';
                     }
                     return null;
                   },
                   onTap: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
-                    Map<String, dynamic> result = await Navigator.pushNamed(
-                        context, '/categoriesPage',
-                        arguments: 'newTransaction');
-                    if (result != null) {
-                      _data['category'] = result['uuid'];
-                      _categoryController.text = result['name'];
-                      _data['categoryName'] = result['name'];
-                      isExpense = result['type'] == 'E';
-                    }
+                    showCustomModalBottomSheet(
+                            context, AccountListBottomSheet())
+                        .then(
+                      (value) {
+                        if (value != null) {
+                          _data['accountFrom'] = value;
+                          _accountFromController.text =
+                              Provider.of<AccountModel>(context, listen: false)
+                                  .getAccountName(value);
+                          _data['accountFromName'] =
+                              _accountFromController.text;
+                        }
+                      },
+                    );
                   },
                 ),
                 TextFormField(
-                  controller: _accountController,
+                  controller: _accountToController,
                   decoration: InputDecoration(
                     icon: Icon(Icons.account_balance_wallet),
-                    labelText: 'Account',
+                    labelText: 'To',
                   ),
                   validator: (value) {
                     if (value.isEmpty) {
@@ -205,11 +208,11 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                         .then(
                       (value) {
                         if (value != null) {
-                          _data['account'] = value;
-                          _accountController.text =
+                          _data['accountTo'] = value;
+                          _accountToController.text =
                               Provider.of<AccountModel>(context, listen: false)
                                   .getAccountName(value);
-                          _data['accountName'] = _accountController.text;
+                          _data['accountToName'] = _accountToController.text;
                         }
                       },
                     );
@@ -276,33 +279,43 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   children: [
                     Container(
                       height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        gradient: LinearGradient(
-                          colors: [Colors.red, Colors.red[300]],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
-                      ),
                       child: FlatButton(
-                        child: Text('Eliminar'),
+                        child: Text(
+                          'Eliminar',
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                          ),
+                        ),
                         onPressed: () {},
                       ),
                     ),
-                    Consumer<TransactionModel>(builder: (BuildContext context,
-                        TransactionModel model, Widget widget) {
-                      return OutlineButton(
-                        shape: RoundedRectangleBorder(
+                    Consumer<TransfersModel>(builder: (BuildContext context,
+                        TransfersModel model, Widget widget) {
+                      return Container(
+                        height: 40,
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(217, 81, 157, 1),
+                              Color.fromRGBO(237, 135, 112, 1)
+                            ],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
                         ),
-                        borderSide: BorderSide(
-                            width: 1.0, color: Theme.of(context).accentColor),
-                        color: Theme.of(context).dialogBackgroundColor,
-                        textColor: Colors.white,
-                        onPressed: () {
-                          _submitForm(model.insertTransactiontIntoDb);
-                        },
-                        child: Text("Guardar"),
+                        child: FlatButton(
+                          child: Text(
+                            'Guardar',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onPressed: () {
+                            _submitForm(model.insertTransferIntoDb);
+                          },
+                        ),
                       );
                     }),
                   ],

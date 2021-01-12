@@ -11,6 +11,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
+//   debugPaintPointersEnabled = true;
+//   debugPaintBaselinesEnabled = true;
+//   debugPaintLayerBordersEnabled = true;
   bool _lockApp = false;
   SharedPreferences prefs;
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +55,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<TransactionModel>(
           create: (BuildContext context) => TransactionModel(),
         ),
+        ChangeNotifierProvider<TransfersModel>(
+          create: (BuildContext context) => TransfersModel(),
+        ),
       ],
       child: MaterialApp(
         onGenerateRoute: RouteGenerator.generateRoute,
@@ -66,6 +72,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
           primarySwatch: Colors.green,
           visualDensity: VisualDensity.adaptivePlatformDensity,
+          cardTheme: CardTheme(color: Colors.grey[700]),
         ),
       ),
     );

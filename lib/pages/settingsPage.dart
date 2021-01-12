@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/dataModels/accounts.dart';
@@ -8,8 +7,6 @@ import 'package:moedeiro/dataModels/transaction.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:package_info/package_info.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
       File file = File(result.files.single.path);
       List<String> contents = await file.readAsLines();
       contents.removeAt(0);
-      print(contents);
+
       contents.forEach((element) async {
         List<String> row = element.split(',');
         accounts.add(row[0]);
@@ -82,19 +79,22 @@ class _SettingsPageState extends State<SettingsPage> {
 
         print(row);
       });
-      print(accounts);
+
       accounts.forEach((element) async {
         if (element != null) {
           element = element.toString().replaceAll('"', '');
           List<Map<String, dynamic>> data = await DB.query('accounts',
               where: 'name=?', whereArgs: [element.toString()]);
-          if (data != null && data.isNotEmpty) {
-            if (data[0]['name'].isEmpty)
-              await Provider.of<AccountModel>(context, listen: false)
-                  .insertAccountIntoDb(
-                Account(name: element.toString(), initialAmount: 0),
-              );
-          }
+          if (data != null || data.isEmpty) {
+            await Provider.of<AccountModel>(context, listen: false)
+                .insertAccountIntoDb(
+              Account(name: element.toString(), initialAmount: 0),
+            );
+          } else if (data[0]['name'].isEmpty)
+            await Provider.of<AccountModel>(context, listen: false)
+                .insertAccountIntoDb(
+              Account(name: element.toString(), initialAmount: 0),
+            );
         }
       });
 
@@ -133,11 +133,11 @@ class _SettingsPageState extends State<SettingsPage> {
             );
         }
       });
-      sleep(Duration(seconds: 20));
+      Provider.of<AccountModel>(context, listen: false).getAccounts();
+      Provider.of<CategoryModel>(context, listen: false).getCategories();
 
-      // I/flutter (13953): ["wallet", "currency", "category", "datetime", "money", "description"]
-// I/flutter (13953): ["Efectivo", "EUR", "Comida trabajo", "2020-12-31 17:06:50", "-7, 00", ""]
-//var moonLanding = DateTime.parse("1969-07-20 20:18:04Z");  // 8:18pm
+      sleep(Duration(seconds: 5));
+
       contents.forEach((element) async {
         List<String> row = element.split(',');
         row[4] = row[4] + '.' + row[5];
