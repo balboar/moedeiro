@@ -17,20 +17,7 @@ class TransferTile extends StatelessWidget {
       onTap: () {
         showCustomModalBottomSheet(
           context,
-          Container(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom, top: 20.0),
-            child: Column(
-              children: [
-                Text(
-                  'Transfer',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-                ),
-                TransferBottomSheet(transfer),
-              ],
-            ),
-            height: 440,
-          ),
+          TransferBottomSheet(transfer),
         );
       },
       child: Card(

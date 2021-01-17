@@ -168,7 +168,10 @@ class MainPageState extends State<MainPage> {
                         itemCount: model.accounts.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
-                          return AccountCard(account: model.accounts[index]);
+                          return AccountCard(
+                            account: model.accounts[index],
+                            avatarSize: 11.0,
+                          );
                         },
                       ),
                     );

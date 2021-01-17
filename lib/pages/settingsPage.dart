@@ -7,8 +7,11 @@ import 'package:moedeiro/dataModels/transaction.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart' as db;
+import 'package:path/path.dart' as p;
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -51,6 +54,20 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _lockApp = prefs.getBool('lockApp') ?? false;
     });
+  }
+
+  Future<void> _selectFolder(BuildContext context) async {
+    String _destination = await FilePicker.platform.getDirectoryPath();
+    if (_destination != null && _destination != '/') {
+      String _databasePath = p.join(await db.getDatabasesPath(), 'moedeiro.db');
+      var _database = File(_databasePath);
+      _database.copySync(_destination + '/moedeiro.db');
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Exported!'),
+        ),
+      );
+    }
   }
 
   Future<void> _openFile(BuildContext context) async {
@@ -179,63 +196,82 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildContent(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-      child: Column(
-        children: <Widget>[
-          Text(
-            'Settings',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-          ),
-          SettingsTitleWidget(
-            title: 'Security',
-            icon: Icons.security_outlined,
-            color: Colors.redAccent,
-          ),
-          MyDivider(),
-          SwitchListTile(
-              secondary: Icon(Icons.lock_open_outlined),
-              title: Text('Access protection'),
-              value: _lockApp,
-              onChanged: (bool value) {
-                setState(() {
-                  _lockApp = value;
-                });
-                prefs.setBool('lockApp', _lockApp);
-              }),
-          SizedBox(
-            height: 15.0,
-          ),
-          SettingsTitleWidget(
-            title: 'Data',
-            icon: Icons.archive_outlined,
-            color: Colors.blueAccent,
-          ),
-          MyDivider(),
-          ListTile(
-            leading: Icon(Icons.import_export_outlined),
-            title: Text('Import from CSV'),
-            onTap: () async {
-              _openFile(context);
-            },
-          ),
-          SizedBox(
-            height: 15.0,
-          ),
-          SettingsTitleWidget(
-            title: 'Acerca de',
-            icon: Icons.info_outline,
-            color: Colors.orange,
-          ),
-          MyDivider(),
-          ListTile(
-            leading: Icon(Icons.app_registration),
-            title: Text('Versión'),
-            subtitle: Text(_packageInfo.version),
-          )
-        ],
-      ),
-    );
+    return Builder(
+        // Create an inner BuildContext so that the onPressed methods
+        // can refer to the Scaffold with Scaffold.of().
+        builder: (BuildContext context) {
+      return Container(
+        margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Settings',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            SettingsTitleWidget(
+              title: 'Security',
+              icon: Icons.security_outlined,
+              color: Colors.redAccent,
+            ),
+            MyDivider(),
+            SwitchListTile(
+                secondary: Icon(Icons.lock_open_outlined),
+                title: Text('Access protection'),
+                value: _lockApp,
+                onChanged: (bool value) {
+                  setState(() {
+                    _lockApp = value;
+                  });
+                  prefs.setBool('lockApp', _lockApp);
+                }),
+            SizedBox(
+              height: 15.0,
+            ),
+            SettingsTitleWidget(
+              title: 'Data',
+              icon: Icons.archive_outlined,
+              color: Colors.blueAccent,
+            ),
+            MyDivider(),
+            ListTile(
+              leading: Icon(Icons.import_export_outlined),
+              title: Text('Import from CSV'),
+              onTap: () async {
+                _openFile(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.arrow_downward_outlined),
+              title: Text('Import database'),
+              onTap: () async {
+                _openFile(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.arrow_upward_outlined),
+              title: Text('Export database'),
+              onTap: () async {
+                _selectFolder(context);
+              },
+            ),
+            SizedBox(
+              height: 15.0,
+            ),
+            SettingsTitleWidget(
+              title: 'Acerca de',
+              icon: Icons.info_outline,
+              color: Colors.orange,
+            ),
+            MyDivider(),
+            ListTile(
+              leading: Icon(Icons.app_registration),
+              title: Text('Versión'),
+              subtitle: Text(_packageInfo.version),
+            )
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildBody() {

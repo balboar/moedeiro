@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:moedeiro/dataModels/accounts.dart';
 import 'package:moedeiro/models/mainModel.dart';
@@ -9,7 +11,8 @@ import 'package:provider/provider.dart';
 
 class AccountCard extends StatefulWidget {
   Account account;
-  AccountCard({Key key, this.account}) : super(key: key);
+  double avatarSize = 10.0;
+  AccountCard({Key key, this.account, this.avatarSize}) : super(key: key);
 
   @override
   _AccountCardState createState() => _AccountCardState();
@@ -18,8 +21,17 @@ class AccountCard extends StatefulWidget {
 class _AccountCardState extends State<AccountCard> {
   @override
   void initState() {
+    // initStorage();
     super.initState();
   }
+
+  // void initStorage() async {
+  //   if (widget.account.icon != null) {
+  //     var file = await File(widget.account.icon).exists();
+  //     print(file);
+  //     if (!file) widget.account.icon = null;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +45,21 @@ class _AccountCardState extends State<AccountCard> {
               child: Column(
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 5.0),
+                        child: CircleAvatar(
+                          backgroundImage: widget.account.icon != null
+                              ? FileImage(
+                                  File(widget.account.icon),
+                                )
+                              : null,
+                          backgroundColor: Colors.transparent,
+                          radius: widget.avatarSize,
+                        ),
+                      ),
                       Expanded(
                         child: Text(widget.account.name, //
                             overflow: TextOverflow.clip,

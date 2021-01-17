@@ -93,8 +93,8 @@ const double height = 40.0;
 const double borderRadius = 10.0;
 const double transactionAlign = -1;
 const double transferAlign = 1;
-const Color selectedColor = Colors.white;
-const Color normalColor = Colors.black54;
+const Color selectedColor = Colors.black;
+const Color normalColor = Colors.black;
 
 class _MoedeiroTransactionTransferButtonsState
     extends State<MoedeiroTransactionTransferButtons> {

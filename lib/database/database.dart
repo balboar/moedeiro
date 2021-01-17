@@ -178,12 +178,12 @@ class DB {
     return await _db.transaction(
       (txn) async {
         return await txn.rawQuery(
-            'select a.uuid,a.name,coalesce(a.initialAmount,0.0) initialAmount,a.position,coalesce(a.initialAmount,0.0)+ ' +
+            'select a.uuid,a.name,coalesce(a.initialAmount,0.0) initialAmount,a.position,a.icon,coalesce(a.initialAmount,0.0)+ ' +
                 '(select coalesce(sum(bb.amount),0.0)  from accounts aa ' +
                 'left outer join transactions bb on bb.account=aa.uuid where aa.uuid=a.uuid ) + ' +
                 '(select coalesce(sum(amount),0.0) from transfers  where accountTo=a.uuid) ' +
                 '	-(select coalesce(sum(d.amount),0.0) from transfers d where d.accountFrom=a.uuid)  amount ' +
-                '	from accounts a   group by a.uuid,a.name,a.initialAmount,a.position ');
+                '	from accounts a   group by a.uuid,a.name,a.initialAmount,a.position order by a.position  ');
       },
     );
   }

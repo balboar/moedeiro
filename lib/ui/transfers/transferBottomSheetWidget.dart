@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:moedeiro/dataModels/transfer.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/accounts/AccountsListBottonSheet.dart';
+import 'package:moedeiro/ui/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +25,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
   TextEditingController _accountFromController = TextEditingController();
   TextEditingController _accountToController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
+  double space = 10.0;
 
   @override
   void initState() {
@@ -101,6 +103,16 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
     }
   }
 
+  Future<bool> _showMyDialog() async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return ComfirmDeleteDialog();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     void _submitForm(Function save) {
@@ -122,6 +134,9 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                 EdgeInsets.only(right: 20.0, left: 20, top: 5, bottom: 5.0),
             child: Column(
               children: <Widget>[
+                SizedBox(
+                  height: space,
+                ),
                 // Text(
                 //   'Transfer',
                 //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
@@ -129,12 +144,16 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                 TextFormField(
                   initialValue: _data['name'] ?? '',
                   decoration: InputDecoration(
-                    icon: Icon(Icons.description),
+                    prefixIcon: Icon(Icons.description),
+                    border: OutlineInputBorder(),
                     labelText: 'Description',
                   ),
                   onSaved: (String value) {
                     _data['name'] = value;
                   },
+                ),
+                SizedBox(
+                  height: space,
                 ),
                 TextFormField(
                   controller: _amountController,
@@ -151,17 +170,22 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                   },
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.attach_money_outlined),
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.attach_money_outlined),
                     labelText: 'Amount',
                   ),
                   onSaved: (String value) {
                     _data['amount'] = double.parse(value);
                   },
                 ),
+                SizedBox(
+                  height: space,
+                ),
                 TextFormField(
                   controller: _accountFromController,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.account_balance_wallet),
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.account_balance_wallet),
                     labelText: 'From',
                   ),
                   validator: (value) {
@@ -188,10 +212,14 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                     );
                   },
                 ),
+                SizedBox(
+                  height: space,
+                ),
                 TextFormField(
                   controller: _accountToController,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.account_balance_wallet),
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.account_balance_wallet),
                     labelText: 'To',
                   ),
                   validator: (value) {
@@ -218,6 +246,9 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                     );
                   },
                 ),
+                SizedBox(
+                  height: space,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -225,7 +256,8 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                         readOnly: true,
                         controller: _dateController,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.calendar_today),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.calendar_today),
                           labelText: 'Date',
                         ),
                         onTap: () {
@@ -248,7 +280,8 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                         readOnly: true,
                         controller: _timeController,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.hourglass_bottom_outlined),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.hourglass_bottom_outlined),
                           labelText: 'Time',
                         ),
                         onTap: () {
@@ -264,7 +297,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                           });
                         },
                       ),
-                      width: 100,
+                      width: 130,
                     ),
                   ],
                 ),
@@ -272,26 +305,35 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                   child: Container(),
                   padding: EdgeInsets.all(5.0),
                 ),
-                ButtonBar(
-                  buttonHeight: 40.0,
-                  buttonMinWidth: 140.0,
-                  alignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 40,
-                      child: FlatButton(
-                        child: Text(
-                          'Eliminar',
-                          style: TextStyle(
-                            color: Colors.grey[500],
+                Consumer<TransfersModel>(builder: (BuildContext context,
+                    TransfersModel model, Widget widget) {
+                  return ButtonBar(
+                    buttonHeight: 40.0,
+                    buttonMinWidth: 140.0,
+                    alignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 40,
+                        child: FlatButton(
+                          child: Text(
+                            'Eliminar',
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                            ),
                           ),
+                          onPressed: () {
+                            if (_data['uuid'] != null) {
+                              _showMyDialog().then((value) {
+                                if (value) {
+                                  model.delete(_data['uuid']);
+                                  Navigator.pop(context);
+                                }
+                              });
+                            }
+                          },
                         ),
-                        onPressed: () {},
                       ),
-                    ),
-                    Consumer<TransfersModel>(builder: (BuildContext context,
-                        TransfersModel model, Widget widget) {
-                      return Container(
+                      Container(
                         height: 40,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
@@ -316,10 +358,10 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                             _submitForm(model.insertTransferIntoDb);
                           },
                         ),
-                      );
-                    }),
-                  ],
-                )
+                      )
+                    ],
+                  );
+                }),
               ],
             ),
           ),

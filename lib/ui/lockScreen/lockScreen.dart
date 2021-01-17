@@ -226,7 +226,7 @@ class _LockScreenState extends State<LockScreen> {
   Widget build(BuildContext context) {
     _enteredStreamListener();
     _removedStreamListener();
-    var _rowMarginSize = MediaQuery.of(context).size.width * 0.005;
+    var _rowMarginSize = MediaQuery.of(context).size.width * 0.0005;
     var _columnMarginSize = MediaQuery.of(context).size.width * 0.065;
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -245,6 +245,13 @@ class _LockScreenState extends State<LockScreen> {
         body: SafeArea(
           child: Column(
             children: <Widget>[
+              Image(
+                image: AssetImage(
+                  'lib/assets/icon.png',
+                ),
+                height: 100,
+                width: 100,
+              ),
               _buildTitle(),
               Spacer(),
               _buildSubtitle(),
@@ -254,7 +261,6 @@ class _LockScreenState extends State<LockScreen> {
                 config: widget.dotSecretConfig,
                 enteredLengthStream: enteredLengthStream.stream,
               ),
-              Spacer(),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: _columnMarginSize,
@@ -319,7 +325,7 @@ class _LockScreenState extends State<LockScreen> {
     BuildContext context,
     String number,
   ) {
-    final buttonSize = MediaQuery.of(context).size.width * 0.215;
+    final buttonSize = MediaQuery.of(context).size.width * 0.200;
     return Container(
       width: buttonSize,
       height: buttonSize,
@@ -342,7 +348,7 @@ class _LockScreenState extends State<LockScreen> {
 
   Widget _buildTitle() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
+      //    margin: EdgeInsets.symmetric(vertical: 20),
       child: Text(
         'Moedeiro.',
         style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),

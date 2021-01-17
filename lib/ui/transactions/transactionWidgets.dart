@@ -15,20 +15,7 @@ class TransactionTile extends StatelessWidget {
       onTap: () {
         showCustomModalBottomSheet(
           context,
-          Container(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom, top: 20.0),
-            child: Column(
-              children: [
-                Text(
-                  'Transacción',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-                ),
-                TransactionBottomSheet(transaction),
-              ],
-            ),
-            height: 440,
-          ),
+          TransactionBottomSheet(transaction),
         );
       },
       child: Card(

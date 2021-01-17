@@ -10,9 +10,14 @@ class Account {
   double amount = 0;
   double expensesMonth = 0;
   int position;
-  Map<String, dynamic> icon;
+  String icon;
   Account(
-      {this.uuid, this.name, this.initialAmount, this.amount, this.position});
+      {this.uuid,
+      this.name,
+      this.initialAmount,
+      this.amount,
+      this.position,
+      this.icon});
 
   Account copyWith({
     String uuid,
@@ -34,7 +39,8 @@ class Account {
         "###.0#",
         "en_US",
       ).format(initialAmount),
-      'position': position
+      'position': position,
+      'icon': icon,
     };
   }
 
@@ -47,6 +53,7 @@ class Account {
       initialAmount: map['initialAmount'],
       amount: map['amount'],
       position: map['position'],
+      icon: map['icon'],
     );
   }
 

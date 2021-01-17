@@ -39,41 +39,25 @@ class AccountModel extends ChangeNotifier {
     });
 
     return Future.value(true);
-
-    // final List<Map<String, dynamic>> maps = await DB.query('accounts');
-    // _accounts.clear();
-    // _totalAmount = 0;
-    // maps.forEach((Map<String, dynamic> element) async {
-    //   final List<Map<String, dynamic>> expenses =
-    //       await DB.getAllExpenses(element['uuid']);
-    //   final List<Map<String, dynamic>> income =
-    //       await DB.getAllIncomes(element['uuid']);
-    //   var account = Account.fromMap(element);
-    //   account.amount = double.parse(
-    //       (account.initialAmount + expenses[0]['amount'] + income[0]['amount'])
-    //           .toStringAsFixed(2));
-    //   final List<Map<String, dynamic>> expendesLastMonth =
-    //       await DB.getExpensesLastMonth(element['uuid']);
-    //   account.expensesMonth =
-    //       double.tryParse(expendesLastMonth[0]['amount'].toString());
-
-    //   _accounts.add(account);
-    //   if (account.amount > 0) _totalAmount = _totalAmount + account.amount;
-    //   notifyListeners();
-    // });
-
-    // return Future.value(true);
   }
 
-  // set defaultAccount(Account account) {
-  //   var active = account.defaultAcount;
-  //   accounts.forEach((element) {
-  //     element.defaultAcount = false;
-  //   });
-  //   account.defaultAcount = !active;
-  //   DB.update(Account.table, account.toMap());
-  //   notifyListeners();
-  // }
+  void saveAccountsPosition() {
+    for (var i = 0; i < _accounts.length; i++) {
+      _accounts[i].position = i;
+      DB.update(Account.table, _accounts[i].toMap());
+    }
+  }
+
+  void reorderAccounts(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final Account item = _accounts.removeAt(oldIndex);
+
+    _accounts.insert(newIndex, item);
+    notifyListeners();
+    saveAccountsPosition();
+  }
 
   set setActiveAccount(String uuid) {
     _activeAccount =
@@ -93,20 +77,17 @@ class AccountModel extends ChangeNotifier {
   Future<int> insertAccountIntoDb(Account accountData) async {
     if (accountData.uuid == null) {
       accountData.uuid = _uuid.v4();
+      if (_accounts != null) {
+        if (_accounts.length > 0) {
+          accountData.position = _accounts.length + 1;
+        } else
+          _accounts.length = 0;
+      }
       await DB.insert(Account.table, accountData.toMap());
     } else
       await DB.update(Account.table, accountData.toMap());
     getAccounts();
   }
-
-  // void updateFichaje(Map<String, dynamic> _fichaje) async {
-  //   if (_fichaje['user'] == null) {
-  //     throw ('El usuario no puede ser nulo');
-  //   }
-  //   DB.update(Fichaje.table, _fichaje);
-  //   getFichajes(_fichaje['user']);
-  //   syncFichajeWithServer(Fichaje.fromMap(_fichaje));
-  // }
 
   Future<Map<String, dynamic>> deleteAccount(String uuid) async {
     DB.deleteItem(Account.table, uuid);
@@ -224,6 +205,12 @@ class TransactionModel extends ChangeNotifier {
       await DB.update(Transaction.table, data.toDbMap());
     getTransactions();
   }
+
+  Future<Map<String, dynamic>> delete(String uuid) async {
+    DB.deleteItem(Transaction.table, uuid);
+    _transactions.removeWhere((element) => element.uuid == uuid);
+    notifyListeners();
+  }
 }
 
 class TransfersModel extends ChangeNotifier {
@@ -261,6 +248,12 @@ class TransfersModel extends ChangeNotifier {
       } else
         return false;
     }).toList();
+  }
+
+  Future<Map<String, dynamic>> delete(String uuid) async {
+    DB.deleteItem(Transfer.table, uuid);
+    _transfers.removeWhere((element) => element.uuid == uuid);
+    notifyListeners();
   }
 
   insertTransferIntoDb(Transfer data) async {

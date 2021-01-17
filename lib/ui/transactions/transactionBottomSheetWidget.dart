@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:moedeiro/dataModels/transaction.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/accounts/AccountsListBottonSheet.dart';
+import 'package:moedeiro/ui/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,6 @@ class TransactionBottomSheet extends StatefulWidget {
 }
 
 class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
-  Transaction transaction;
   Map<String, dynamic> _data;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _dateController = TextEditingController();
@@ -25,6 +25,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   TextEditingController _accountController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
   bool isExpense = false;
+  double space = 10.0;
 
   @override
   void initState() {
@@ -102,6 +103,16 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     }
   }
 
+  Future<bool> _showMyDialog() async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return ComfirmDeleteDialog();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     void _submitForm(Function save) {
@@ -124,15 +135,22 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                 EdgeInsets.only(right: 20.0, left: 20, top: 5, bottom: 5.0),
             child: Column(
               children: <Widget>[
+                SizedBox(
+                  height: space,
+                ),
                 TextFormField(
                   initialValue: _data['name'] ?? '',
                   decoration: InputDecoration(
-                    icon: Icon(Icons.description),
+                    prefixIcon: Icon(Icons.description),
+                    border: OutlineInputBorder(),
                     labelText: 'Description',
                   ),
                   onSaved: (String value) {
                     _data['name'] = value;
                   },
+                ),
+                SizedBox(
+                  height: space,
                 ),
                 TextFormField(
                   controller: _amountController,
@@ -149,17 +167,23 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   },
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.attach_money_outlined),
+                    prefixIcon: Icon(Icons.attach_money_outlined),
+                    border: OutlineInputBorder(),
                     labelText: 'Amount',
                   ),
                   onSaved: (String value) {
                     _data['amount'] = double.parse(value);
                   },
                 ),
+                SizedBox(
+                  height: space,
+                ),
                 TextFormField(
+                  readOnly: true,
                   controller: _categoryController,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.category_outlined),
+                    prefixIcon: Icon(Icons.category_outlined),
+                    border: OutlineInputBorder(),
                     labelText: 'Category',
                   ),
                   validator: (value) {
@@ -181,10 +205,15 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                     }
                   },
                 ),
+                SizedBox(
+                  height: space,
+                ),
                 TextFormField(
+                  readOnly: true,
                   controller: _accountController,
                   decoration: InputDecoration(
-                    icon: Icon(Icons.account_balance_wallet),
+                    prefixIcon: Icon(Icons.account_balance_wallet),
+                    border: OutlineInputBorder(),
                     labelText: 'Account',
                   ),
                   validator: (value) {
@@ -211,6 +240,9 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                     );
                   },
                 ),
+                SizedBox(
+                  height: space,
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -218,7 +250,8 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                         readOnly: true,
                         controller: _dateController,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.calendar_today),
+                          prefixIcon: Icon(Icons.calendar_today),
+                          border: OutlineInputBorder(),
                           labelText: 'Date',
                         ),
                         onTap: () {
@@ -241,7 +274,8 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                         readOnly: true,
                         controller: _timeController,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.hourglass_bottom_outlined),
+                          prefixIcon: Icon(Icons.hourglass_bottom_outlined),
+                          border: OutlineInputBorder(),
                           labelText: 'Time',
                         ),
                         onTap: () {
@@ -257,7 +291,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                           });
                         },
                       ),
-                      width: 100,
+                      width: 130,
                     ),
                   ],
                 ),
@@ -265,54 +299,65 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   child: Container(),
                   padding: EdgeInsets.all(5.0),
                 ),
-                ButtonBar(
-                  buttonHeight: 40.0,
-                  buttonMinWidth: 140.0,
-                  alignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 40,
-                      child: FlatButton(
-                        child: Text(
-                          'Eliminar',
-                          style: TextStyle(
-                            color: Colors.grey[500],
+                Consumer<TransactionModel>(
+                  builder: (BuildContext context, TransactionModel model,
+                      Widget widget) {
+                    return ButtonBar(
+                      buttonHeight: 40.0,
+                      buttonMinWidth: 140.0,
+                      alignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 40,
+                          child: FlatButton(
+                            child: Text(
+                              'Eliminar',
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                            onPressed: () {
+                              if (_data['uuid'] != null) {
+                                _showMyDialog().then((value) {
+                                  if (value) {
+                                    model.delete(_data['uuid']);
+                                    Navigator.pop(context);
+                                  }
+                                });
+                              }
+                            },
                           ),
                         ),
-                        onPressed: () {},
-                      ),
-                    ),
-                    Consumer<TransactionModel>(builder: (BuildContext context,
-                        TransactionModel model, Widget widget) {
-                      return Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          gradient: LinearGradient(
-                            colors: [
-                              Color.fromRGBO(217, 81, 157, 1),
-                              Color.fromRGBO(237, 135, 112, 1)
-                            ],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                        ),
-                        child: FlatButton(
-                          child: Text(
-                            'Guardar',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                        Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromRGBO(217, 81, 157, 1),
+                                Color.fromRGBO(237, 135, 112, 1)
+                              ],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
                             ),
                           ),
-                          onPressed: () {
-                            _submitForm(model.insertTransactiontIntoDb);
-                          },
+                          child: FlatButton(
+                            child: Text(
+                              'Guardar',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onPressed: () {
+                              _submitForm(model.insertTransactiontIntoDb);
+                            },
+                          ),
                         ),
-                      );
-                    }),
-                  ],
-                )
+                      ],
+                    );
+                  },
+                ),
               ],
             ),
           ),

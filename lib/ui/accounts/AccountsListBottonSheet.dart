@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/moedeiro_widgets.dart';
@@ -30,12 +32,28 @@ class AccountListBottomSheet extends StatelessWidget {
                       controller: scrollController,
                       itemCount: model.accounts.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          onTap: () {
-                            Navigator.pop(context, model.accounts[index].uuid);
-                          },
-                          title: Text(
-                            model.accounts[index].name,
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)),
+                          color: Theme.of(context).cardTheme.color,
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage:
+                                  model.accounts[index].icon != null
+                                      ? FileImage(
+                                          File(model.accounts[index].icon),
+                                        )
+                                      : null,
+                              backgroundColor: Colors.transparent,
+                              radius: 15,
+                            ),
+                            onTap: () {
+                              Navigator.pop(
+                                  context, model.accounts[index].uuid);
+                            },
+                            title: Text(
+                              model.accounts[index].name,
+                            ),
                           ),
                         );
                       },

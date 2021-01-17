@@ -20,6 +20,7 @@ class _TransactionTransferBottomSheetState
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TabController _tabController;
+
   final controller = PageController(viewportFraction: 1);
   @override
   void initState() {
@@ -57,7 +58,7 @@ class _TransactionTransferBottomSheetState
                           timestamp: DateTime.now().millisecondsSinceEpoch))
                 ],
               ),
-              height: 400,
+              height: 440,
             ),
           ],
         ),
