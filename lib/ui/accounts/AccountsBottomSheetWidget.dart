@@ -25,6 +25,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
   final picker = ImagePicker();
   File _image;
   String _imagePath;
+  double _space = 7.0;
 
   @override
   void initState() {
@@ -99,7 +100,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                   onTap: getImageFromFile,
                 ),
                 SizedBox(
-                  height: 15.0,
+                  height: _space * 3,
                 ),
                 TextFormField(
                   initialValue: activeAccount.name,
@@ -121,7 +122,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                   },
                 ),
                 SizedBox(
-                  height: 15,
+                  height: _space,
                 ),
                 TextFormField(
                   initialValue: activeAccount.initialAmount.toString(),

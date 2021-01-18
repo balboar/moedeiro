@@ -20,7 +20,7 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Categori category;
   CategoryType _categoryType = CategoryType.income;
-  double space = 10.0;
+  double space = 7.0;
 
   @override
   void initState() {

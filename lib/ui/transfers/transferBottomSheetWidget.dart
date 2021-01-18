@@ -25,7 +25,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
   TextEditingController _accountFromController = TextEditingController();
   TextEditingController _accountToController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
-  double space = 10.0;
+  double space = 7.0;
 
   @override
   void initState() {
@@ -274,6 +274,9 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                           });
                         },
                       ),
+                    ),
+                    SizedBox(
+                      width: space,
                     ),
                     Container(
                       child: TextFormField(

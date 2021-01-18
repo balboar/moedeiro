@@ -3,7 +3,7 @@ import 'package:moedeiro/pages/accountsPage.dart';
 import 'package:moedeiro/pages/categoriesPage.dart';
 import 'package:moedeiro/pages/mainPage.dart';
 import 'package:moedeiro/pages/settingsPage.dart';
-import 'package:moedeiro/pages/transactionsPage.dart';
+import 'package:moedeiro/pages/movementsPage.dart';
 
 class RouteGenerator {
   static Route<Map<String, dynamic>> generateRoute(RouteSettings settings) {

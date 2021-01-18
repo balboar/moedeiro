@@ -47,7 +47,7 @@ class _AccountsPageState extends State<AccountsPage> {
                   return Container(
                     width: MediaQuery.of(context).size.width,
                     key: Key(account.uuid),
-                    height: 120,
+                    height: 130,
                     child: AccountCard(
                       account: account,
                       avatarSize: 18.0,

@@ -256,6 +256,43 @@ class DB {
     );
   }
 
+  static Future<List<Map<String, dynamic>>>
+      getTrasactionsLast6MonthByAccountAndDay(String uuidAccount) async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery('SELECT round(sum(z.amount),2) amount, z.dayofYear, z.monthofyear, z.year FROM ' +
+            '(SELECT sum(a.amount) amount, ' +
+            'strftime("%d", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS dayofyear, ' +
+            'strftime("%m", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS monthofyear,' +
+            'strftime("%Y", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS YEAR ' +
+            'FROM transactions a   WHERE a.account=   "' +
+            uuidAccount +
+            '" ' +
+            '  AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.5 YEAR")  ' +
+            'GROUP BY 2,  3, 4  ' +
+            'UNION SELECT sum(a.amount) amount, ' +
+            '           strftime("%d", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS dayofyear, ' +
+            '            strftime("%m", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS monthofyear, ' +
+            '            strftime("%Y", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS YEAR ' +
+            'FROM transfers a WHERE a.accountTo= "' +
+            uuidAccount +
+            '" ' +
+            'AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.5 YEAR") ' +
+            'GROUP BY 2,   3,  4 ' +
+            'UNION SELECT -sum(a.amount) amount, ' +
+            '             strftime("%d", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS dayofyear, ' +
+            '             strftime("%m", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS monthofyear, ' +
+            '             strftime("%Y", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS YEAR ' +
+            'FROM transfers a WHERE a.accountFrom= "' +
+            uuidAccount +
+            '" ' +
+            'AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.5 YEAR") ' +
+            'GROUP BY 2, 3, 4   ORDER BY 4,  3,  2) AS z ' +
+            'GROUP BY 2, 3, 4 ORDER BY 4, 3,  2');
+      },
+    );
+  }
+
   static Future<List<Map<String, dynamic>>> getTrasactionsLast6Month() async {
     return await _db.transaction(
       (txn) async {

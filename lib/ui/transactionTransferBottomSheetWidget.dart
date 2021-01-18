@@ -58,7 +58,7 @@ class _TransactionTransferBottomSheetState
                           timestamp: DateTime.now().millisecondsSinceEpoch))
                 ],
               ),
-              height: 440,
+              height: 420,
             ),
           ],
         ),

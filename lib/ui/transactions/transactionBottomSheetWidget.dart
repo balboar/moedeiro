@@ -25,7 +25,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   TextEditingController _accountController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
   bool isExpense = false;
-  double space = 10.0;
+  double space = 7.0;
 
   @override
   void initState() {
@@ -46,6 +46,20 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     _accountController.text = _data['accountName'] ?? '';
     _amountController.text = _data['amount'].toString() ?? '';
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_data['account'] == null) {
+      _data['account'] =
+          Provider.of<AccountModel>(context, listen: false).accounts[0].uuid;
+
+      _accountController.text =
+          Provider.of<AccountModel>(context, listen: false)
+              .getAccountName(_data['account']);
+      _data['accountName'] = _accountController.text;
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -217,7 +231,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                     labelText: 'Account',
                   ),
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (_accountController.text.isEmpty) {
                       return 'Please select an Account';
                     }
                     return null;
@@ -268,6 +282,9 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                           });
                         },
                       ),
+                    ),
+                    SizedBox(
+                      width: space,
                     ),
                     Container(
                       child: TextFormField(
