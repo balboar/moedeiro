@@ -40,7 +40,7 @@ class _AccountBalanceChartState extends State<AccountBalanceChart> {
     for (var i = 1; i <= chartData.length; i++) {
       spots.clear();
       el['id'] = i;
-      if (i == 0) _total = widget.account.initialAmount;
+      if (i == 1) _total = widget.account.initialAmount;
       _total = _total + chartData[i - 1]['amount'];
       el['amount'] = _total;
       chartDataParsed.add(Map.from(el));
@@ -55,7 +55,7 @@ class _AccountBalanceChartState extends State<AccountBalanceChart> {
             double.parse(
               double.parse(
                 element['amount'].toString(),
-              ).toStringAsPrecision(2),
+              ).toStringAsFixed(2),
             ),
           ),
         );
