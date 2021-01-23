@@ -7,7 +7,6 @@ import 'package:moedeiro/dataModels/transaction.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:package_info/package_info.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as db;
@@ -54,6 +53,27 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _lockApp = prefs.getBool('lockApp') ?? false;
     });
+  }
+
+  Future<void> _openDB(BuildContext context) async {
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+      type: FileType.any,
+      // allowedExtensions: ['db'],
+      allowMultiple: false,
+    );
+    if (result != null) {
+      File file = File(result.files.single.path);
+      if (file != null) {
+        String _databasePath =
+            p.join(await db.getDatabasesPath(), 'moedeiro.db');
+        file.copySync(_databasePath);
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Exported!'),
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _selectFolder(BuildContext context) async {
@@ -244,7 +264,7 @@ class _SettingsPageState extends State<SettingsPage> {
               leading: Icon(Icons.arrow_downward_outlined),
               title: Text('Import database'),
               onTap: () async {
-                _openFile(context);
+                _openDB(context);
               },
             ),
             ListTile(

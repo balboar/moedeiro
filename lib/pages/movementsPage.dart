@@ -6,7 +6,7 @@ import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/accounts/accountWidgets.dart';
 import 'package:moedeiro/ui/moedeiroSliverList.dart';
 import 'package:moedeiro/ui/accounts/AccountsBottomSheetWidget.dart';
-import 'package:moedeiro/ui/moedeiro_widgets.dart';
+import 'package:moedeiro/ui/moedeiroWidgets.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:moedeiro/ui/transactions/transactionWidgets.dart';
 import 'package:moedeiro/ui/moedeiroSliverAppBar.dart';

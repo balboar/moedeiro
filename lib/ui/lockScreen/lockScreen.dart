@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
@@ -93,10 +92,10 @@ class _LockScreenState extends State<LockScreen> {
 
       bool isAuthenticated = false;
       try {
-        isAuthenticated = await _localAuthentication.authenticateWithBiometrics(
-          localizedReason: "Please authenticate",
-          useErrorDialogs: true,
+        isAuthenticated = await _localAuthentication.authenticate(
+          localizedReason: 'Please authenticate to show data',
           stickyAuth: true,
+          biometricOnly: widget.canBiometric,
         );
       } on PlatformException catch (e) {
         print(e);
@@ -391,12 +390,7 @@ class _LockScreenState extends State<LockScreen> {
     return StreamBuilder<int>(
         stream: enteredLengthStream.stream,
         builder: (context, snapshot) {
-          String buttonText;
-          if (snapshot.hasData && snapshot.data > 0) {
-            buttonText = widget.deleteText;
-          } else if (widget.canCancel) {
-            buttonText = widget.cancelText;
-          } else {
+          if (!snapshot.hasData || snapshot.data == 0) {
             return Container();
           }
 

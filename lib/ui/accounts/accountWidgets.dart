@@ -23,15 +23,16 @@ class AccountCard extends StatefulWidget {
 class _AccountCardState extends State<AccountCard> {
   @override
   void initState() {
-    // initStorage();
+    // checkIcon();
     super.initState();
   }
 
-  // void initStorage() async {
+  // void checkIcon() async {
   //   if (widget.account.icon != null) {
-  //     var file = await File(widget.account.icon).exists();
-  //     print(file);
-  //     if (!file) widget.account.icon = null;
+  //     var exists = await File(widget.account.icon).exists();
+  //     if (!exists) {
+  //       widget.account.icon = null;
+  //     }
   //   }
   // }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/dataModels/categories.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/dialogs/confirmDeleteDialog.dart';
+import 'package:moedeiro/ui/widgets/buttons.dart';
 import 'package:provider/provider.dart';
 
 enum CategoryType { income, expense }
@@ -37,6 +38,17 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
         return ComfirmDeleteDialog();
       },
     );
+  }
+
+  void deleteCategory(CategoryModelmodel) {
+    if (category.uuid != null) {
+      _showMyDialog().then((value) {
+        if (value) {
+          //   model.delete(_data['uuid']);
+          Navigator.pop(context);
+        }
+      });
+    }
   }
 
   @override
@@ -114,53 +126,12 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                       buttonMinWidth: 140.0,
                       alignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          height: 40,
-                          child: FlatButton(
-                            child: Text(
-                              'Eliminar',
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                            onPressed: () {
-                              if (category.uuid != null) {
-                                _showMyDialog().then((value) {
-                                  if (value) {
-                                    //   model.delete(_data['uuid']);
-                                    Navigator.pop(context);
-                                  }
-                                });
-                              }
-                            },
-                          ),
-                        ),
-                        Container(
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(217, 81, 157, 1),
-                                Color.fromRGBO(237, 135, 112, 1)
-                              ],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                          ),
-                          child: FlatButton(
-                            child: Text(
-                              'Guardar',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onPressed: () {
-                              _submitForm(model.insertCategoryIntoDb);
-                            },
-                          ),
-                        ),
+                        DeleteButton(() {
+                          deleteCategory(model);
+                        }),
+                        SaveButton(() {
+                          _submitForm(model.insertCategoryIntoDb);
+                        }),
                       ],
                     );
                   }),

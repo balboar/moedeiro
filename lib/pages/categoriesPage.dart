@@ -3,7 +3,7 @@ import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/moedeiroSliverList.dart';
 import 'package:moedeiro/ui/moedeiroSliverAppBar.dart';
 import 'package:moedeiro/ui/categories/CategoryBottomSheetWidget.dart';
-import 'package:moedeiro/ui/moedeiro_widgets.dart';
+import 'package:moedeiro/ui/moedeiroWidgets.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:provider/provider.dart';
 

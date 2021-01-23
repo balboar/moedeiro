@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "732886564090",
+    "project_id": "moedeiro-4675f",
+    "storage_bucket": "moedeiro-4675f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732886564090:android:50f42628cb66b176fa9d43",
+        "android_client_info": {
+          "package_name": "com.rodrigo.moedeiro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "732886564090-ah9jea263ld8blcp1u8t1d046bcrmm05.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-MUG8V9TAOZoJWPrfUu-QIMFCLaEWJg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "732886564090-ah9jea263ld8blcp1u8t1d046bcrmm05.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

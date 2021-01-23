@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/pages/accountsPage.dart';
 import 'package:moedeiro/pages/categoriesPage.dart';
+import 'package:moedeiro/pages/chartsPage.dart';
 import 'package:moedeiro/pages/mainPage.dart';
 import 'package:moedeiro/pages/settingsPage.dart';
 import 'package:moedeiro/pages/movementsPage.dart';
@@ -47,6 +48,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => AccountsPage());
       case '/settingsPage':
         return MaterialPageRoute(builder: (_) => SettingsPage());
+      case '/chartsPage':
+        return MaterialPageRoute(builder: (_) => ChartsPage());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();

@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -9,6 +10,7 @@ import 'package:moedeiro/ui/lockScreen/lockScreen.dart';
 import 'package:moedeiro/util/routeGenerator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
 //   debugPaintPointersEnabled = true;
@@ -17,12 +19,16 @@ Future<void> main() async {
   bool _lockApp = false;
   SharedPreferences prefs;
   WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   await DB.init();
 
   prefs = await SharedPreferences.getInstance();
 
   _lockApp = prefs.getBool('lockApp') ?? false;
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
+  /// STEP 2. Pass your root widget (MyApp) along with Catcher configuration:
+  ///
   if (_lockApp) {
     runApp(
       AppLock(
@@ -35,9 +41,7 @@ Future<void> main() async {
       ),
     );
   } else
-    runApp(
-      MyApp(),
-    );
+    runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

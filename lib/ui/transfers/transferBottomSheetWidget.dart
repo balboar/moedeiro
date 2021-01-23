@@ -5,6 +5,7 @@ import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/accounts/AccountsListBottonSheet.dart';
 import 'package:moedeiro/ui/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
+import 'package:moedeiro/ui/widgets/buttons.dart';
 import 'package:provider/provider.dart';
 
 class TransferBottomSheet extends StatefulWidget {
@@ -111,6 +112,17 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
         return ComfirmDeleteDialog();
       },
     );
+  }
+
+  void deleteTransfer(TransfersModel model) {
+    if (_data['uuid'] != null) {
+      _showMyDialog().then((value) {
+        if (value) {
+          model.delete(_data['uuid']);
+          Navigator.pop(context);
+        }
+      });
+    }
   }
 
   @override
@@ -315,53 +327,12 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                     buttonMinWidth: 140.0,
                     alignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        height: 40,
-                        child: FlatButton(
-                          child: Text(
-                            'Eliminar',
-                            style: TextStyle(
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                          onPressed: () {
-                            if (_data['uuid'] != null) {
-                              _showMyDialog().then((value) {
-                                if (value) {
-                                  model.delete(_data['uuid']);
-                                  Navigator.pop(context);
-                                }
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          gradient: LinearGradient(
-                            colors: [
-                              Color.fromRGBO(217, 81, 157, 1),
-                              Color.fromRGBO(237, 135, 112, 1)
-                            ],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                        ),
-                        child: FlatButton(
-                          child: Text(
-                            'Guardar',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () {
-                            _submitForm(model.insertTransferIntoDb);
-                          },
-                        ),
-                      )
+                      DeleteButton(() {
+                        deleteTransfer(model);
+                      }),
+                      SaveButton(() {
+                        _submitForm(model.insertTransferIntoDb);
+                      }),
                     ],
                   );
                 }),

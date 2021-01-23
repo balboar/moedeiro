@@ -1,10 +1,11 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:moedeiro/dataModels/accounts.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/dialogs/confirmDeleteDialog.dart';
+import 'package:moedeiro/ui/widgets/buttons.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,6 @@ class AccountBottomSheet extends StatefulWidget {
 class _AccountBottomSheetState extends State<AccountBottomSheet> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Account activeAccount;
-  final picker = ImagePicker();
   File _image;
   String _imagePath;
   double _space = 7.0;
@@ -30,16 +30,29 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
   @override
   void initState() {
     activeAccount = widget.activeAccount ?? Account(initialAmount: 0.00);
+    checkIcon();
     super.initState();
   }
 
+  void checkIcon() async {
+    if (activeAccount.icon != null) {
+      var file = await File(activeAccount.icon).exists();
+      if (!file) {
+        activeAccount.icon = null;
+      }
+    }
+  }
+
   Future getImageFromFile() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
     Directory _destination = await getApplicationDocumentsDirectory();
     if (pickedFile != null) {
-      _image = File(pickedFile.path);
+      _image = File(pickedFile.files.single.path);
       _imagePath = _destination.path +
-          '/${activeAccount.uuid}${p.extension(pickedFile.path)}';
+          '/${activeAccount.uuid}${p.extension(pickedFile.files.single.path)}';
       _image.copy(_imagePath);
     }
 
@@ -64,6 +77,17 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
         );
       },
     );
+  }
+
+  void deleteAccount(AccountModel model) {
+    if (activeAccount.uuid != null) {
+      _showMyDialog().then((value) {
+        if (value) {
+          model.deleteAccount(activeAccount.uuid);
+          Navigator.pop(context);
+        }
+      });
+    }
   }
 
   @override
@@ -155,53 +179,12 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                       buttonMinWidth: 140.0,
                       alignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          height: 40,
-                          child: FlatButton(
-                            child: Text(
-                              'Eliminar',
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                            onPressed: () {
-                              if (activeAccount.uuid != null) {
-                                _showMyDialog().then((value) {
-                                  if (value) {
-                                    model.deleteAccount(activeAccount.uuid);
-                                    Navigator.pop(context);
-                                  }
-                                });
-                              }
-                            },
-                          ),
-                        ),
-                        Container(
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(217, 81, 157, 1),
-                                Color.fromRGBO(237, 135, 112, 1)
-                              ],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                          ),
-                          child: FlatButton(
-                            child: Text(
-                              'Guardar',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onPressed: () {
-                              _submitForm(model.insertAccountIntoDb);
-                            },
-                          ),
-                        )
+                        DeleteButton(() {
+                          deleteAccount(model);
+                        }),
+                        SaveButton(() {
+                          _submitForm(model.insertAccountIntoDb);
+                        }),
                       ],
                     );
                   },

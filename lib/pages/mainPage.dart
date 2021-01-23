@@ -5,12 +5,13 @@ import 'package:moedeiro/dataModels/transfer.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/accounts/accountWidgets.dart';
 import 'package:moedeiro/ui/charts/transactionsCharts.dart';
-import 'package:moedeiro/ui/moedeiro_widgets.dart';
+import 'package:moedeiro/ui/moedeiroWidgets.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:moedeiro/ui/transactionTransferBottomSheetWidget.dart';
 import 'package:moedeiro/ui/transactions/transactionBottomSheetWidget.dart';
 import 'package:moedeiro/ui/transactions/transactionWidgets.dart';
 import 'package:moedeiro/ui/transfers/transferBottomSheetWidget.dart';
+import 'package:moedeiro/ui/widgets/moedeiroWidgets.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -22,7 +23,6 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-  int _selectedIndex = 0;
   final controller = PageController(viewportFraction: 1);
   @override
   void initState() {
@@ -177,35 +177,37 @@ class MainPageState extends State<MainPage> {
                     );
                 },
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/categoriesPage');
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Icon(Icons.date_range_outlined),
-                        Divider(
-                          indent: 10.0,
-                        ),
-                        Text(
-                          'Movements',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Icon(Icons.arrow_forward),
-                          ),
-                        )
-                      ],
+              Container(
+                height: 90,
+                margin: EdgeInsets.only(left: 10.0, bottom: 10.0),
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    OptionsCard(
+                      Icons.dashboard_outlined,
+                      Colors.green,
+                      () {
+                        Navigator.pushNamed(context, '/categoriesPage');
+                      },
+                      "Category",
                     ),
-                    margin:
-                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                  ),
+                    OptionsCard(
+                      Icons.receipt,
+                      Colors.blue,
+                      () {
+                        Navigator.pushNamed(context, '/chartsPage');
+                      },
+                      "Budgets",
+                    ),
+                  ],
                 ),
+              ),
+              MainPageSectionStateless(
+                'Movements',
+                () {
+                  Navigator.pushNamed(context, '/chartsPage');
+                },
+                Icons.analytics_outlined,
               ),
               Container(
                 margin: EdgeInsets.only(
@@ -217,7 +219,6 @@ class MainPageState extends State<MainPage> {
                   children: [
                     TransactionChart(),
                     ExpensesByMonthChart(),
-                    ExpensesByCategoryChart(),
                   ],
                   scrollDirection: Axis.horizontal,
                 ),
@@ -226,7 +227,7 @@ class MainPageState extends State<MainPage> {
                 margin: EdgeInsets.only(bottom: 5.0),
                 child: SmoothPageIndicator(
                   controller: controller,
-                  count: 3,
+                  count: 2,
                   effect: WormEffect(
                       dotHeight: 7,
                       activeDotColor: Colors.blue,
@@ -234,38 +235,15 @@ class MainPageState extends State<MainPage> {
                       dotColor: Colors.grey),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
+              MainPageSectionStateless(
+                'Recent transactions',
+                () {
                   Provider.of<AccountModel>(context, listen: false)
                       .setActiveAccountNull();
                   Navigator.pushNamed(context, '/accountTransactionsPage',
                       arguments: true);
                 },
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Icon(Icons.receipt_long_outlined),
-                        Divider(
-                          indent: 10.0,
-                        ),
-                        Text(
-                          'Recent transactions',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Icon(Icons.arrow_forward),
-                          ),
-                        )
-                      ],
-                    ),
-                    margin:
-                        EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                  ),
-                ),
+                Icons.receipt_long_outlined,
               ),
               Consumer<TransactionModel>(
                 builder: (BuildContext context, TransactionModel model,

@@ -410,11 +410,11 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
   List<Map<String, dynamic>> chartDataParsed = [];
 
   List<BarChartGroupData> rawBarGroups = [];
-  List<BarChartGroupData> showingBarGroups;
+  List<BarChartGroupData> showingBarGroups = [];
   @override
   void initState() {
-    super.initState();
     loadChartData();
+    super.initState();
   }
 
   void loadChartData() async {
@@ -426,17 +426,27 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
     chartData.forEach((element) {
       el['x'] = index;
       index = index + 1;
-      el['category'] = element['name'];
+      if (element['name'].toString().length > 7)
+        el['category'] = element['name'].toString().substring(0, 7);
+      else
+        el['category'] = element['name'];
       el['expense'] = element['amount'];
 
       chartDataParsed.add(Map.from(el));
     });
 
-    if (chartDataParsed.length > 0)
+    if (chartDataParsed.length > 0) {
+      chartDataParsed.sort((a, b) {
+        var aexpense = a['expense'];
+        var bexpense = b['expense'];
+        return bexpense.compareTo(
+            aexpense); //to get the order other way just switch `adate & bdate`
+      });
       chartDataParsed.forEach((element) {
         rawBarGroups.add(makeGroupData(element['x'], element['expense']));
         showingBarGroups = rawBarGroups;
       });
+    }
 
     setState(() {
       if (chartDataParsed.length > 0)

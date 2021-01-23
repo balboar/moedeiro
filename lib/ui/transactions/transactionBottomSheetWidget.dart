@@ -5,6 +5,7 @@ import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/accounts/AccountsListBottonSheet.dart';
 import 'package:moedeiro/ui/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
+import 'package:moedeiro/ui/widgets/buttons.dart';
 import 'package:provider/provider.dart';
 
 class TransactionBottomSheet extends StatefulWidget {
@@ -51,13 +52,17 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   @override
   void didChangeDependencies() {
     if (_data['account'] == null) {
-      _data['account'] =
-          Provider.of<AccountModel>(context, listen: false).accounts[0].uuid;
+      var _accounts =
+          Provider.of<AccountModel>(context, listen: false).accounts;
+      if (_accounts.length > 0) {
+        _data['account'] =
+            Provider.of<AccountModel>(context, listen: false).accounts[0].uuid;
 
-      _accountController.text =
-          Provider.of<AccountModel>(context, listen: false)
-              .getAccountName(_data['account']);
-      _data['accountName'] = _accountController.text;
+        _accountController.text =
+            Provider.of<AccountModel>(context, listen: false)
+                .getAccountName(_data['account']);
+        _data['accountName'] = _accountController.text;
+      }
     }
     super.didChangeDependencies();
   }
@@ -125,6 +130,17 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
         return ComfirmDeleteDialog();
       },
     );
+  }
+
+  void deleteTransaction(TransactionModel model) {
+    if (_data['uuid'] != null) {
+      _showMyDialog().then((value) {
+        if (value) {
+          model.delete(_data['uuid']);
+          Navigator.pop(context);
+        }
+      });
+    }
   }
 
   @override
@@ -324,53 +340,12 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                       buttonMinWidth: 140.0,
                       alignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          height: 40,
-                          child: FlatButton(
-                            child: Text(
-                              'Eliminar',
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                              ),
-                            ),
-                            onPressed: () {
-                              if (_data['uuid'] != null) {
-                                _showMyDialog().then((value) {
-                                  if (value) {
-                                    model.delete(_data['uuid']);
-                                    Navigator.pop(context);
-                                  }
-                                });
-                              }
-                            },
-                          ),
-                        ),
-                        Container(
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(217, 81, 157, 1),
-                                Color.fromRGBO(237, 135, 112, 1)
-                              ],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                          ),
-                          child: FlatButton(
-                            child: Text(
-                              'Guardar',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onPressed: () {
-                              _submitForm(model.insertTransactiontIntoDb);
-                            },
-                          ),
-                        ),
+                        DeleteButton(() {
+                          deleteTransaction(model);
+                        }),
+                        SaveButton(() {
+                          _submitForm(model.insertTransactiontIntoDb);
+                        }),
                       ],
                     );
                   },

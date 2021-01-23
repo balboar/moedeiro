@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/dataModels/transaction.dart';
 import 'package:moedeiro/dataModels/transfer.dart';
-import 'package:moedeiro/ui/moedeiro_widgets.dart';
+import 'package:moedeiro/ui/moedeiroWidgets.dart';
 import 'package:moedeiro/ui/transactions/transactionBottomSheetWidget.dart';
 import 'package:moedeiro/ui/transfers/transferBottomSheetWidget.dart';
 
