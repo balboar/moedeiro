@@ -55,48 +55,11 @@ class _MoedeiroSliverOverlapAbsorberAppBarState
         top: false,
         sliver: SliverAppBar(
           title: Text(widget.titleName),
-
           bottom: widget.tabs,
           floating: false,
           snap: false,
           pinned: true,
           actions: widget.actions,
-
-          // flexibleSpace: FlexibleSpaceBar(
-          //   stretchModes: [StretchMode.fadeTitle],
-          //   collapseMode: CollapseMode.pin,
-          //   background: Column(children: [
-          //     Container(
-          //       height: 75,
-          //     ),
-          //     BarChartSample3(),
-          //     Container(
-          //       height: 1,
-          //     ),
-          //   ]),
-          // ),
-
-          // flexibleSpace: FlexibleSpaceBar(
-          //   background: Container(
-          //     decoration: BoxDecoration(
-          //       gradient: LinearGradient(
-          //           begin: Alignment.topRight,
-          //           end: Alignment.bottomLeft,
-          //           stops: [
-          //             0.1,
-          //             0.4,
-          //             0.7,
-          //             0.9
-          //           ],
-          //           colors: [
-          //             Colors.yellow,
-          //             Colors.red,
-          //             Colors.indigo,
-          //             Colors.teal
-          //           ]),
-          //     ),
-          //   ),
-          // ),
           expandedHeight: 200,
         ),
       ),

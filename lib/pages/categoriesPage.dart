@@ -6,20 +6,23 @@ import 'package:moedeiro/ui/categories/CategoryBottomSheetWidget.dart';
 import 'package:moedeiro/ui/moedeiroWidgets.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:provider/provider.dart';
+// import 'package:moedeiro/generated/l10n.dart';
 
 class CategoriesPage extends StatelessWidget {
   String data;
   CategoriesPage({this.data});
 
-  PreferredSizeWidget buildTabs() {
-    return TabBar(tabs: [
-      Tab(
-        text: 'Income',
-      ),
-      Tab(
-        text: 'Expenses',
-      ),
-    ]);
+  Widget buildTabs(BuildContext context) {
+    return TabBar(
+      tabs: [
+        Tab(
+          text: 'a', //S.of(context).incomes,
+        ),
+        Tab(
+          text: 'a', // S.of(context).expenses,
+        ),
+      ],
+    );
   }
 
   Widget buildIncomeList() {
@@ -106,16 +109,22 @@ class CategoriesPage extends StatelessWidget {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               MoedeiroSliverOverlapAbsorberAppBar(
-                'Categories',
-                tabs: buildTabs(),
+                'a', // S.of(context).categoryTitle,
+                tabs: buildTabs(context),
               )
             ];
           },
           body: TabBarView(
               // These are the contents of the tab views, below the tabs.
               children: <Widget>[
-                MoedeiroSliverList('Income', buildIncomeList()),
-                MoedeiroSliverList('Expenses', buildExpensesList()),
+                MoedeiroSliverList(
+                  'a', //S.of(context).incomes,
+                  buildIncomeList(),
+                ),
+                MoedeiroSliverList(
+                  'a', //S.of(context).expenses,
+                  buildExpensesList(),
+                ),
               ]),
         ),
       ),

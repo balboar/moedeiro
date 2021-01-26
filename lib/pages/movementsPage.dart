@@ -12,6 +12,7 @@ import 'package:moedeiro/ui/transactions/transactionWidgets.dart';
 import 'package:moedeiro/ui/moedeiroSliverAppBar.dart';
 import 'package:moedeiro/ui/transfers/transfersWidgets.dart';
 import 'package:provider/provider.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class AccountTransactionsPage extends StatefulWidget {
   bool showAllTransactions = true;
@@ -39,7 +40,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
         IconButton(
           color: Colors.white,
           icon: const Icon(Icons.edit),
-          tooltip: 'Cuenta',
+          tooltip: S.of(context).account,
           onPressed: () {
             showCustomModalBottomSheet(
                 context, AccountBottomSheet(activeAccount));
@@ -48,15 +49,25 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
       ].toList();
   }
 
-  PreferredSizeWidget buildTabs() {
-    return TabBar(tabs: [
-      Tab(
-        text: 'Transactions',
-      ),
-      Tab(
-        text: 'Transfers',
-      ),
-    ]);
+  Widget buildTabs() {
+    return TabBar(
+      tabs: [
+        Tab(
+          child: Text(
+            S.of(context).transactions,
+            overflow: TextOverflow.clip,
+            maxLines: 1,
+          ),
+        ),
+        Tab(
+          child: Text(
+            S.of(context).transfers,
+            overflow: TextOverflow.clip,
+            maxLines: 1,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget buildTransactionsList() {
@@ -145,6 +156,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
     return Scaffold(
       key: _formKey,
       body: DefaultTabController(
+        initialIndex: 1,
         length: 2, // This is the number of tabs.
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -156,7 +168,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
                       tabs: buildTabs(),
                     )
                   : MoedeiroSliverOverlapAbsorberAppBar(
-                      'Movements',
+                      S.of(context).movementsTitle,
                       actions: buildActions(),
                       tabs: buildTabs(),
                     )
@@ -165,8 +177,10 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
           body: TabBarView(
               // These are the contents of the tab views, below the tabs.
               children: <Widget>[
-                MoedeiroSliverList('Transactions', buildTransactionsList()),
-                MoedeiroSliverList('Transfers', buildTransfersList()),
+                MoedeiroSliverList(
+                    S.of(context).transactions, buildTransactionsList()),
+                MoedeiroSliverList(
+                    S.of(context).transfers, buildTransfersList()),
               ]),
         ),
       ),

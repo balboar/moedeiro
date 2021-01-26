@@ -4,6 +4,7 @@ import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/ui/widgets/buttons.dart';
 import 'package:provider/provider.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 enum CategoryType { income, expense }
 
@@ -81,11 +82,11 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                       prefixIcon: Icon(Icons.analytics_outlined),
                       border: OutlineInputBorder(),
                       labelStyle: TextStyle(fontSize: 20.0),
-                      labelText: 'Name',
+                      labelText: S.of(context).name,
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter a name';
+                        return S.of(context).nameError;
                       }
                       return null;
                     },
@@ -94,7 +95,7 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                     },
                   ),
                   RadioListTile(
-                    title: const Text('Income'),
+                    title: Text(S.of(context).income),
                     value: CategoryType.income,
                     groupValue: _categoryType,
                     onChanged: (CategoryType value) {
@@ -105,7 +106,7 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                     },
                   ),
                   RadioListTile(
-                    title: const Text('Expense'),
+                    title: Text(S.of(context).expense),
                     value: CategoryType.expense,
                     groupValue: _categoryType,
                     onChanged: (CategoryType value) {

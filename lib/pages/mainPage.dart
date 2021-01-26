@@ -16,6 +16,7 @@ import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -98,7 +99,7 @@ class MainPageState extends State<MainPage> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.settings),
-                    tooltip: 'Ajustes',
+                    tooltip: S.of(context).settings,
                     onPressed: () =>
                         Navigator.pushNamed(context, '/settingsPage'),
                   ),
@@ -123,7 +124,7 @@ class MainPageState extends State<MainPage> {
                         Consumer<AccountModel>(builder: (BuildContext context,
                             AccountModel model, Widget child) {
                           return Text(
-                            'Accounts ${formatCurrency(context, model.totalAmount)}',
+                            '${S.of(context).accountsTitle} ${formatCurrency(context, model.totalAmount)}',
                             style: TextStyle(fontSize: 20.0),
                           );
                         }),
@@ -189,7 +190,7 @@ class MainPageState extends State<MainPage> {
                       () {
                         Navigator.pushNamed(context, '/categoriesPage');
                       },
-                      "Category",
+                      S.of(context).categoryTitle,
                     ),
                     OptionsCard(
                       Icons.receipt,
@@ -197,13 +198,13 @@ class MainPageState extends State<MainPage> {
                       () {
                         Navigator.pushNamed(context, '/chartsPage');
                       },
-                      "Budgets",
+                      S.of(context).budgetsTitle,
                     ),
                   ],
                 ),
               ),
               MainPageSectionStateless(
-                'Movements',
+                S.of(context).movementsTitle,
                 () {
                   Navigator.pushNamed(context, '/chartsPage');
                 },
@@ -236,7 +237,7 @@ class MainPageState extends State<MainPage> {
                 ),
               ),
               MainPageSectionStateless(
-                'Recent transactions',
+                S.of(context).transactionsTitle,
                 () {
                   Provider.of<AccountModel>(context, listen: false)
                       .setActiveAccountNull();

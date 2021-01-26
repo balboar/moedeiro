@@ -10,6 +10,7 @@ import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class AccountCard extends StatefulWidget {
   Account account;
@@ -98,7 +99,7 @@ class _AccountCardState extends State<AccountCard> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      'Expenses month',
+                      S.of(context).expensesMonth,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.subtitle2.color,
                           fontSize: 14.0,
@@ -197,26 +198,19 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
               Container(
                 height: kToolbarHeight,
               ),
-              // Text(
-              //   formatCurrency(context, widget.activeAccount.amount),
-              //   style: TextStyle(
-              //       fontWeight: FontWeight.bold,
-              //       fontSize: Theme.of(context).textTheme.headline5.fontSize),
-              // ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(
-                      left: 10.0, right: 10, top: 2.0, bottom: 2.0),
-                  child: PageView(
-                    physics: BouncingScrollPhysics(),
-                    controller: controller,
-                    children: [
-                      AccountBalanceChart(account: widget.activeAccount),
-                      ExpensesByMonthChart(
-                          accountUuid: widget.activeAccount.uuid),
-                    ],
-                    scrollDirection: Axis.horizontal,
-                  ),
+              Container(
+                height: 100,
+                margin: EdgeInsets.only(
+                    left: 10.0, right: 10, top: 2.0, bottom: 2.0),
+                child: PageView(
+                  physics: BouncingScrollPhysics(),
+                  controller: controller,
+                  children: [
+                    AccountBalanceChart(account: widget.activeAccount),
+                    ExpensesByMonthChart(
+                        accountUuid: widget.activeAccount.uuid),
+                  ],
+                  scrollDirection: Axis.horizontal,
                 ),
               ),
               Container(

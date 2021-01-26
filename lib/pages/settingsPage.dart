@@ -3,14 +3,20 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/dataModels/accounts.dart';
 import 'package:moedeiro/dataModels/categories.dart';
+import 'package:moedeiro/dataModels/theme.dart';
 import 'package:moedeiro/dataModels/transaction.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/models/mainModel.dart';
+import 'package:moedeiro/ui/dialogs/appThemeSelectionDialog.dart';
+import 'package:moedeiro/ui/dialogs/languageSelectionDialog.dart';
+import 'package:moedeiro/util/utils.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
+import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as db;
 import 'package:path/path.dart' as p;
+import 'package:moedeiro/generated/l10n.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -31,6 +37,8 @@ class _SettingsPageState extends State<SettingsPage> {
   Directory rootPath;
   String filePath;
   bool _lockApp = false;
+  String locale;
+  String theme;
   SharedPreferences prefs;
   @override
   void initState() {
@@ -50,6 +58,24 @@ class _SettingsPageState extends State<SettingsPage> {
     rootPath = Directory('/storage/emulated/0/Downloads');
 
     prefs = await SharedPreferences.getInstance();
+
+    var _locale = prefs.getString('locale') ?? 'default';
+    if (_locale == 'default') {
+      locale = S.of(context).systemDefaultTitle;
+    } else {
+      var activeLocale =
+          languageOptions.firstWhere((element) => element.key == _locale);
+      locale = activeLocale.value;
+    }
+
+    var _theme = prefs.getString('theme') ?? 'default';
+    if (_theme == 'default') {
+      theme = S.of(context).systemDefaultTitle;
+    } else {
+      var activeAheme =
+          themeOptions.firstWhere((element) => element.key == _theme);
+      theme = activeAheme.value;
+    }
     setState(() {
       _lockApp = prefs.getBool('lockApp') ?? false;
     });
@@ -215,93 +241,148 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  Widget _buildContent(BuildContext context) {
-    return Builder(
-        // Create an inner BuildContext so that the onPressed methods
-        // can refer to the Scaffold with Scaffold.of().
-        builder: (BuildContext context) {
-      return Container(
-        margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-        child: Column(
-          children: <Widget>[
-            Text(
-              'Settings',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
-            SettingsTitleWidget(
-              title: 'Security',
-              icon: Icons.security_outlined,
-              color: Colors.redAccent,
-            ),
-            MyDivider(),
-            SwitchListTile(
-                secondary: Icon(Icons.lock_open_outlined),
-                title: Text('Access protection'),
-                value: _lockApp,
-                onChanged: (bool value) {
-                  setState(() {
-                    _lockApp = value;
-                  });
-                  prefs.setBool('lockApp', _lockApp);
-                }),
-            SizedBox(
-              height: 15.0,
-            ),
-            SettingsTitleWidget(
-              title: 'Data',
-              icon: Icons.archive_outlined,
-              color: Colors.blueAccent,
-            ),
-            MyDivider(),
-            ListTile(
-              leading: Icon(Icons.import_export_outlined),
-              title: Text('Import from CSV'),
-              onTap: () async {
-                _openFile(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.arrow_downward_outlined),
-              title: Text('Import database'),
-              onTap: () async {
-                _openDB(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.arrow_upward_outlined),
-              title: Text('Export database'),
-              onTap: () async {
-                _selectFolder(context);
-              },
-            ),
-            SizedBox(
-              height: 15.0,
-            ),
-            SettingsTitleWidget(
-              title: 'Acerca de',
-              icon: Icons.info_outline,
-              color: Colors.orange,
-            ),
-            MyDivider(),
-            ListTile(
-              leading: Icon(Icons.app_registration),
-              title: Text('Versión'),
-              subtitle: Text(_packageInfo.version),
-            )
-          ],
-        ),
-      );
-    });
+  Future<bool> _showLanguageDialog() async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return LanguageSelectionDialog();
+      },
+    );
+  }
+
+  Future<bool> _showThemeDialog() async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AppThemeSelectionDialog();
+      },
+    );
   }
 
   Widget _buildBody() {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            child: _buildContent(context),
+      appBar: AppBar(
+        title: Text(S.of(context).settings),
+      ),
+      body: SettingsList(
+        // backgroundColor: Colors.orange,
+        sections: [
+          SettingsSection(
+            titlePadding: EdgeInsets.only(
+                left: 15.0, right: 15.0, bottom: 6.0, top: 10.0),
+            title: S.of(context).common,
+            // titleTextStyle: TextStyle(fontSize: 30),
+            tiles: [
+              SettingsTile(
+                title: S.of(context).language,
+                subtitle: locale,
+                leading: Icon(Icons.language),
+                onPressed: (BuildContext context) async {
+                  await _showLanguageDialog();
+                  var prefs = await SharedPreferences.getInstance();
+                  var _locale = prefs.getString('locale');
+                  if (_locale == 'default') {
+                    setState(() {
+                      locale = S.of(context).systemDefaultTitle;
+                    });
+                  } else {
+                    var activeLocale = languageOptions
+                        .firstWhere((element) => element.key == _locale);
+                    setState(() {
+                      locale = activeLocale.value;
+                    });
+                  }
+                },
+              ),
+              SettingsTile(
+                title: 'App theme',
+                subtitle: theme,
+                leading: Icon(Icons.lightbulb_outline),
+                onPressed: (BuildContext context) async {
+                  await _showThemeDialog();
+                  var prefs = await SharedPreferences.getInstance();
+                  var _theme = prefs.getString('theme');
+                  if (_theme == 'default') {
+                    setState(() {
+                      theme = S.of(context).systemDefaultTitle;
+                      Provider.of<ThemeModel>(context, listen: false)
+                          .setSystemDefault();
+                    });
+                  } else {
+                    var activeTheme = themeOptions
+                        .firstWhere((element) => element.key == _theme);
+                    setState(() {
+                      theme = activeTheme.value;
+                    });
+                    if (_theme == 'dark')
+                      Provider.of<ThemeModel>(context, listen: false).setDark();
+                    else
+                      Provider.of<ThemeModel>(context, listen: false)
+                          .setLight();
+                  }
+                },
+              ),
+            ],
           ),
-        ),
+          SettingsSection(
+            title: S.of(context).security,
+            tiles: [
+              SettingsTile.switchTile(
+                title: S.of(context).lockAppInBackGround,
+                leading: Icon(Icons.phonelink_lock),
+                switchValue: false,
+                onToggle: (bool value) {},
+              ),
+              SettingsTile.switchTile(
+                  title: S.of(context).useFingerprint,
+                  leading: Icon(Icons.fingerprint),
+                  onToggle: (bool value) {},
+                  switchValue: false),
+              SettingsTile.switchTile(
+                title: S.of(context).changePassword,
+                leading: Icon(Icons.lock),
+                switchValue: true,
+                onToggle: (bool value) {},
+              ),
+            ],
+          ),
+          SettingsSection(
+            title: S.of(context).data,
+            tiles: [
+              SettingsTile(
+                title: S.of(context).importCSV,
+                leading: Icon(Icons.import_export_outlined),
+                onPressed: (BuildContext context) async {
+                  _openFile(context);
+                },
+              ),
+              SettingsTile(
+                title: S.of(context).importDb,
+                leading: Icon(Icons.arrow_downward_outlined),
+                onPressed: (BuildContext context) async {
+                  _openDB(context);
+                },
+              ),
+              SettingsTile(
+                title: S.of(context).exportDb,
+                leading: Icon(Icons.arrow_upward_outlined),
+                onPressed: (BuildContext context) async {
+                  _selectFolder(context);
+                },
+              ),
+            ],
+          ),
+          CustomSection(
+            child: Column(
+              children: [
+                Text(
+                  '${S.of(context).version} ${_packageInfo.version}',
+                  style: TextStyle(color: Color(0xFF777777)),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -309,49 +390,5 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return _buildBody();
-  }
-}
-
-class SettingsTitleWidget extends StatelessWidget {
-  final String title;
-  final Color color;
-  final IconData icon;
-  const SettingsTitleWidget({Key key, this.title, this.color, this.icon})
-      : assert(title != null),
-        assert(color != null),
-        assert(icon != null),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 17.0),
-          child: Icon(
-            icon,
-            color: color,
-            size: 25.0,
-          ),
-        ),
-        Text(
-          title,
-          textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 18.0),
-        ),
-      ],
-    );
-  }
-}
-
-class MyDivider extends StatelessWidget {
-  const MyDivider({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Divider(
-      // color: Theme.of(context).accentColor,
-      thickness: 2.0,
-    );
   }
 }

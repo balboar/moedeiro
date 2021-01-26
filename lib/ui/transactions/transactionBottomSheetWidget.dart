@@ -7,6 +7,7 @@ import 'package:moedeiro/ui/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:moedeiro/ui/widgets/buttons.dart';
 import 'package:provider/provider.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class TransactionBottomSheet extends StatefulWidget {
   Transaction transaction;
@@ -173,7 +174,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.description),
                     border: OutlineInputBorder(),
-                    labelText: 'Description',
+                    labelText: S.of(context).description,
                   ),
                   onSaved: (String value) {
                     _data['name'] = value;
@@ -191,7 +192,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   },
                   validator: (value) {
                     if (value.isEmpty || double.tryParse(value) == 0) {
-                      return 'Amount should be greater than 0';
+                      return S.of(context).amountError;
                     }
                     return null;
                   },
@@ -199,7 +200,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.attach_money_outlined),
                     border: OutlineInputBorder(),
-                    labelText: 'Amount',
+                    labelText: S.of(context).amount,
                   ),
                   onSaved: (String value) {
                     _data['amount'] = double.parse(value);
@@ -214,11 +215,11 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.category_outlined),
                     border: OutlineInputBorder(),
-                    labelText: 'Category',
+                    labelText: S.of(context).categoryTitle,
                   ),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please select a Category';
+                      return S.of(context).categoryError;
                     }
                     return null;
                   },
@@ -244,11 +245,11 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.account_balance_wallet),
                     border: OutlineInputBorder(),
-                    labelText: 'Account',
+                    labelText: S.of(context).account,
                   ),
                   validator: (value) {
                     if (_accountController.text.isEmpty) {
-                      return 'Please select an Account';
+                      return S.of(context).accountSelectError;
                     }
                     return null;
                   },
@@ -282,7 +283,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.calendar_today),
                           border: OutlineInputBorder(),
-                          labelText: 'Date',
+                          labelText: S.of(context).date,
                         ),
                         onTap: () {
                           FocusScope.of(context).requestFocus(FocusNode());
@@ -309,7 +310,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.hourglass_bottom_outlined),
                           border: OutlineInputBorder(),
-                          labelText: 'Time',
+                          labelText: S.of(context).time,
                         ),
                         onTap: () {
                           FocusScope.of(context).requestFocus(FocusNode());

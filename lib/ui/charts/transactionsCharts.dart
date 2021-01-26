@@ -436,12 +436,6 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
     });
 
     if (chartDataParsed.length > 0) {
-      chartDataParsed.sort((a, b) {
-        var aexpense = a['expense'];
-        var bexpense = b['expense'];
-        return bexpense.compareTo(
-            aexpense); //to get the order other way just switch `adate & bdate`
-      });
       chartDataParsed.forEach((element) {
         rawBarGroups.add(makeGroupData(element['x'], element['expense']));
         showingBarGroups = rawBarGroups;
@@ -459,13 +453,17 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
 
   BarChartGroupData makeGroupData(int x, double y1) {
     return BarChartGroupData(
-      barsSpace: 4,
+      barsSpace: 0,
       x: x,
       barRods: [
         BarChartRodData(
           y: y1,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(7.0),
+            topRight: Radius.circular(7.0),
+          ),
           colors: [Colors.red, Colors.redAccent],
-          width: 7,
+          width: 40,
         ),
       ],
       showingTooltipIndicators: [0],
@@ -488,11 +486,13 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
               padding: const EdgeInsets.only(top: 40, left: 5, right: 5),
               child: BarChart(
                 BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
+                  alignment: BarChartAlignment.start,
                   maxY: maxY,
                   barTouchData: BarTouchData(
                     enabled: false,
                     touchTooltipData: BarTouchTooltipData(
+                      fitInsideHorizontally: true,
+                      fitInsideVertically: true,
                       tooltipBgColor: Colors.transparent,
                       tooltipPadding: const EdgeInsets.all(0),
                       tooltipBottomMargin: 8,
@@ -513,7 +513,7 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
                     ),
                   ),
                   titlesData: FlTitlesData(
-                    show: true,
+                    show: false,
                     bottomTitles: SideTitles(
                       showTitles: true,
                       getTextStyles: (value) => const TextStyle(

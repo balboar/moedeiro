@@ -6,6 +6,7 @@ import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:moedeiro/ui/lockScreen/DotSecretUI.dart';
 import 'package:moedeiro/ui/lockScreen/lockScreenButton.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class LockScreen extends StatefulWidget {
   final String correctString;
@@ -92,20 +93,15 @@ class _LockScreenState extends State<LockScreen> {
 
       bool isAuthenticated = false;
       try {
-        isAuthenticated = await _localAuthentication.authenticate(
-          localizedReason: 'Please authenticate to show data',
+        isAuthenticated = await _localAuthentication.authenticateWithBiometrics(
+          localizedReason: S.of(context).authenticateLabel,
           stickyAuth: true,
-          biometricOnly: widget.canBiometric,
         );
       } on PlatformException catch (e) {
         print(e);
       }
 
       if (!mounted) return;
-
-      isAuthenticated
-          ? print('User is authenticated!')
-          : print('User is not authenticated.');
 
       if (isAuthenticated) {
         AppLock.of(context).didUnlock();
@@ -122,10 +118,6 @@ class _LockScreenState extends State<LockScreen> {
     }
 
     if (!mounted) return isAvailable;
-
-    isAvailable
-        ? print('Biometric is available!')
-        : print('Biometric is unavailable.');
 
     return isAvailable;
   }

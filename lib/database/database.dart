@@ -312,7 +312,7 @@ class DB {
         return await txn.rawQuery(
             '   SELECT sum(abs(a.amount)) amount,c.name  FROM transactions a '
                     'left outer join category c on c.uuid=a.category where c.type="E" and date( substr(a.timestamp,1,10), "unixepoch") >= date("now","start of month")' +
-                ' group by 2 order by 2 ');
+                ' group by 2 order by 1 desc ');
       },
     );
   }

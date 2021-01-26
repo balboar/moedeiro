@@ -4,6 +4,7 @@ import 'package:moedeiro/ui/accounts/accountWidgets.dart';
 import 'package:moedeiro/ui/accounts/AccountsBottomSheetWidget.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:provider/provider.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class AccountsPage extends StatefulWidget {
   AccountsPage({Key key}) : super(key: key);
@@ -35,7 +36,7 @@ class _AccountsPageState extends State<AccountsPage> {
                 height: 20.0,
               ),
               Text(
-                'No data',
+                S.of(context).noDataLabel,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
             ],
@@ -65,7 +66,7 @@ class _AccountsPageState extends State<AccountsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Accounts'),
+        title: Text(S.of(context).accountsTitle),
         // actions: [
         //   IconButton(
         //     icon: Icon(Icons.reorder),
@@ -75,7 +76,7 @@ class _AccountsPageState extends State<AccountsPage> {
       ),
       key: _formKey,
       floatingActionButton: FloatingActionButton.extended(
-        label: Text('Account'),
+        label: Text(S.of(context).account),
         onPressed: () {
           showCustomModalBottomSheet(context, AccountBottomSheet(null));
         },

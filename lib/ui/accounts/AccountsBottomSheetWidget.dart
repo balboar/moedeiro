@@ -9,6 +9,7 @@ import 'package:moedeiro/ui/widgets/buttons.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class AccountBottomSheet extends StatefulWidget {
   Account activeAccount;
@@ -72,8 +73,8 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
       builder: (BuildContext context) {
         return ComfirmDeleteDialog(
           icon: Icons.account_balance_wallet_outlined,
-          title: 'Delete account?',
-          subtitle: 'An account is going to be deleted, are you sure?',
+          title: S.of(context).deleteAccount,
+          subtitle: S.of(context).deleteAccountDescription,
         );
       },
     );
@@ -133,11 +134,11 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                     border: OutlineInputBorder(),
                     labelStyle: TextStyle(fontSize: 20.0),
                     // icon: Icon(Icons.account_balance_wallet),
-                    labelText: 'Nombre de la cuenta',
+                    labelText: S.of(context).accountName,
                   ),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter a name';
+                      return S.of(context).accountName;
                     }
                     return null;
                   },
@@ -155,11 +156,11 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                     prefixIcon: Icon(Icons.euro),
                     border: OutlineInputBorder(),
                     // icon: Icon(Icons.euro),
-                    labelText: 'Cantidad Inicial',
+                    labelText: S.of(context).initialAmount,
                   ),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter a number';
+                      return S.of(context).initialAmountError;
                     }
                     return null;
                   },

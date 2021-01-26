@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class NoDataWidgetVertical extends StatelessWidget {
   const NoDataWidgetVertical({Key key}) : super(key: key);
@@ -19,7 +20,7 @@ class NoDataWidgetVertical extends StatelessWidget {
           height: 20.0,
         ),
         Text(
-          'No data',
+          S.of(context).noDataLabel,
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
       ],
@@ -43,7 +44,7 @@ class NoDataWidgetHorizontal extends StatelessWidget {
           width: 20.0,
         ),
         Text(
-          'No data',
+          S.of(context).noDataLabel,
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
       ],
@@ -176,7 +177,7 @@ class _MoedeiroTransactionTransferButtonsState
                 color: Colors.transparent,
                 alignment: Alignment.center,
                 child: Text(
-                  'Transaction',
+                  S.of(context).transaction,
                   style: TextStyle(
                     color: transactionColor,
                     fontWeight: FontWeight.bold,
@@ -207,7 +208,7 @@ class _MoedeiroTransactionTransferButtonsState
                 color: Colors.transparent,
                 alignment: Alignment.center,
                 child: Text(
-                  'Transfer',
+                  S.of(context).transfer,
                   style: TextStyle(
                     color: transferColor,
                     fontWeight: FontWeight.bold,

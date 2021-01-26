@@ -33,6 +33,7 @@ class OptionsCard extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
+                  fontSize: 12.0,
                   fontWeight: FontWeight.bold,
                   color: color[800],
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class SaveButton extends StatelessWidget {
   final Function onPressed;
@@ -23,7 +24,7 @@ class SaveButton extends StatelessWidget {
       ),
       child: FlatButton(
         child: Text(
-          'Guardar',
+          S.of(context).save,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -45,7 +46,7 @@ class DeleteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlatButton(
       child: Text(
-        'Eliminar',
+        S.of(context).delete,
         style: TextStyle(
           color: Colors.grey[500],
         ),

@@ -7,6 +7,7 @@ import 'package:moedeiro/ui/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:moedeiro/ui/widgets/buttons.dart';
 import 'package:provider/provider.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class TransferBottomSheet extends StatefulWidget {
   Transfer transfer;
@@ -158,7 +159,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.description),
                     border: OutlineInputBorder(),
-                    labelText: 'Description',
+                    labelText: S.of(context).description,
                   ),
                   onSaved: (String value) {
                     _data['name'] = value;
@@ -176,7 +177,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                   },
                   validator: (value) {
                     if (value.isEmpty || double.tryParse(value) == 0) {
-                      return 'Amount should be greater than 0';
+                      return S.of(context).amountError;
                     }
                     return null;
                   },
@@ -184,7 +185,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.attach_money_outlined),
-                    labelText: 'Amount',
+                    labelText: S.of(context).amount,
                   ),
                   onSaved: (String value) {
                     _data['amount'] = double.parse(value);
@@ -198,11 +199,11 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.account_balance_wallet),
-                    labelText: 'From',
+                    labelText: S.of(context).from,
                   ),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please select an Account';
+                      return S.of(context).accountSelectError;
                     }
                     return null;
                   },
@@ -232,11 +233,11 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.account_balance_wallet),
-                    labelText: 'To',
+                    labelText: S.of(context).to,
                   ),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please select an Account';
+                      return S.of(context).accountSelectError;
                     }
                     return null;
                   },
@@ -270,7 +271,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.calendar_today),
-                          labelText: 'Date',
+                          labelText: S.of(context).date,
                         ),
                         onTap: () {
                           FocusScope.of(context).requestFocus(FocusNode());
@@ -297,7 +298,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.hourglass_bottom_outlined),
-                          labelText: 'Time',
+                          labelText: S.of(context).time,
                         ),
                         onTap: () {
                           FocusScope.of(context).requestFocus(FocusNode());

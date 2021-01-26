@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class ComfirmDeleteDialog extends StatelessWidget {
   final IconData icon;
@@ -31,7 +32,7 @@ class ComfirmDeleteDialog extends StatelessWidget {
           children: <Widget>[
             Center(
               child: Text(
-                title ?? 'Delete movement?',
+                title ?? S.of(context).deleteMovement,
                 style: Theme.of(context).textTheme.headline6,
               ),
             ),
@@ -39,7 +40,7 @@ class ComfirmDeleteDialog extends StatelessWidget {
               height: 10,
             ),
             Text(
-              subtitle ?? 'A movement is going to be deleted, are you sure?',
+              subtitle ?? S.of(context).deleteMovementDescription,
               style: Theme.of(context).textTheme.subtitle1,
             ),
           ],
@@ -56,7 +57,7 @@ class ComfirmDeleteDialog extends StatelessWidget {
               color: Theme.of(context).dialogBackgroundColor,
               elevation: 0,
               icon: Icon(Icons.cancel_outlined),
-              label: Text('Cancel'),
+              label: Text(S.of(context).cancel),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
@@ -64,7 +65,7 @@ class ComfirmDeleteDialog extends StatelessWidget {
             RaisedButton.icon(
               icon: Icon(Icons.delete_outline_outlined),
               color: Theme.of(context).accentColor,
-              label: Text('Delete'),
+              label: Text(S.of(context).delete),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
