@@ -82,16 +82,11 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   Future<int> _selectDate(BuildContext context) async {
     DateTime _date = DateTime.fromMillisecondsSinceEpoch(_data['timestamp']);
     final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: _date,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101),
-        builder: (BuildContext context, Widget child) {
-          return Theme(
-            data: ThemeData.dark(),
-            child: child,
-          );
-        });
+      context: context,
+      initialDate: _date,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
     if (picked != null && picked != _date) {
       return Future.value(picked.millisecondsSinceEpoch);
     }
@@ -99,16 +94,11 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
 
   Future<int> _selectTime(BuildContext context) async {
     final TimeOfDay picked = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(
-          DateTime.fromMillisecondsSinceEpoch(_data['timestamp']),
-        ),
-        builder: (BuildContext context, Widget child) {
-          return Theme(
-            data: ThemeData.dark(),
-            child: child,
-          );
-        });
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(
+        DateTime.fromMillisecondsSinceEpoch(_data['timestamp']),
+      ),
+    );
 
     if (picked != null) {
       setState(() {
@@ -173,7 +163,6 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   initialValue: _data['name'] ?? '',
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.description),
-                    border: OutlineInputBorder(),
                     labelText: S.of(context).description,
                   ),
                   onSaved: (String value) {
@@ -198,8 +187,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   },
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.attach_money_outlined),
-                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.euro_outlined),
                     labelText: S.of(context).amount,
                   ),
                   onSaved: (String value) {
@@ -213,8 +201,9 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   readOnly: true,
                   controller: _categoryController,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.category_outlined),
-                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(
+                      Icons.dashboard_outlined,
+                    ),
                     labelText: S.of(context).categoryTitle,
                   ),
                   validator: (value) {
@@ -244,7 +233,6 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   controller: _accountController,
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.account_balance_wallet),
-                    border: OutlineInputBorder(),
                     labelText: S.of(context).account,
                   ),
                   validator: (value) {
@@ -282,7 +270,6 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                         controller: _dateController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.calendar_today),
-                          border: OutlineInputBorder(),
                           labelText: S.of(context).date,
                         ),
                         onTap: () {
@@ -309,7 +296,6 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                         controller: _timeController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.hourglass_bottom_outlined),
-                          border: OutlineInputBorder(),
                           labelText: S.of(context).time,
                         ),
                         onTap: () {
@@ -328,10 +314,6 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                       width: 130,
                     ),
                   ],
-                ),
-                Padding(
-                  child: Container(),
-                  padding: EdgeInsets.all(5.0),
                 ),
                 Consumer<TransactionModel>(
                   builder: (BuildContext context, TransactionModel model,

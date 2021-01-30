@@ -305,14 +305,41 @@ class DB {
     );
   }
 
+  static Future<List<Map<String, dynamic>>> getTrasactionsByMonthAndCategory(
+      String month, String year) async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            'SELECT round(sum(abs(a.amount)),2) amount,c.name,count(a.uuid) total  FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where c.type="E" and ' +
+                ' strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))=? and ' +
+                'strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) =?    group by 2 order by 1 desc ,2  desc',
+            [month, year]);
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>>
+      getTrasactionsGroupedByMonthAndCategory() async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            '   SELECT round(sum(abs(a.amount)),2) amount,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
+                ' strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year,c.type   FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where c.type="E"  group by 2,3,4 order by 3 ,2 ');
+      },
+    );
+  }
+
   static Future<List<Map<String, dynamic>>>
       getTrasactionsLastMonthByCategory() async {
     return await _db.transaction(
       (txn) async {
         return await txn.rawQuery(
             '   SELECT sum(abs(a.amount)) amount,c.name  FROM transactions a '
-                    'left outer join category c on c.uuid=a.category where c.type="E" and date( substr(a.timestamp,1,10), "unixepoch") >= date("now","start of month")' +
-                ' group by 2 order by 1 desc ');
+                    'left outer join category c on c.uuid=a.category where c.type="E" ' +
+                ' and date( substr(a.timestamp,1,10), "unixepoch") >= date("now","start of month")' +
+                ' group by 2 order by 1 desc limit 6 ');
       },
     );
   }

@@ -38,7 +38,6 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
     else
       return <Widget>[
         IconButton(
-          color: Colors.white,
           icon: const Icon(Icons.edit),
           tooltip: S.of(context).account,
           onPressed: () {
@@ -118,7 +117,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
                 child: NoDataWidgetVertical(),
               )
             : SliverFixedExtentList(
-                itemExtent: 80.0,
+                itemExtent: 75.0,
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     Transfer transfer = model.transfers[index];
@@ -135,7 +134,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
                 child: NoDataWidgetVertical(),
               )
             : SliverFixedExtentList(
-                itemExtent: 80.0,
+                itemExtent: 75.0,
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     Transfer transfer = accountTransfers[index];
@@ -156,7 +155,6 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
     return Scaffold(
       key: _formKey,
       body: DefaultTabController(
-        initialIndex: 1,
         length: 2, // This is the number of tabs.
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {

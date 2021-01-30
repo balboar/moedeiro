@@ -108,7 +108,8 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+            padding:
+                EdgeInsets.only(right: 20.0, left: 20.0, top: 20, bottom: 5.0),
             child: Column(
               children: <Widget>[
                 GestureDetector(
@@ -131,7 +132,6 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                   initialValue: activeAccount.name,
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.account_balance_wallet),
-                    border: OutlineInputBorder(),
                     labelStyle: TextStyle(fontSize: 20.0),
                     // icon: Icon(Icons.account_balance_wallet),
                     labelText: S.of(context).accountName,
@@ -154,7 +154,6 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.euro),
-                    border: OutlineInputBorder(),
                     // icon: Icon(Icons.euro),
                     labelText: S.of(context).initialAmount,
                   ),
@@ -167,10 +166,6 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                   onSaved: (String value) {
                     activeAccount.initialAmount = double.parse(value);
                   },
-                ),
-                Padding(
-                  child: Container(),
-                  padding: EdgeInsets.all(5.0),
                 ),
                 Consumer<AccountModel>(
                   builder: (BuildContext context, AccountModel model,

@@ -64,16 +64,11 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
   Future<int> _selectDate(BuildContext context) async {
     DateTime _date = DateTime.fromMillisecondsSinceEpoch(_data['timestamp']);
     final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: _date,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101),
-        builder: (BuildContext context, Widget child) {
-          return Theme(
-            data: ThemeData.dark(),
-            child: child,
-          );
-        });
+      context: context,
+      initialDate: _date,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
     if (picked != null && picked != _date) {
       return Future.value(picked.millisecondsSinceEpoch);
     }
@@ -81,16 +76,11 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
 
   Future<int> _selectTime(BuildContext context) async {
     final TimeOfDay picked = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(
-          DateTime.fromMillisecondsSinceEpoch(_data['timestamp']),
-        ),
-        builder: (BuildContext context, Widget child) {
-          return Theme(
-            data: ThemeData.dark(),
-            child: child,
-          );
-        });
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(
+        DateTime.fromMillisecondsSinceEpoch(_data['timestamp']),
+      ),
+    );
 
     if (picked != null) {
       setState(() {
@@ -150,15 +140,10 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                 SizedBox(
                   height: space,
                 ),
-                // Text(
-                //   'Transfer',
-                //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-                // ),
                 TextFormField(
                   initialValue: _data['name'] ?? '',
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.description),
-                    border: OutlineInputBorder(),
                     labelText: S.of(context).description,
                   ),
                   onSaved: (String value) {
@@ -183,8 +168,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                   },
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.attach_money_outlined),
+                    prefixIcon: Icon(Icons.euro_outlined),
                     labelText: S.of(context).amount,
                   ),
                   onSaved: (String value) {
@@ -197,7 +181,6 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                 TextFormField(
                   controller: _accountFromController,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.account_balance_wallet),
                     labelText: S.of(context).from,
                   ),
@@ -231,7 +214,6 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                 TextFormField(
                   controller: _accountToController,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.account_balance_wallet),
                     labelText: S.of(context).to,
                   ),
@@ -269,7 +251,6 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                         readOnly: true,
                         controller: _dateController,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.calendar_today),
                           labelText: S.of(context).date,
                         ),
@@ -296,7 +277,6 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                         readOnly: true,
                         controller: _timeController,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.hourglass_bottom_outlined),
                           labelText: S.of(context).time,
                         ),
@@ -316,10 +296,6 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                       width: 130,
                     ),
                   ],
-                ),
-                Padding(
-                  child: Container(),
-                  padding: EdgeInsets.all(5.0),
                 ),
                 Consumer<TransfersModel>(builder: (BuildContext context,
                     TransfersModel model, Widget widget) {

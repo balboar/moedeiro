@@ -45,14 +45,9 @@ class _AccountsPageState extends State<AccountsPage> {
           return ReorderableListView(
               children: model.accounts.map(
                 (account) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
+                  return AccountCard(
+                    account: account,
                     key: Key(account.uuid),
-                    height: 130,
-                    child: AccountCard(
-                      account: account,
-                      avatarSize: 18.0,
-                    ),
                   );
                 },
               ).toList(),

@@ -79,8 +79,7 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                   TextFormField(
                     initialValue: category.name,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.analytics_outlined),
-                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.dashboard_outlined),
                       labelStyle: TextStyle(fontSize: 20.0),
                       labelText: S.of(context).name,
                     ),
@@ -115,10 +114,6 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                         category.type = 'E';
                       });
                     },
-                  ),
-                  Padding(
-                    child: Container(),
-                    padding: EdgeInsets.all(5.0),
                   ),
                   Consumer<CategoryModel>(builder: (BuildContext context,
                       CategoryModel model, Widget widget) {

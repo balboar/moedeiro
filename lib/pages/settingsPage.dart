@@ -9,8 +9,11 @@ import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/ui/dialogs/appThemeSelectionDialog.dart';
 import 'package:moedeiro/ui/dialogs/languageSelectionDialog.dart';
+import 'package:moedeiro/ui/passwordBottomSheet.dart';
+import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:package_info/package_info.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,6 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Directory rootPath;
   String filePath;
   bool _lockApp = false;
+  bool _useBiometrics = false;
   String locale;
   String theme;
   SharedPreferences prefs;
@@ -78,6 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }
     setState(() {
       _lockApp = prefs.getBool('lockApp') ?? false;
+      _useBiometrics = prefs.getBool('useBiometrics') ?? false;
     });
   }
 
@@ -102,7 +107,11 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  Future<void> _selectFolder(BuildContext context) async {
+  Future<void> _exportDB(BuildContext context) async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
     String _destination = await FilePicker.platform.getDirectoryPath();
     if (_destination != null && _destination != '/') {
       String _databasePath = p.join(await db.getDatabasesPath(), 'moedeiro.db');
@@ -266,6 +275,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: SettingsList(
         // backgroundColor: Colors.orange,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         sections: [
           SettingsSection(
             titlePadding: EdgeInsets.only(
@@ -281,44 +291,50 @@ class _SettingsPageState extends State<SettingsPage> {
                   await _showLanguageDialog();
                   var prefs = await SharedPreferences.getInstance();
                   var _locale = prefs.getString('locale');
-                  if (_locale == 'default') {
-                    setState(() {
-                      locale = S.of(context).systemDefaultTitle;
-                    });
-                  } else {
-                    var activeLocale = languageOptions
-                        .firstWhere((element) => element.key == _locale);
-                    setState(() {
-                      locale = activeLocale.value;
-                    });
+                  if (_locale != null) {
+                    if (_locale == 'default') {
+                      setState(() {
+                        locale = S.of(context).systemDefaultTitle;
+                      });
+                    } else {
+                      var activeLocale = languageOptions
+                          .firstWhere((element) => element.key == _locale);
+                      setState(() {
+                        locale = activeLocale.value;
+                      });
+                    }
                   }
                 },
               ),
               SettingsTile(
-                title: 'App theme',
+                title: S.of(context).theme,
                 subtitle: theme,
                 leading: Icon(Icons.lightbulb_outline),
                 onPressed: (BuildContext context) async {
                   await _showThemeDialog();
                   var prefs = await SharedPreferences.getInstance();
                   var _theme = prefs.getString('theme');
-                  if (_theme == 'default') {
-                    setState(() {
-                      theme = S.of(context).systemDefaultTitle;
-                      Provider.of<ThemeModel>(context, listen: false)
-                          .setSystemDefault();
-                    });
-                  } else {
-                    var activeTheme = themeOptions
-                        .firstWhere((element) => element.key == _theme);
-                    setState(() {
-                      theme = activeTheme.value;
-                    });
-                    if (_theme == 'dark')
-                      Provider.of<ThemeModel>(context, listen: false).setDark();
-                    else
-                      Provider.of<ThemeModel>(context, listen: false)
-                          .setLight();
+                  if (_theme != null) {
+                    if (_theme == 'default') {
+                      setState(() {
+                        theme = S.of(context).systemDefaultTitle;
+                        Provider.of<ThemeModel>(context, listen: false)
+                            .setSystemDefault();
+                      });
+                    } else {
+                      var activeTheme = themeOptions
+                          .firstWhere((element) => element.key == _theme);
+                      setState(() {
+                        theme = activeTheme.value;
+                      });
+
+                      if (_theme == 'dark')
+                        Provider.of<ThemeModel>(context, listen: false)
+                            .setDark();
+                      else
+                        Provider.of<ThemeModel>(context, listen: false)
+                            .setLight();
+                    }
                   }
                 },
               ),
@@ -330,19 +346,51 @@ class _SettingsPageState extends State<SettingsPage> {
               SettingsTile.switchTile(
                 title: S.of(context).lockAppInBackGround,
                 leading: Icon(Icons.phonelink_lock),
-                switchValue: false,
-                onToggle: (bool value) {},
+                switchValue: _lockApp,
+                onToggle: (bool value) async {
+                  setState(() {
+                    _lockApp = !_lockApp;
+                  });
+
+                  var prefs = await SharedPreferences.getInstance();
+                  prefs.setBool('lockApp', _lockApp);
+                  if (value) {
+                    showCustomModalBottomSheet(
+                      context,
+                      PasswordBottomSheet(),
+                    ).then((value) {
+                      var pin = prefs.getString('PIN');
+                      if (pin == null)
+                        setState(() {
+                          _lockApp = false;
+                        });
+                      prefs.setBool('lockApp', _lockApp);
+                    });
+                  } else {
+                    prefs.remove('PIN');
+                  }
+                },
               ),
               SettingsTile.switchTile(
                   title: S.of(context).useFingerprint,
                   leading: Icon(Icons.fingerprint),
-                  onToggle: (bool value) {},
-                  switchValue: false),
-              SettingsTile.switchTile(
+                  onToggle: (bool value) async {
+                    setState(() {
+                      _useBiometrics = !_useBiometrics;
+                    });
+                    var prefs = await SharedPreferences.getInstance();
+                    prefs.setBool('useBiometrics', _lockApp);
+                  },
+                  switchValue: _useBiometrics),
+              SettingsTile(
                 title: S.of(context).changePassword,
                 leading: Icon(Icons.lock),
-                switchValue: true,
-                onToggle: (bool value) {},
+                onPressed: (BuildContext context) {
+                  showCustomModalBottomSheet(
+                    context,
+                    PasswordBottomSheet(),
+                  );
+                },
               ),
             ],
           ),
@@ -367,7 +415,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: S.of(context).exportDb,
                 leading: Icon(Icons.arrow_upward_outlined),
                 onPressed: (BuildContext context) async {
-                  _selectFolder(context);
+                  _exportDB(context);
                 },
               ),
             ],

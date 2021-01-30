@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/dataModels/accounts.dart';
 import 'package:moedeiro/models/mainModel.dart';
-import 'package:moedeiro/ui/accounts/AccountsBottomSheetWidget.dart';
 import 'package:moedeiro/ui/charts/accountCharts.dart';
 import 'package:moedeiro/ui/charts/transactionsCharts.dart';
-import 'package:moedeiro/ui/showBottomSheet.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -14,8 +12,7 @@ import 'package:moedeiro/generated/l10n.dart';
 
 class AccountCard extends StatefulWidget {
   Account account;
-  double avatarSize = 10.0;
-  AccountCard({Key key, this.account, this.avatarSize}) : super(key: key);
+  AccountCard({Key key, this.account}) : super(key: key);
 
   @override
   _AccountCardState createState() => _AccountCardState();
@@ -28,14 +25,63 @@ class _AccountCardState extends State<AccountCard> {
     super.initState();
   }
 
-  // void checkIcon() async {
-  //   if (widget.account.icon != null) {
-  //     var exists = await File(widget.account.icon).exists();
-  //     if (!exists) {
-  //       widget.account.icon = null;
-  //     }
-  //   }
-  // }
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+      child: ListTile(
+        onTap: () {
+          Provider.of<AccountModel>(context, listen: false).setActiveAccount =
+              widget.account.uuid;
+          Navigator.pushNamed(context, '/accountTransactionsPage',
+              arguments: false);
+        },
+        leading: CircleAvatar(
+          backgroundImage: widget.account.icon != null
+              ? FileImage(
+                  File(widget.account.icon),
+                )
+              : null,
+          backgroundColor: Colors.transparent,
+          radius: 20,
+        ),
+        title: Text(
+          widget.account.name, //
+          overflow: TextOverflow.clip,
+          maxLines: 1,
+        ),
+        subtitle: Text(
+          '${formatCurrency(context, widget.account.amount)}',
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(S.of(context).expensesMonth),
+            Text(
+              '${formatCurrency(context, widget.account.expensesMonth)}',
+              style: Theme.of(context).textTheme.bodyText2,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AccountMiniCard extends StatefulWidget {
+  Account account;
+  AccountMiniCard({Key key, this.account}) : super(key: key);
+
+  @override
+  _AccountMiniCardState createState() => _AccountMiniCardState();
+}
+
+class _AccountMiniCardState extends State<AccountMiniCard> {
+  @override
+  void initState() {
+    // checkIcon();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +89,7 @@ class _AccountCardState extends State<AccountCard> {
       child: GestureDetector(
           child: Card(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0)),
+                borderRadius: BorderRadius.circular(10.0)),
             color: Theme.of(context).cardTheme.color,
             child: Padding(
               child: Column(
@@ -52,6 +98,18 @@ class _AccountCardState extends State<AccountCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Expanded(
+                        child: Text(
+                          widget.account.name, //
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  Theme.of(context).textTheme.bodyText1.color,
+                              fontSize: 17.0),
+                        ),
+                      ),
                       Padding(
                         padding: EdgeInsets.only(right: 5.0),
                         child: CircleAvatar(
@@ -61,64 +119,22 @@ class _AccountCardState extends State<AccountCard> {
                                 )
                               : null,
                           backgroundColor: Colors.transparent,
-                          radius: widget.avatarSize,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(widget.account.name, //
-                            overflow: TextOverflow.clip,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color:
-                                    Theme.of(context).textTheme.bodyText1.color,
-                                fontSize: 17.0)),
-                      ),
-                      GestureDetector(
-                          child: Icon(Icons.more_vert),
-                          onTap: () {
-                            showCustomModalBottomSheet(
-                                context, AccountBottomSheet(widget.account));
-                          }),
-                    ],
-                  ),
-                  Spacer(),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          '${formatCurrency(context, widget.account.amount)}',
-                          style: TextStyle(color: Colors.white, fontSize: 16.0),
+                          radius: 11,
                         ),
                       ),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Align(
-                    alignment: Alignment.centerRight,
                     child: Text(
-                      S.of(context).expensesMonth,
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.subtitle2.color,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold),
+                      '${formatCurrency(context, widget.account.amount)}',
+                      style: Theme.of(context).textTheme.headline6,
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      '${formatCurrency(context, widget.account.expensesMonth)}',
-                      style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                    alignment: Alignment.centerLeft,
+                  )
                 ],
               ),
-              padding: EdgeInsets.all(7.0),
+              padding: EdgeInsets.all(10.0),
             ),
           ),
           onTap: () {
@@ -127,7 +143,7 @@ class _AccountCardState extends State<AccountCard> {
             Navigator.pushNamed(context, '/accountTransactionsPage',
                 arguments: false);
           }),
-      width: 160.0,
+      width: 170.0,
     );
   }
 }
@@ -188,6 +204,7 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
             formatCurrency(context, widget.activeAccount.amount)),
         bottom: widget.tabs,
         floating: false,
+        snap: false,
         pinned: true,
         actions: widget.actions,
         flexibleSpace: FlexibleSpaceBar(
@@ -199,9 +216,9 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
                 height: kToolbarHeight,
               ),
               Container(
-                height: 100,
-                margin: EdgeInsets.only(
-                    left: 10.0, right: 10, top: 2.0, bottom: 2.0),
+                height: 180,
+                margin:
+                    EdgeInsets.only(left: 0.0, right: 0, top: 2.0, bottom: 2.0),
                 child: PageView(
                   physics: BouncingScrollPhysics(),
                   controller: controller,

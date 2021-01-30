@@ -52,7 +52,12 @@
   "expensesMonth":"Expenses month",
   "name":"Name",
   "categoryError":"Select a category",
-  "authenticateLabel": "Please authenticate to show data"
+  "authenticateLabel": "Please authenticate to show data",
+  "pin":"PIN",
+  "pinError":"PIN must be a numeric value",
+  "pinEmpty":"PIN can not be empty",
+  "confirmPin":"Confirm PIN",
+  "balance":"Balance"
 
 
 }

@@ -1,8 +1,9 @@
 {
   "@@locale": "es",
   "appTitle": "Moedeiro",
-  "settingsTooltip":"Ajustes",
+  "settings":"Ajustes",
   "accountsTitle":"Cuentas",
+  "account":"Cuenta",
   "categoryTitle":"Categoría",
   "budgetsTitle":"Presupuestos",
   "movementsTitle":"Movimientos",
@@ -16,7 +17,7 @@
   "save":"Guardar",
   "delete":"Eliminar",
   "description":"Descripción",
-  "amount":"Cantidad",
+  "amount":"Importe",
   "amountError":"La cantidad tiene que ser mayor a 0",
   "from":"De",
   "accountSelectError":"Selecciona una cuenta",
@@ -51,7 +52,12 @@
   "expensesMonth":"Gastos mes",
   "name":"Nombre",
   "categoryError":"Selecciona una categoria",
-  "authenticateLabel": "Inicia sesión para ver los datos"
+  "authenticateLabel": "Inicia sesión para ver los datos",
+  "pin":"PIN",
+  "pinError":"El PIN tiene que ser un valor numérico",
+  "pinEmpty":"El PIN no puede estar vacio",
+  "confirmPin":"Confirma el PIN",
+  "balance":"Balance"
 
 
 }

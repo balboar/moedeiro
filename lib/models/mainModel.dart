@@ -32,7 +32,7 @@ class AccountModel extends ChangeNotifier {
           await DB.getExpensesLastMonth(element['uuid']);
       account.expensesMonth =
           double.tryParse(expendesLastMonth[0]['amount'].toString());
-
+      expenses = expenses + account.expensesMonth;
       _accounts.add(account);
       if (account.amount > 0) _totalAmount = _totalAmount + account.amount;
       notifyListeners();
@@ -194,6 +194,16 @@ class TransactionModel extends ChangeNotifier {
 
   Future<List<Map<String, dynamic>>> getCategoryExpensesChartData() async {
     return await DB.getTrasactionsLastMonthByCategory();
+  }
+
+  Future<List<Map<String, dynamic>>>
+      getTrasactionsGroupedByMonthAndCategory() async {
+    return await DB.getTrasactionsGroupedByMonthAndCategory();
+  }
+
+  Future<List<Map<String, dynamic>>> getTrasactionsByMonthAndCategory(
+      String month, String year) async {
+    return await DB.getTrasactionsByMonthAndCategory(month, year);
   }
 
   List<Transaction> getAccountTransactions(String accountUuid) {

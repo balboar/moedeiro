@@ -144,14 +144,7 @@ class _MoedeiroTransactionTransferButtonsState
               height: height,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.0),
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromRGBO(217, 81, 157, 1),
-                    Color.fromRGBO(237, 135, 112, 1)
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
+                color: Colors.blue[300],
               ),
             ),
           ),

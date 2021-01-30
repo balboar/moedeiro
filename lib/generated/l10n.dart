@@ -564,6 +564,56 @@ class S {
       args: [],
     );
   }
+
+  /// `PIN`
+  String get pin {
+    return Intl.message(
+      'PIN',
+      name: 'pin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PIN must be a numeric value`
+  String get pinError {
+    return Intl.message(
+      'PIN must be a numeric value',
+      name: 'pinError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PIN can not be empty`
+  String get pinEmpty {
+    return Intl.message(
+      'PIN can not be empty',
+      name: 'pinEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm PIN`
+  String get confirmPin {
+    return Intl.message(
+      'Confirm PIN',
+      name: 'confirmPin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Balance`
+  String get balance {
+    return Intl.message(
+      'Balance',
+      name: 'balance',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,11 @@ Future<void> main() async {
 //   debugPaintBaselinesEnabled = true;
 //   debugPaintLayerBordersEnabled = true;
   bool _lockApp = false;
+  bool _useBiometrics = false;
   Locale locale;
+  String theme;
+  String pin;
+  ThemeModel model;
   SharedPreferences prefs;
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
@@ -28,9 +33,13 @@ Future<void> main() async {
   prefs = await SharedPreferences.getInstance();
 
   _lockApp = prefs.getBool('lockApp') ?? false;
+  _useBiometrics = prefs.getBool('useBiometrics') ?? false;
+  theme = prefs.getString('theme') ?? 'system';
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   var _locale = prefs.getString('locale') ?? 'default';
+  pin = prefs.getString('PIN') ?? '0000';
+
   if (_locale == 'default') {
     locale = null;
   } else {
@@ -38,24 +47,33 @@ Future<void> main() async {
         languageOptions.firstWhere((element) => element.key == _locale);
     locale = Locale.fromSubtags(languageCode: activeLocale.key);
   }
-
+  model = ThemeModel();
+  if (theme == 'system')
+    model.setSystemDefault();
+  else if (theme == 'dark')
+    model.setDark();
+  else
+    model.setLight();
   if (_lockApp) {
     runApp(
-      AppLock(
-        builder: (args) => MyApp(
-          locale: locale,
-        ),
-        lockScreen: LockScreen(
-          correctString: '0000',
-          canBiometric: true,
-          showBiometricFirst: true,
+      ChangeNotifierProvider<ThemeModel>(
+        create: (BuildContext context) => model,
+        child: AppLock(
+          builder: (args) => MyApp(
+            locale: locale,
+          ),
+          lockScreen: LockScreen(
+            correctString: pin,
+            canBiometric: _useBiometrics,
+            showBiometricFirst: _useBiometrics,
+          ),
         ),
       ),
     );
   } else
     runApp(
       ChangeNotifierProvider<ThemeModel>(
-        create: (BuildContext context) => ThemeModel(),
+        create: (BuildContext context) => model,
         child: MyApp(
           locale: locale,
         ),
@@ -65,15 +83,20 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   final Locale locale;
+  final String theme = 'dark';
 
   MyApp({
     Key key,
     this.locale,
   }) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final isPlatformDark =
+        WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
+    final initTheme = isPlatformDark
+        ? Provider.of<ThemeModel>(context, listen: true).darkTheme
+        : Provider.of<ThemeModel>(context, listen: true).lightTheme;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AccountModel>(

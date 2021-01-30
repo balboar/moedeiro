@@ -3,18 +3,46 @@ import 'package:moedeiro/util/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
-class LanguageSelectionDialog extends StatefulWidget {
+class LanguageSelectionDialog extends StatelessWidget {
   const LanguageSelectionDialog({
     Key key,
   }) : super(key: key);
 
   @override
-  _LanguageSelectionDialogState createState() =>
-      _LanguageSelectionDialogState();
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      insetPadding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 5.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(7.0),
+      ),
+      title: Text(S.of(context).language),
+      contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 5.0),
+      content: SingleChildScrollView(
+        child: RadioButtons(),
+      ),
+      actionsPadding: EdgeInsets.symmetric(horizontal: 5.0),
+      buttonPadding: EdgeInsets.symmetric(horizontal: 5.0),
+      actions: <Widget>[
+        TextButton(
+          child: Text(S.of(context).cancel),
+          onPressed: () {
+            Navigator.of(context).pop(true);
+          },
+        ),
+      ],
+    );
+  }
 }
 
-class _LanguageSelectionDialogState extends State<LanguageSelectionDialog> {
-  String _selectedValue = 'es';
+class RadioButtons extends StatefulWidget {
+  RadioButtons({Key key}) : super(key: key);
+
+  @override
+  _RadioButtonsState createState() => _RadioButtonsState();
+}
+
+class _RadioButtonsState extends State<RadioButtons> {
+  String _selectedValue = 'default';
 
   @override
   void initState() {
@@ -32,44 +60,24 @@ class _LanguageSelectionDialogState extends State<LanguageSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      insetPadding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 5.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(7.0),
-      ),
-      title: Text(S.of(context).language),
-      contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 5.0),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: languageOptions
-              .map(
-                (LanguageValue e) => RadioListTile(
-                  title: Text(e.value),
-                  value: e.key,
-                  groupValue: _selectedValue,
-                  onChanged: (val) async {
-                    var prefs = await SharedPreferences.getInstance();
-                    prefs.setString('locale', val.toString());
-                    setState(() {
-                      _selectedValue = val;
-                    });
-                    Navigator.of(context).pop(true);
-                  },
-                ),
-              )
-              .toList(),
-        ),
-      ),
-      actionsPadding: EdgeInsets.symmetric(horizontal: 5.0),
-      buttonPadding: EdgeInsets.symmetric(horizontal: 5.0),
-      actions: <Widget>[
-        TextButton(
-          child: Text(S.of(context).cancel),
-          onPressed: () {
-            Navigator.of(context).pop(true);
-          },
-        ),
-      ],
+    return ListBody(
+      children: languageOptions
+          .map(
+            (LanguageValue e) => RadioListTile(
+              title: Text(e.value),
+              value: e.key,
+              groupValue: _selectedValue,
+              onChanged: (val) async {
+                var prefs = await SharedPreferences.getInstance();
+                prefs.setString('locale', val.toString());
+                setState(() {
+                  _selectedValue = val;
+                });
+                Navigator.of(context).pop(true);
+              },
+            ),
+          )
+          .toList(),
     );
   }
 }

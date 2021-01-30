@@ -94,7 +94,7 @@ class _LockScreenState extends State<LockScreen> {
       bool isAuthenticated = false;
       try {
         isAuthenticated = await _localAuthentication.authenticateWithBiometrics(
-          localizedReason: S.of(context).authenticateLabel,
+          localizedReason: 'Authenticate to show data',
           stickyAuth: true,
         );
       } on PlatformException catch (e) {

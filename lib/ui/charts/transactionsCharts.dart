@@ -69,7 +69,7 @@ class TransactionChartState extends State<TransactionChart> {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      color: const Color(0xff2c4260),
+      color: Colors.transparent, //const Color(0xff2c4260),
       child: Padding(
         padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
         child: Column(
@@ -293,7 +293,9 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
       barRods: [
         BarChartRodData(
           y: y1,
-          colors: [Colors.red, Colors.redAccent],
+          colors: [
+            Colors.red[900],
+          ],
           width: 7,
         ),
       ],
@@ -306,9 +308,10 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      color: widget.accountUuid != null
-          ? Colors.transparent
-          : const Color(0xff2c4260),
+      color: //widget.accountUuid != null
+          //?
+          Colors.transparent,
+      // : const Color(0xff2c4260),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -453,7 +456,7 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
 
   BarChartGroupData makeGroupData(int x, double y1) {
     return BarChartGroupData(
-      barsSpace: 0,
+      barsSpace: 4,
       x: x,
       barRods: [
         BarChartRodData(
@@ -463,7 +466,7 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
             topRight: Radius.circular(7.0),
           ),
           colors: [Colors.red, Colors.redAccent],
-          width: 40,
+          width: 7,
         ),
       ],
       showingTooltipIndicators: [0],
@@ -475,7 +478,7 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      color: const Color(0xff2c4260),
+      color: Colors.transparent, // const Color(0xff2c4260),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -486,13 +489,11 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
               padding: const EdgeInsets.only(top: 40, left: 5, right: 5),
               child: BarChart(
                 BarChartData(
-                  alignment: BarChartAlignment.start,
+                  alignment: BarChartAlignment.spaceAround,
                   maxY: maxY,
                   barTouchData: BarTouchData(
                     enabled: false,
                     touchTooltipData: BarTouchTooltipData(
-                      fitInsideHorizontally: true,
-                      fitInsideVertically: true,
                       tooltipBgColor: Colors.transparent,
                       tooltipPadding: const EdgeInsets.all(0),
                       tooltipBottomMargin: 8,
@@ -513,14 +514,14 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
                     ),
                   ),
                   titlesData: FlTitlesData(
-                    show: false,
+                    show: true,
                     bottomTitles: SideTitles(
                       showTitles: true,
                       getTextStyles: (value) => const TextStyle(
                           color: Color(0xff7589a2),
                           fontWeight: FontWeight.bold,
                           fontSize: 14),
-                      margin: 20,
+                      margin: 5,
                       getTitles: (double value) {
                         return chartDataParsed
                             .elementAt(value.toInt() - 1)['category'];
