@@ -17,21 +17,26 @@ import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:moedeiro/generated/l10n.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPage extends StatefulWidget {
   @override
   MainPageState createState() => MainPageState();
 }
 
-class MainPageState extends State<MainPage> {
+class MainPageState extends State<MainPage> with WidgetsBindingObserver {
+  bool lockScreen;
+  bool useBiometrics;
+  String pin;
   @override
   void initState() {
+    loadSettings();
     Provider.of<AccountModel>(context, listen: false).getAccounts();
     Provider.of<CategoryModel>(context, listen: false).getCategories();
     Provider.of<TransactionModel>(context, listen: false).getTransactions();
     Provider.of<TransfersModel>(context, listen: false).getTransfers();
     super.initState();
-
+    WidgetsBinding.instance.addObserver(this);
     final QuickActions quickActions = QuickActions();
     quickActions.initialize((String shortcutType) {
       // AppLock.of(context).showLockScreen();
@@ -73,15 +78,39 @@ class MainPageState extends State<MainPage> {
     ]);
   }
 
+  void loadSettings() async {
+    var prefs = await SharedPreferences.getInstance();
+
+    lockScreen = prefs.getBool('lockApp') ?? false;
+    useBiometrics = prefs.getBool('useBiometrics') ?? false;
+    pin = prefs.getString('PIN') ?? '0000';
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      // went to Background
+    }
+    if (state == AppLifecycleState.resumed) {
+      if (lockScreen)
+        Navigator.pushNamed(context, '/lockScreen',
+            arguments: {"pin": pin, "useBiometrics": useBiometrics});
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor:
-            WidgetsBinding.instance.window.platformBrightness == Brightness.dark
-                ? Colors.white
-                : Colors.black,
+        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
         statusBarIconBrightness:
             WidgetsBinding.instance.window.platformBrightness == Brightness.dark
                 ? Brightness.light

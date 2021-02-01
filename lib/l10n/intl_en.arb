@@ -57,7 +57,8 @@
   "pinError":"PIN must be a numeric value",
   "pinEmpty":"PIN can not be empty",
   "confirmPin":"Confirm PIN",
-  "balance":"Balance"
+  "balance":"Balance",
+  "pinErrorLenght":"PIN must have four numbers"
 
 
 }

@@ -65,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pin" : MessageLookupByLibrary.simpleMessage("PIN"),
     "pinEmpty" : MessageLookupByLibrary.simpleMessage("PIN can not be empty"),
     "pinError" : MessageLookupByLibrary.simpleMessage("PIN must be a numeric value"),
+    "pinErrorLenght" : MessageLookupByLibrary.simpleMessage("PIN must have four numbers"),
     "save" : MessageLookupByLibrary.simpleMessage("Save"),
     "security" : MessageLookupByLibrary.simpleMessage("Security"),
     "settings" : MessageLookupByLibrary.simpleMessage("Settings"),

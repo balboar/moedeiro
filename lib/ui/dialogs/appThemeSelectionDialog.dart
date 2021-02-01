@@ -4,8 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class AppThemeSelectionDialog extends StatelessWidget {
+  const AppThemeSelectionDialog({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    print(context);
     return AlertDialog(
       insetPadding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 5.0),
       shape: RoundedRectangleBorder(

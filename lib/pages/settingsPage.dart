@@ -251,6 +251,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<bool> _showLanguageDialog() async {
+    BuildContext context1 = context;
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -260,6 +261,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<bool> _showThemeDialog() async {
+    BuildContext context1 = context;
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -310,32 +312,32 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: S.of(context).theme,
                 subtitle: theme,
                 leading: Icon(Icons.lightbulb_outline),
-                onPressed: (BuildContext context) async {
-                  await _showThemeDialog();
-                  var prefs = await SharedPreferences.getInstance();
-                  var _theme = prefs.getString('theme');
-                  if (_theme != null) {
-                    if (_theme == 'default') {
-                      setState(() {
-                        theme = S.of(context).systemDefaultTitle;
-                        Provider.of<ThemeModel>(context, listen: false)
-                            .setSystemDefault();
-                      });
-                    } else {
-                      var activeTheme = themeOptions
-                          .firstWhere((element) => element.key == _theme);
-                      setState(() {
-                        theme = activeTheme.value;
-                      });
+                onPressed: (BuildContext context) {
+                  _showThemeDialog();
+                  // var prefs = await SharedPreferences.getInstance();
+                  // var _theme = prefs.getString('theme');
+                  // if (_theme != null) {
+                  //   if (_theme == 'default') {
+                  //     setState(() {
+                  //       theme = S.of(context).systemDefaultTitle;
+                  //       Provider.of<ThemeModel>(context, listen: false)
+                  //           .setSystemDefault();
+                  //     });
+                  //   } else {
+                  //     var activeTheme = themeOptions
+                  //         .firstWhere((element) => element.key == _theme);
+                  //     setState(() {
+                  //       theme = activeTheme.value;
+                  //     });
 
-                      if (_theme == 'dark')
-                        Provider.of<ThemeModel>(context, listen: false)
-                            .setDark();
-                      else
-                        Provider.of<ThemeModel>(context, listen: false)
-                            .setLight();
-                    }
-                  }
+                  //     if (_theme == 'dark')
+                  //       Provider.of<ThemeModel>(context, listen: false)
+                  //           .setDark();
+                  //     else
+                  //       Provider.of<ThemeModel>(context, listen: false)
+                  //           .setLight();
+                  //   }
+                  // }
                 },
               ),
             ],
@@ -379,7 +381,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       _useBiometrics = !_useBiometrics;
                     });
                     var prefs = await SharedPreferences.getInstance();
-                    prefs.setBool('useBiometrics', _lockApp);
+                    prefs.setBool('useBiometrics', _useBiometrics);
                   },
                   switchValue: _useBiometrics),
               SettingsTile(

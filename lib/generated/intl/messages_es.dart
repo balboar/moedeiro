@@ -65,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pin" : MessageLookupByLibrary.simpleMessage("PIN"),
     "pinEmpty" : MessageLookupByLibrary.simpleMessage("El PIN no puede estar vacio"),
     "pinError" : MessageLookupByLibrary.simpleMessage("El PIN tiene que ser un valor numérico"),
+    "pinErrorLenght" : MessageLookupByLibrary.simpleMessage("El PIN tiene que tener 4 numeros"),
     "save" : MessageLookupByLibrary.simpleMessage("Guardar"),
     "security" : MessageLookupByLibrary.simpleMessage("Seguridad"),
     "settings" : MessageLookupByLibrary.simpleMessage("Ajustes"),

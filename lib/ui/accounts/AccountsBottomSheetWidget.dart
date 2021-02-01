@@ -67,11 +67,13 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
   }
 
   Future<bool> _showMyDialog() async {
+    BuildContext context1 = context;
     return showDialog<bool>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return ComfirmDeleteDialog(
+        
           icon: Icons.account_balance_wallet_outlined,
           title: S.of(context).deleteAccount,
           subtitle: S.of(context).deleteAccountDescription,

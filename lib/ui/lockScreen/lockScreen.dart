@@ -2,11 +2,9 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:moedeiro/ui/lockScreen/DotSecretUI.dart';
 import 'package:moedeiro/ui/lockScreen/lockScreenButton.dart';
-import 'package:moedeiro/generated/l10n.dart';
 
 class LockScreen extends StatefulWidget {
   final String correctString;
@@ -104,7 +102,13 @@ class _LockScreenState extends State<LockScreen> {
       if (!mounted) return;
 
       if (isAuthenticated) {
-        AppLock.of(context).didUnlock();
+        if (Navigator.canPop(context))
+          Navigator.of(context).pop();
+        else
+          Navigator.pushNamed(
+            context,
+            '/',
+          );
       }
     }
   }
@@ -203,7 +207,14 @@ class _LockScreenState extends State<LockScreen> {
         if (widget.onUnlocked != null) {
           widget.onUnlocked();
         }
-        AppLock.of(context).didUnlock();
+
+        if (Navigator.canPop(context))
+          Navigator.of(context).pop();
+        else
+          Navigator.pushNamed(
+            context,
+            '/',
+          );
       } else {
         // send invalid status to DotSecretUI
         validateStreamController.add(false);

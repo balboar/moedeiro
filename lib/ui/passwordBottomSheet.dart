@@ -42,9 +42,9 @@ class _PasswordBottomSheetState extends State<PasswordBottomSheet> {
         } else
           secondPassword = _controller.text;
         if (firstPassword == secondPassword) {
-          Navigator.pop(context);
           var prefs = await SharedPreferences.getInstance();
           prefs.setString('PIN', firstPassword);
+          Navigator.pop(context);
         }
       }
     }
@@ -82,6 +82,8 @@ class _PasswordBottomSheetState extends State<PasswordBottomSheet> {
                         var pin = int.tryParse(value);
                         if (pin == null) {
                           return S.of(context).pinError;
+                        } else if (value.length != 4) {
+                          return S.of(context).pinErrorLenght;
                         } else
                           return null;
                       }

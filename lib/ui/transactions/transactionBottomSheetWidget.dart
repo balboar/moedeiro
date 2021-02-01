@@ -114,6 +114,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   }
 
   Future<bool> _showMyDialog() async {
+    BuildContext context1 = context;
     return showDialog<bool>(
       context: context,
       barrierDismissible: false, // user must tap button!

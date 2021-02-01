@@ -5,6 +5,7 @@ import 'package:moedeiro/pages/chartsPage.dart';
 import 'package:moedeiro/pages/mainPage.dart';
 import 'package:moedeiro/pages/settingsPage.dart';
 import 'package:moedeiro/pages/movementsPage.dart';
+import 'package:moedeiro/ui/lockScreen/lockScreen.dart';
 
 class RouteGenerator {
   static Route<Map<String, dynamic>> generateRoute(RouteSettings settings) {
@@ -14,6 +15,17 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => MainPage());
+      case '/lockScreen':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+            builder: (_) => LockScreen(
+              correctString: args["pin"],
+              canBiometric: args["useBiometrics"],
+              showBiometricFirst: args["useBiometrics"],
+            ),
+          );
+        }
+        break;
       case '/accountTransactionsPage':
         if (args is bool) {
           return MaterialPageRoute(

@@ -614,6 +614,16 @@ class S {
       args: [],
     );
   }
+
+  /// `PIN must have four numbers`
+  String get pinErrorLenght {
+    return Intl.message(
+      'PIN must have four numbers',
+      name: 'pinErrorLenght',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
