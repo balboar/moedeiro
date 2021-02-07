@@ -2,12 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:moedeiro/models/theme.dart';
+import 'package:moedeiro/provider/mainModel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:moedeiro/dataModels/theme.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/generated/l10n.dart';
-import 'package:moedeiro/models/mainModel.dart';
 import 'package:moedeiro/util/routeGenerator.dart';
 import 'package:moedeiro/util/utils.dart';
 

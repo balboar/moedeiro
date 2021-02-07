@@ -166,10 +166,23 @@ class DB {
     return await _db.transaction(
       (txn) async {
         return await txn.rawQuery(
-          'SELECT a.*,b.name accountName,c.name categoryName FROM transactions a ' +
+          'SELECT a.*,b.name accountName,c.name categoryName,coalesce(b.initialAmount,0.0) initialAmount FROM transactions a ' +
               'left outer join accounts b on b.uuid=a.account ' +
               'left outer join category c on c.uuid=a.category order by a.timestamp desc',
         );
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getAccountTransactions(
+      String accountUuid) async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            'SELECT a.*,b.name accountName,c.name categoryName,coalesce(b.initialAmount,0.0) initialAmount FROM transactions a ' +
+                'left outer join accounts b on b.uuid=a.account ' +
+                'left outer join category c on c.uuid=a.category where a.account=? order by a.timestamp desc',
+            [accountUuid]);
       },
     );
   }
@@ -415,12 +428,12 @@ class DB {
     });
   }
 
-  static void deleteItem(String table, String uuid) async {
-    await _db.delete(table, where: "uuid=?", whereArgs: [uuid]);
+  static Future<int> deleteItem(String table, String uuid) async {
+    return await _db.delete(table, where: "uuid=?", whereArgs: [uuid]);
   }
 
-  static void update(String table, Map<String, dynamic> item) async {
-    await _db.update(
+  static Future<int> update(String table, Map<String, dynamic> item) async {
+    return await _db.update(
       table,
       item,
       where: "uuid = ?",

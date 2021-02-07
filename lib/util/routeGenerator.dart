@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:moedeiro/pages/accountsPage.dart';
-import 'package:moedeiro/pages/categoriesPage.dart';
-import 'package:moedeiro/pages/chartsPage.dart';
-import 'package:moedeiro/pages/mainPage.dart';
-import 'package:moedeiro/pages/settingsPage.dart';
-import 'package:moedeiro/pages/movementsPage.dart';
-import 'package:moedeiro/ui/lockScreen/lockScreen.dart';
+import 'package:moedeiro/screens/accounts/accountsPage.dart';
+import 'package:moedeiro/screens/categories/categoriesPage.dart';
+import 'package:moedeiro/screens/categoryDetail/categoryPage.dart';
+import 'package:moedeiro/screens/charts/chartsPage.dart';
+import 'package:moedeiro/screens/lockScreen/lockScreen.dart';
+import 'package:moedeiro/screens/main/mainPage.dart';
+import 'package:moedeiro/screens/movements/movementsPage.dart';
+import 'package:moedeiro/screens/settings/settingsPage.dart';
 
 class RouteGenerator {
   static Route<Map<String, dynamic>> generateRoute(RouteSettings settings) {
@@ -55,6 +56,18 @@ class RouteGenerator {
           );
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
+        break;
+
+      case '/categoryPage':
+        // return MaterialPageRoute(builder: (_) => CategoriesPage());
+        // Validation of correct data type
+        if (args is String) {
+          return MaterialPageRoute(
+            builder: (_) => CategoryPage(
+              categoryUuid: args,
+            ),
+          );
+        }
         break;
       case '/accountsPage':
         return MaterialPageRoute(builder: (_) => AccountsPage());
