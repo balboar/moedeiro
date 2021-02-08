@@ -35,8 +35,9 @@ class AccountModel extends ChangeNotifier {
       expenses = expenses + account.expensesMonth;
       _accounts.add(account);
       if (account.amount > 0) _totalAmount = _totalAmount + account.amount;
+      notifyListeners();
     });
-    notifyListeners();
+
     return Future.value(true);
   }
 
