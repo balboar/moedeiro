@@ -8,7 +8,7 @@ import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/models/transfer.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/accounts/components/accountWidgets.dart';
-import 'package:moedeiro/screens/movements/components/transactionBottomSheetWidget.dart';
+import 'package:moedeiro/screens/movements/components/transactionBottomSheet.dart';
 import 'package:moedeiro/screens/movements/components/transactionTransferBottomSheetWidget.dart';
 import 'package:moedeiro/screens/movements/components/transactionWidgets.dart';
 import 'package:moedeiro/screens/movements/components/transferBottomSheetWidget.dart';

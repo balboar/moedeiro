@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/models/transaction.dart';
-import 'package:moedeiro/screens/movements/components/transactionBottomSheetWidget.dart';
+import 'package:moedeiro/screens/movements/components/transactionBottomSheet.dart';
 import 'package:moedeiro/util/utils.dart';
 
 class TransactionTile extends StatelessWidget {

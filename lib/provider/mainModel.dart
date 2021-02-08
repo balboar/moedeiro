@@ -142,6 +142,15 @@ class CategoryModel extends ChangeNotifier {
     return Future.value(true);
   }
 
+  bool isExpense(String categoryUuid) {
+    try {
+      incomecategories.firstWhere((Categori cat) => cat.uuid == categoryUuid);
+      return false;
+    } catch (e) {
+      return true;
+    }
+  }
+
   String getCategoryName(String uuid) {
     String name;
     try {

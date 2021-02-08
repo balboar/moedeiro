@@ -26,7 +26,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   TextEditingController _categoryController = TextEditingController();
   TextEditingController _accountController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
-  bool isExpense = false;
+  bool isExpense;
   double space = 7.0;
 
   @override
@@ -47,11 +47,15 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     _categoryController.text = _data['categoryName'] ?? '';
     _accountController.text = _data['accountName'] ?? '';
     _amountController.text = _data['amount'].toString() ?? '';
+
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
+    if (_data.containsKey('category') && isExpense == null)
+      isExpense = Provider.of<CategoryModel>(context, listen: false)
+          .isExpense(_data['category']);
     if (_data['account'] == null) {
       var _accounts =
           Provider.of<AccountModel>(context, listen: false).accounts;
@@ -144,7 +148,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   void _submitForm(Function save) {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      if (isExpense) _data['amount'] = -1 * _data['amount'];
+      if (isExpense) _data['amount'] = -1 * _data['amount'].abs();
       save(Transaction.fromMap(_data)).then(
         (value) {
           Provider.of<AccountModel>(context, listen: false).getAccounts();

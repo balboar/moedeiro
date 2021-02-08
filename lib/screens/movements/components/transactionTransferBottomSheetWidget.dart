@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/components/moedeiroWidgets.dart';
 import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/models/transfer.dart';
-import 'package:moedeiro/screens/movements/components/transactionBottomSheetWidget.dart';
+import 'package:moedeiro/screens/movements/components/transactionBottomSheet.dart';
 import 'package:moedeiro/screens/movements/components/transferBottomSheetWidget.dart';
 
 class TransactionTransferBottomSheet extends StatefulWidget {
