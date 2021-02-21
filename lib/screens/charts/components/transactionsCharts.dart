@@ -5,6 +5,10 @@ import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 
 class TransactionChart extends StatefulWidget {
+  final String accountUuid;
+
+  const TransactionChart({Key key, this.accountUuid}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => TransactionChartState();
 }
@@ -16,21 +20,28 @@ class TransactionChartState extends State<TransactionChart> {
   double maxY = 2000;
 
   List<BarChartGroupData> rawBarGroups = [];
-  List<BarChartGroupData> showingBarGroups;
+  List<BarChartGroupData> showingBarGroups = [];
 
   int touchedGroupIndex;
 
   @override
   void initState() {
-    super.initState();
     loadChartData();
+    super.initState();
   }
 
   void loadChartData() async {
-    var chartData = await Provider.of<TransactionModel>(context, listen: false)
-        .getChartData();
+    List<Map<String, dynamic>> chartData;
+
+    if (widget.accountUuid != null)
+      chartData = await Provider.of<TransactionModel>(context, listen: false)
+          .getChartDataByAccount(widget.accountUuid);
+    else
+      chartData = await Provider.of<TransactionModel>(context, listen: false)
+          .getChartData();
 //{amount: 7.0, monthofyear: 01, year: 2021, type: E},
     List<Map<String, dynamic>> chartDataParsed = [];
+
     Map<String, dynamic> el = {};
     chartData.forEach((element) {
       if (el.isNotEmpty) {
@@ -83,54 +94,55 @@ class TransactionChartState extends State<TransactionChart> {
                 child: BarChart(
                   BarChartData(
                     maxY: maxY,
+                    minY: 0,
                     barTouchData: BarTouchData(
                         touchTooltipData: BarTouchTooltipData(
                           tooltipBgColor: Colors.grey,
                           getTooltipItem: (_a, _b, _c, _d) => null,
                         ),
                         touchCallback: (response) {
-                          if (response.spot == null) {
-                            setState(() {
-                              touchedGroupIndex = -1;
-                              showingBarGroups = List.of(rawBarGroups);
-                            });
-                            return;
-                          }
+                          // if (response.spot == null) {
+                          //   setState(() {
+                          //     touchedGroupIndex = -1;
+                          //     showingBarGroups = List.of(rawBarGroups);
+                          //   });
+                          //   return;
+                          // }
 
-                          touchedGroupIndex =
-                              response.spot.touchedBarGroupIndex;
+                          // touchedGroupIndex =
+                          //     response.spot.touchedBarGroupIndex;
 
-                          setState(() {
-                            if (response.touchInput is FlLongPressEnd ||
-                                response.touchInput is FlPanEnd) {
-                              touchedGroupIndex = -1;
-                              showingBarGroups = List.of(rawBarGroups);
-                            } else {
-                              showingBarGroups = List.of(rawBarGroups);
-                              if (touchedGroupIndex != -1) {
-                                double sum = 0;
-                                for (BarChartRodData rod
-                                    in showingBarGroups[touchedGroupIndex]
-                                        .barRods) {
-                                  sum += rod.y;
-                                }
-                                final avg = sum /
-                                    showingBarGroups[touchedGroupIndex]
-                                        .barRods
-                                        .length;
+                          // setState(() {
+                          //   if (response.touchInput is FlLongPressEnd ||
+                          //       response.touchInput is FlPanEnd) {
+                          //     touchedGroupIndex = -1;
+                          //     showingBarGroups = List.of(rawBarGroups);
+                          //   } else {
+                          //     showingBarGroups = List.of(rawBarGroups);
+                          //     if (touchedGroupIndex != -1) {
+                          //       double sum = 0;
+                          //       for (BarChartRodData rod
+                          //           in showingBarGroups[touchedGroupIndex]
+                          //               .barRods) {
+                          //         sum += rod.y;
+                          //       }
+                          //       final avg = sum /
+                          //           showingBarGroups[touchedGroupIndex]
+                          //               .barRods
+                          //               .length;
 
-                                showingBarGroups[touchedGroupIndex] =
-                                    showingBarGroups[touchedGroupIndex]
-                                        .copyWith(
-                                  barRods: showingBarGroups[touchedGroupIndex]
-                                      .barRods
-                                      .map((rod) {
-                                    return rod.copyWith(y: avg);
-                                  }).toList(),
-                                );
-                              }
-                            }
-                          });
+                          //       showingBarGroups[touchedGroupIndex] =
+                          //           showingBarGroups[touchedGroupIndex]
+                          //               .copyWith(
+                          //         barRods: showingBarGroups[touchedGroupIndex]
+                          //             .barRods
+                          //             .map((rod) {
+                          //           return rod.copyWith(y: avg);
+                          //         }).toList(),
+                          //       );
+                          //     }
+                          //   }
+                          // });
                         }),
                     titlesData: FlTitlesData(
                       show: true,
@@ -216,6 +228,8 @@ class TransactionChartState extends State<TransactionChart> {
   }
 
   BarChartGroupData makeGroupData(int x, double y1, double y2) {
+    if (y1 == null) y1 = 0;
+    if (y2 == null) y2 = 0;
     return BarChartGroupData(barsSpace: 4, x: x, barRods: [
       BarChartRodData(
         y: y1,
@@ -408,59 +422,24 @@ class ExpensesByCategoryChart extends StatefulWidget {
 }
 
 class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
-  double maxY = 2000;
+  double maxY = 0;
   int index = 1;
-  List<Map<String, dynamic>> chartDataParsed = [];
+  int touchedIndex;
 
   List<BarChartGroupData> rawBarGroups = [];
   List<BarChartGroupData> showingBarGroups = [];
   @override
   void initState() {
-    loadChartData();
     super.initState();
   }
 
-  void loadChartData() async {
-    var chartData = await Provider.of<TransactionModel>(context, listen: false)
-        .getCategoryExpensesChartData();
-//{amount: 7.0, monthofyear: 01, year: 2021, type: E},
-
-    Map<String, dynamic> el = {};
-    chartData.forEach((element) {
-      el['x'] = index;
-      index = index + 1;
-      if (element['name'].toString().length > 7)
-        el['category'] = element['name'].toString().substring(0, 7);
-      else
-        el['category'] = element['name'];
-      el['expense'] = element['amount'];
-
-      chartDataParsed.add(Map.from(el));
-    });
-
-    if (chartDataParsed.length > 0) {
-      chartDataParsed.forEach((element) {
-        rawBarGroups.add(makeGroupData(element['x'], element['expense']));
-        showingBarGroups = rawBarGroups;
-      });
-    }
-
-    setState(() {
-      if (chartDataParsed.length > 0)
-        maxY = chartDataParsed.reduce((currentMap, nextMap) =>
-            currentMap['expense'] > nextMap['expense']
-                ? currentMap
-                : nextMap)['expense'];
-    });
-  }
-
-  BarChartGroupData makeGroupData(int x, double y1) {
+  BarChartGroupData makeGroupData(int x, double y1, bool isTouched) {
     return BarChartGroupData(
       barsSpace: 4,
       x: x,
       barRods: [
         BarChartRodData(
-          y: y1,
+          y: isTouched ? y1 + 1 : y1,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(7.0),
             topRight: Radius.circular(7.0),
@@ -469,30 +448,57 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
           width: 7,
         ),
       ],
-      showingTooltipIndicators: [0],
+      showingTooltipIndicators: [],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      color: Colors.transparent, // const Color(0xff2c4260),
-      child: Column(
+    return Consumer<TransactionModel>(
+        builder: (BuildContext context, TransactionModel model, Widget child) {
+      showingBarGroups.clear();
+      index = 1;
+      rawBarGroups.clear();
+      model.transactionsOfTheMonth.forEach((Map<String, dynamic> value) {
+        if (index < 7)
+          rawBarGroups.add(
+              makeGroupData(index, value['amount'], index == touchedIndex));
+        index = index + 1;
+      });
+      showingBarGroups = rawBarGroups;
+
+      if (model.transactionsOfTheMonth.length > 0)
+        maxY = model.transactionsOfTheMonth.reduce((currentMap, nextMap) =>
+            currentMap['amount'] > nextMap['amount']
+                ? currentMap
+                : nextMap)['amount'];
+
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top: 40, left: 5, right: 5),
+              padding: const EdgeInsets.only(
+                  top: 40, left: 10, right: 10, bottom: 20),
               child: BarChart(
                 BarChartData(
                   alignment: BarChartAlignment.spaceAround,
                   maxY: maxY,
                   barTouchData: BarTouchData(
-                    enabled: false,
+                    touchCallback: (barTouchResponse) {
+                      setState(() {
+                        if (barTouchResponse.spot != null &&
+                            barTouchResponse.touchInput is! FlPanEnd &&
+                            barTouchResponse.touchInput is! FlLongPressEnd) {
+                          touchedIndex =
+                              barTouchResponse.spot.touchedBarGroupIndex;
+                        } else {
+                          touchedIndex = -1;
+                        }
+                      });
+                    },
                     touchTooltipData: BarTouchTooltipData(
                       tooltipBgColor: Colors.transparent,
                       tooltipPadding: const EdgeInsets.all(0),
@@ -516,15 +522,16 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
                   titlesData: FlTitlesData(
                     show: true,
                     bottomTitles: SideTitles(
-                      showTitles: true,
+                      rotateAngle: 270,
+                      showTitles: false,
                       getTextStyles: (value) => const TextStyle(
                           color: Color(0xff7589a2),
                           fontWeight: FontWeight.bold,
                           fontSize: 14),
                       margin: 5,
                       getTitles: (double value) {
-                        return chartDataParsed
-                            .elementAt(value.toInt() - 1)['category'];
+                        return model.transactionsOfTheMonth
+                            .elementAt(value.toInt() - 1)['name'];
                       },
                     ),
                     leftTitles: SideTitles(showTitles: false),
@@ -538,8 +545,8 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
             ),
           ),
         ],
-      ),
-    );
+      );
+    });
   }
 }
 

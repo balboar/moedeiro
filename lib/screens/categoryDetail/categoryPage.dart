@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/components/moedeiroWidgets.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
+import 'package:moedeiro/models/categories.dart';
 import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/categories/components/CategoryBottomSheetWidget.dart';
@@ -18,6 +19,15 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Categori category;
+
+  @override
+  void initState() {
+    if (widget.categoryUuid != null)
+      category = Provider.of<CategoryModel>(context, listen: false)
+          .getCategory(widget.categoryUuid);
+    super.initState();
+  }
 
   List<Widget> buildActions() {
     return <Widget>[
@@ -27,7 +37,7 @@ class _CategoryPageState extends State<CategoryPage> {
         onPressed: () {
           showCustomModalBottomSheet(
             context,
-            CategoryBottomSheet(null),
+            CategoryBottomSheet(category),
           );
         },
       ),
@@ -65,6 +75,8 @@ class _CategoryPageState extends State<CategoryPage> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
+            title: Text(category.name),
+            actions: buildActions(),
             floating: false,
             expandedHeight: MediaQuery.of(context).size.height * 0.30,
           ),

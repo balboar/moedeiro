@@ -62,15 +62,9 @@ class TransactionTile extends StatelessWidget {
                         Container(
                           width: 10,
                         ),
-                        // Text(transaction.accountName ?? '',
-                        //     style: Theme.of(context).textTheme.subtitle1),
+                        Text(transaction.accountName ?? '',
+                            style: Theme.of(context).textTheme.subtitle1),
                         //     Text(
-                        Text(
-                            DateFormat.yMd().format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  transaction.timestamp),
-                            ),
-                            style: Theme.of(context).textTheme.subtitle2),
                       ],
                     ),
                   ],
@@ -88,14 +82,27 @@ class TransactionTile extends StatelessWidget {
                     children: [
                       Text(
                         formatCurrency(context, transaction.amount),
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style:
+                            // Theme.of(context).textTheme.bodyText1.copyWith(
+
+                            //       color: transaction.amount > 0
+                            //           ? Colors.green.withOpacity(0.9)
+                            //           : Colors.red.withOpacity(0.9),
+                            //     ),
+                            Theme.of(context).textTheme.bodyText1,
                       ),
                       Text(
-                        accountBalance != null
-                            ? formatCurrency(context, accountBalance)
-                            : '',
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
+                          DateFormat.yMd().format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                transaction.timestamp),
+                          ),
+                          style: Theme.of(context).textTheme.subtitle2),
+                      // Text(
+                      //   accountBalance != null
+                      //       ? formatCurrency(context, accountBalance)
+                      //       : '',
+                      //   style: Theme.of(context).textTheme.subtitle2,
+                      // ),
                     ],
                   ),
                 ],
@@ -103,12 +110,12 @@ class TransactionTile extends StatelessWidget {
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 10.0),
-              width: 5,
+              width: 2.5,
               decoration: BoxDecoration(
                 color: transaction.amount > 0 ? Colors.green : Colors.red,
                 borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(4),
-                  topRight: Radius.circular(4),
+                  bottomRight: Radius.circular(2),
+                  topRight: Radius.circular(2),
                 ),
               ),
             ),

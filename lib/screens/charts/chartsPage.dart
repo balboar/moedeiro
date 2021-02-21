@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/components/moedeiroWidgets.dart';
 import 'package:moedeiro/generated/l10n.dart';
 import 'package:moedeiro/provider/mainModel.dart';
-import 'package:moedeiro/screens/charts/components/transactionsCharts.dart';
+import 'package:moedeiro/screens/charts/components/TransactionsListBottonSheet.dart';
+import 'package:moedeiro/screens/charts/components/monthDetail.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class ChartsPage extends StatelessWidget {
   const ChartsPage({Key key}) : super(key: key);
@@ -13,13 +15,15 @@ class ChartsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          DropdownButtonFilter(),
-        ],
-        title: Text(S.of(context).movementsTitle),
+      // appBar: AppBar(
+      //   actions: [
+      //     DropdownButtonFilter(),
+      //   ],
+      //   title: Text(S.of(context).movementsTitle),
+      // ),
+      body: SafeArea(
+        child: MonthViewer(),
       ),
-      body: MonthViewer(),
     );
   }
 }
@@ -35,6 +39,9 @@ class _MonthViewerState extends State<MonthViewer> {
   PageController controller = PageController(
     viewportFraction: 0.4,
   );
+  double totalExpensesMonth;
+  String month;
+  String year;
 
   final controllerCharts = PageController(viewportFraction: 1);
   List<String> _months = [
@@ -51,145 +58,150 @@ class _MonthViewerState extends State<MonthViewer> {
     'November',
     'December'
   ];
-  List<Map<String, dynamic>> chartData = [];
-  List<Widget> dataWidgets = [];
-  List<Map<String, dynamic>> monthData = [];
-  List<Widget> monthDataWidgets = [];
   @override
   void initState() {
-    loadChartData();
-    super.initState();
-  }
+    var date = new DateTime.now();
 
-  void loadChartData() async {
-    chartData = await Provider.of<TransactionModel>(context, listen: false)
+    month = date.month.toString().padLeft(2, '0');
+    year = date.year.toString();
+    Provider.of<TransactionModel>(context, listen: false)
+        .getTrasactionsByMonthAndCategory(month, year);
+    Provider.of<TransactionModel>(context, listen: false)
         .getTrasactionsGroupedByMonthAndCategory();
-    chartData.forEach((element) {
-      dataWidgets.add(
-        Column(
-          children: [
-            Text(
-              formatCurrency(context, element['amount']),
-              style: Theme.of(context).textTheme.headline5,
-            ),
-            Text(
-              _months[int.parse(element['monthofyear']) - 1],
-              style: Theme.of(context).textTheme.subtitle2,
-            )
-          ],
-        ),
-      );
-    });
-    setState(() {
-      dataWidgets = dataWidgets;
-    });
-    controller.jumpToPage(dataWidgets.length - 1);
-
-    loadMonthData(chartData.length - 1);
-  }
-
-  void loadMonthData(int pageIndex) async {
-    monthData = await Provider.of<TransactionModel>(context, listen: false)
-        .getTrasactionsByMonthAndCategory(
-            chartData[pageIndex]['monthofyear'], chartData[pageIndex]['year']);
-    monthData.forEach((element) {
-      monthDataWidgets.add(
-        Column(
-          children: [
-            Text(
-              formatCurrency(context, element['amount']),
-              style: Theme.of(context).textTheme.headline5,
-            ),
-            Text(
-              element['name'],
-              style: Theme.of(context).textTheme.subtitle2,
-            )
-          ],
-        ),
-      );
-    });
-    setState(() {
-      monthDataWidgets = monthDataWidgets;
-    });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Container(
-          //  margin: EdgeInsets.only(left: 10.0, right: 10, bottom: 2.0),
-          height: 200,
-          child: PageView(
-            physics: BouncingScrollPhysics(),
-            controller: controllerCharts,
-            children: [
-              ExpensesByCategoryChart(),
-              ExpensesByMonthChart(),
-              TransactionChart(),
-            ],
-            scrollDirection: Axis.horizontal,
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).movementsTitle),
+      ),
+      body: SafeArea(
+        child: Consumer<TransactionModel>(
+          builder:
+              (BuildContext context, TransactionModel model, Widget child) {
+            if (totalExpensesMonth == null &&
+                model.monthlyTransactions != null) {
+              totalExpensesMonth = model.monthlyTransactions[0]['amount'];
+            }
+            return model.monthlyTransactions == null
+                ? Center()
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      // Container(
+                      //   height: 200,
+                      //   child: ExpensesByCategoryChart(),
+                      // ),
+                      Expanded(
+                        child: model.transactionsOfTheMonth.length > 0
+                            ? ListView.builder(
+                                reverse: true,
+                                itemCount: model.transactionsOfTheMonth.length,
+                                itemExtent: 60.0,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return CustomCard(
+                                      model.transactionsOfTheMonth[index],
+                                      totalExpensesMonth,
+                                      month,
+                                      year);
+                                },
+                              )
+                            : NoDataWidgetVertical(),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 10.0),
+                        height: 60,
+                        child: PageView.builder(
+                          itemBuilder: (BuildContext context, int index) {
+                            return MonthDetail(
+                              amount: model.monthlyTransactions[index]
+                                  ['amount'],
+                              month: _months[int.parse(
+                                      model.monthlyTransactions[index]
+                                          ['monthofyear']) -
+                                  1],
+                            );
+                          },
+                          itemCount: model.monthlyTransactions.length,
+                          pageSnapping: true,
+                          reverse: true,
+                          onPageChanged: (int index) async {
+                            Provider.of<TransactionModel>(context,
+                                    listen: false)
+                                .getTrasactionsByMonthAndCategory(
+                                    model.monthlyTransactions[index]
+                                        ['monthofyear'],
+                                    model.monthlyTransactions[index]['year']);
+                            month =
+                                model.monthlyTransactions[index]['monthofyear'];
+                            year = model.monthlyTransactions[index]['year'];
+                            totalExpensesMonth =
+                                model.monthlyTransactions[index]['amount'];
+                          },
+                          controller: controller,
+                        ),
+                      ),
+                    ],
+                  );
+          },
         ),
-        Container(
-          margin: EdgeInsets.only(bottom: 5.0),
-          child: SmoothPageIndicator(
-            controller: controllerCharts,
-            count: 3,
-            effect: WormEffect(
-                dotHeight: 7,
-                activeDotColor: Colors.blue,
-                dotWidth: 7,
-                dotColor: Colors.grey),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 5.0),
-          height: 60,
-          child: PageView(
-            onPageChanged: (int index) async {
-              loadMonthData(index);
-            },
-            children: dataWidgets,
-            controller: controller,
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: monthData.length,
-            itemExtent: 60.0,
-            itemBuilder: (BuildContext context, int index) {
-              return CustomCard(monthData[index]);
-            },
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
 
 class CustomCard extends StatelessWidget {
   final Map<String, dynamic> data;
-  const CustomCard(this.data, {Key key}) : super(key: key);
+  final double total;
+  final String month;
+  final String year;
+  const CustomCard(this.data, this.total, this.month, this.year, {Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Theme.of(context).backgroundColor,
-        radius: 23.0,
-        child: CircleAvatar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          child: Text(
-            data['total'].toString(),
-            style:
-                TextStyle(color: Theme.of(context).textTheme.subtitle1.color),
-          ),
-          radius: 21.5,
+      onTap: () {
+        showModalBottomSheet(
+            enableDrag: true,
+            context: context,
+            isScrollControlled: true,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            builder: (BuildContext context) {
+              return TransactionsListBottomSheet(data['uuid'], month, year);
+            });
+      },
+      leading: CircularPercentIndicator(
+        radius: 40.0,
+        lineWidth: 2.5,
+        percent: data['amount'] / total,
+        center: Text(
+          '${data['total'].toString()}x',
+          style: TextStyle(color: Theme.of(context).textTheme.subtitle1.color),
         ),
+        backgroundColor: Colors.transparent,
+        circularStrokeCap: CircularStrokeCap.round,
+        progressColor: Colors.redAccent,
       ),
+
+      // leading: CircleAvatar(
+      //   backgroundColor: Theme.of(context).backgroundColor,
+      //   radius: 23.0,
+      //   child: CircleAvatar(
+      //     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      //     child: Text(
+      //       data['total'].toString(),
+      //       style:
+      //           TextStyle(color: Theme.of(context).textTheme.subtitle1.color),
+      //     ),
+      //     radius: 21.5,
+      //   ),
+      // ),
       title: Text(
         data['name'] ?? '',
         style: TextStyle(
@@ -215,7 +227,7 @@ class DropdownButtonFilter extends StatefulWidget {
 }
 
 class _DropdownButtonFilterState extends State<DropdownButtonFilter> {
-  String _value = 'w';
+  String _value = 'm';
   @override
   void initState() {
     loadSettings();
@@ -234,10 +246,10 @@ class _DropdownButtonFilterState extends State<DropdownButtonFilter> {
         underline: Container(color: Colors.transparent),
         style: Theme.of(context).textTheme.headline6,
         items: [
-          DropdownMenuItem<String>(
-            child: Text('Weekly'),
-            value: 'w',
-          ),
+          // DropdownMenuItem<String>(
+          //   child: Text('Weekly'),
+          //   value: 'w',
+          // ),
           DropdownMenuItem<String>(
             child: Text('Monthly'),
             value: 'm',

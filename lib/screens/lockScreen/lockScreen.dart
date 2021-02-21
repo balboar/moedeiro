@@ -107,7 +107,7 @@ class _LockScreenState extends State<LockScreen> {
         if (Navigator.canPop(context))
           Navigator.of(context).pop();
         else
-          Navigator.pushNamed(
+          Navigator.pushReplacementNamed(
             context,
             '/',
           );
@@ -213,7 +213,7 @@ class _LockScreenState extends State<LockScreen> {
         if (Navigator.canPop(context))
           Navigator.of(context).pop();
         else
-          Navigator.pushNamed(
+          Navigator.pushReplacementNamed(
             context,
             '/',
           );

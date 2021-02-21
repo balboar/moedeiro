@@ -31,8 +31,9 @@ class AppTheme {
     cardColor: Color(
         0xFF334051), //293342), //Colors.grey[900].withOpacity(0.8), //Color(0xFF151515),
     bottomSheetTheme: BottomSheetThemeData(
-      backgroundColor: Color(0xFF293342),
+      backgroundColor: Color(0xFF1f2732), // Color(0xFF293342),
     ),
+
     textTheme: TextTheme(
         bodyText1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
     // canvasColor: Color(0xFF020203),
@@ -46,7 +47,7 @@ class AppTheme {
     ),
     appBarTheme: AppBarTheme(
       color: Color(0xFF293342), // Color(0xFF151515),
-      elevation: 0.0,
+      elevation: 0.0, centerTitle: true,
     ),
   );
 }

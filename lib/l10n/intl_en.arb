@@ -58,7 +58,8 @@
   "pinEmpty":"PIN can not be empty",
   "confirmPin":"Confirm PIN",
   "balance":"Balance",
-  "pinErrorLenght":"PIN must have four numbers"
+  "pinErrorLenght":"PIN must have four numbers",
+  "categories":"Categories"
 
 
 }

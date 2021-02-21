@@ -41,22 +41,14 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
       // AppLock.of(context).showLockScreen();
       if (shortcutType == 'transaction') {
         showCustomModalBottomSheet(
-                context,
-                TransactionBottomSheet(Transaction(
-                    timestamp: DateTime.now().millisecondsSinceEpoch)))
-            .then((value) {
-          Provider.of<AccountModel>(context, listen: false).getAccounts();
-          Provider.of<CategoryModel>(context, listen: false).getCategories();
-        });
+            context,
+            TransactionBottomSheet(
+                Transaction(timestamp: DateTime.now().millisecondsSinceEpoch)));
       } else if (shortcutType == 'transfer') {
         showCustomModalBottomSheet(
-                context,
-                TransferBottomSheet(
-                    Transfer(timestamp: DateTime.now().millisecondsSinceEpoch)))
-            .then((value) {
-          Provider.of<AccountModel>(context, listen: false).getAccounts();
-          Provider.of<CategoryModel>(context, listen: false).getCategories();
-        });
+            context,
+            TransferBottomSheet(
+                Transfer(timestamp: DateTime.now().millisecondsSinceEpoch)));
       }
     });
 
@@ -93,7 +85,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
     }
     if (state == AppLifecycleState.resumed) {
       if (lockScreen)
-        Navigator.pushNamed(context, '/lockScreen',
+        Navigator.pushReplacementNamed(context, '/lockScreen',
             arguments: {"pin": pin, "useBiometrics": useBiometrics});
     }
   }
@@ -218,41 +210,50 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                   },
                 ),
                 Padding(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              '/chartsPage',
-                            );
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                S.of(context).expensesMonth,
-                                style: Theme.of(context).textTheme.bodyText2,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/chartsPage',
+                      );
+                    },
+                    child: Card(
+                      elevation: 0,
+                      color: Colors.transparent,
+                      margin: EdgeInsets.zero,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    S.of(context).expensesMonth,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .copyWith(
+                                            fontWeight: FontWeight.normal),
+                                  ),
+                                  Consumer<AccountModel>(builder:
+                                      (BuildContext context, AccountModel model,
+                                          Widget child) {
+                                    return Text(
+                                      '${formatCurrency(context, model.expenses)}',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    );
+                                  }),
+                                ],
                               ),
-                              Consumer<AccountModel>(builder:
-                                  (BuildContext context, AccountModel model,
-                                      Widget child) {
-                                return Text(
-                                  '${formatCurrency(context, model.expenses)}',
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Icon(Icons.arrow_forward),
-                      ),
-                    ],
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(Icons.arrow_forward),
+                            ),
+                          ]),
+                    ),
                   ),
                   padding: EdgeInsets.only(
                     left: 20.0,
@@ -261,29 +262,73 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                     bottom: 15.0,
                   ),
                 ),
-                Container(
-                  height: 85,
-                  margin: EdgeInsets.only(left: 10.0, top: 10.0),
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      OptionsCard(
-                        Icons.dashboard_outlined,
-                        Colors.green,
-                        () {
-                          Navigator.pushNamed(context, '/categoriesPage');
-                        },
-                        S.of(context).categoryTitle,
-                      ),
-                      OptionsCard(
-                        Icons.receipt_outlined,
-                        Colors.blue,
-                        () {},
-                        S.of(context).budgetsTitle,
-                      ),
-                    ],
+                Padding(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/categoriesPage',
+                      );
+                    },
+                    child: Card(
+                      elevation: 0,
+                      color: Colors.transparent,
+                      margin: EdgeInsets.zero,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    S.of(context).categories,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .copyWith(
+                                            fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(Icons.arrow_forward),
+                            ),
+                          ]),
+                    ),
+                  ),
+                  padding: EdgeInsets.only(
+                    left: 20.0,
+                    right: 10.0,
+                    top: 15.0,
+                    bottom: 15.0,
                   ),
                 ),
+                // Container(
+                //   height: 85,
+                //   margin: EdgeInsets.only(left: 10.0, top: 10.0),
+                //   child: ListView(
+                //     scrollDirection: Axis.horizontal,
+                //     children: [
+                //       OptionsCard(
+                //         Icons.dashboard_outlined,
+                //         Colors.green,
+                //         () {
+                //           Navigator.pushNamed(context, '/categoriesPage');
+                //         },
+                //         S.of(context).categoryTitle,
+                //       ),
+                //       OptionsCard(
+                //         Icons.receipt_outlined,
+                //         Colors.blue,
+                //         () {},
+                //         S.of(context).budgetsTitle,
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 MainPageSectionStateless(
                   S.of(context).transactionsTitle,
                   () {

@@ -1,9 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:moedeiro/models/accounts.dart';
 import 'package:moedeiro/provider/mainModel.dart';
-import 'package:moedeiro/screens/charts/components/accountCharts.dart';
+import 'package:moedeiro/screens/accounts/components/accountCharts.dart';
 import 'package:moedeiro/screens/charts/components/transactionsCharts.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
@@ -223,9 +222,10 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
                   physics: BouncingScrollPhysics(),
                   controller: controller,
                   children: [
-                    AccountBalanceChart(account: widget.activeAccount),
                     ExpensesByMonthChart(
                         accountUuid: widget.activeAccount.uuid),
+                    AccountBalanceChart(account: widget.activeAccount),
+                    TransactionChart(accountUuid: widget.activeAccount.uuid),
                   ],
                   scrollDirection: Axis.horizontal,
                 ),
@@ -234,7 +234,7 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
                 margin: EdgeInsets.only(bottom: 40.0),
                 child: SmoothPageIndicator(
                   controller: controller,
-                  count: 2,
+                  count: 3,
                   effect: WormEffect(
                       dotHeight: 7,
                       activeDotColor: Colors.blue,

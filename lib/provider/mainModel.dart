@@ -151,6 +151,16 @@ class CategoryModel extends ChangeNotifier {
     }
   }
 
+  Categori getCategory(String categoryUuid) {
+    try {
+      return incomecategories
+          .firstWhere((Categori cat) => cat.uuid == categoryUuid);
+    } catch (e) {
+      return _expenseCategories
+          .firstWhere((Categori cat) => cat.uuid == categoryUuid);
+    }
+  }
+
   String getCategoryName(String uuid) {
     String name;
     try {
@@ -180,6 +190,8 @@ class TransactionModel extends ChangeNotifier {
   List<Transaction> _transactions;
   bool isLoading = false;
   Uuid _uuid = Uuid();
+  List<Map<String, dynamic>> monthlyTransactions;
+  List<Map<String, dynamic>> transactionsOfTheMonth;
 
   List<Transaction> get transactions => _transactions;
 
@@ -205,14 +217,26 @@ class TransactionModel extends ChangeNotifier {
     return await DB.getTrasactionsLastMonthByCategory();
   }
 
-  Future<List<Map<String, dynamic>>>
-      getTrasactionsGroupedByMonthAndCategory() async {
-    return await DB.getTrasactionsGroupedByMonthAndCategory();
+  void getTrasactionsGroupedByMonthAndCategory() {
+    //  monthlyTransactions.clear();
+    DB.getTrasactionsGroupedByMonthAndCategory().then((value) {
+      monthlyTransactions = value.reversed.toList();
+      notifyListeners();
+    });
+    ;
   }
 
-  Future<List<Map<String, dynamic>>> getTrasactionsByMonthAndCategory(
-      String month, String year) async {
-    return await DB.getTrasactionsByMonthAndCategory(month, year);
+  void getTrasactionsByMonthAndCategory(String month, String year) {
+    // transactionsOfTheMonth.clear();
+    DB.getTrasactionsByMonthAndCategory(month, year).then((value) {
+      transactionsOfTheMonth = value;
+      notifyListeners();
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> getTrasactionsByCategoryMonth(
+      String month, String year, String uuid) async {
+    return await DB.getTrasactionsByCategoryMonth(month, year, uuid);
   }
 
   List<Transaction> getAccountTransactions(String accountUuid) {

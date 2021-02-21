@@ -4,9 +4,10 @@ class MoedeiroSliverOverlapAbsorberAppBar extends StatefulWidget {
   final String titleName;
   final List<Widget> actions;
   final Widget tabs;
+  final Widget flexibleSpace;
 
   MoedeiroSliverOverlapAbsorberAppBar(this.titleName,
-      {this.actions, this.tabs, Key key})
+      {this.actions, this.tabs, this.flexibleSpace, Key key})
       : super(key: key);
 
   @override
@@ -56,11 +57,13 @@ class _MoedeiroSliverOverlapAbsorberAppBarState
         sliver: SliverAppBar(
           title: Text(widget.titleName),
           bottom: widget.tabs,
-          floating: false,
+          floating: true,
           snap: false,
+          centerTitle: true,
           pinned: true,
+          flexibleSpace: widget.flexibleSpace,
           actions: widget.actions,
-          expandedHeight: 200,
+          expandedHeight: 270,
         ),
       ),
     );
@@ -71,7 +74,9 @@ class MoedeiroSliverAppBar extends StatelessWidget {
   final String titleName;
   final List<Widget> actions;
   final Widget tabs;
-  MoedeiroSliverAppBar(this.titleName, {this.actions, this.tabs, Key key})
+  final Widget flexibleSpace;
+  MoedeiroSliverAppBar(this.titleName,
+      {this.actions, this.tabs, this.flexibleSpace, Key key})
       : super(key: key);
 
   @override
@@ -83,7 +88,8 @@ class MoedeiroSliverAppBar extends StatelessWidget {
       snap: false,
       pinned: true,
       actions: actions,
-      expandedHeight: 200,
+      flexibleSpace: flexibleSpace,
+      expandedHeight: 270,
     );
   }
 }

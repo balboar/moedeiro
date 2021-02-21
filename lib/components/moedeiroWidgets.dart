@@ -79,8 +79,7 @@ class MainPageSectionStateless extends StatelessWidget {
         padding: EdgeInsets.only(
           left: 20.0,
           right: 10.0,
-          top: 30.0,
-          bottom: 15.0,
+          top: 15.0,
         ),
         child: Row(
           children: [
@@ -90,7 +89,8 @@ class MainPageSectionStateless extends StatelessWidget {
             // ),
             Text(
               label,
-              style: TextStyle(fontSize: 20.0),
+              style: Theme.of(context).textTheme.headline6.copyWith(
+                  fontWeight: FontWeight.normal), //TextStyle(fontSize: 20.0),
             ),
             Expanded(
               child: Align(

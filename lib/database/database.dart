@@ -323,11 +323,25 @@ class DB {
     return await _db.transaction(
       (txn) async {
         return await txn.rawQuery(
-            'SELECT round(sum(abs(a.amount)),2) amount,c.name,count(a.uuid) total  FROM transactions a '
+            'SELECT round(sum(abs(a.amount)),2) amount,c.name,c.uuid,count(a.uuid) total  FROM transactions a '
                     'left outer join category c on c.uuid=a.category where c.type="E" and ' +
                 ' strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))=? and ' +
-                'strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) =?    group by 2 order by 1 desc ,2  desc',
+                'strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) =?    group by 2,3 order by 1 desc ,2  desc',
             [month, year]);
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getTrasactionsByCategoryMonth(
+      String month, String year, String uuid) async {
+    return await _db.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            'SELECT a.*  FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where c.type="E" and ' +
+                ' strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))=? and ' +
+                'strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) =? and a,category=? ',
+            [month, year, uuid]);
       },
     );
   }

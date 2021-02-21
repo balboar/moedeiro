@@ -111,15 +111,15 @@ class TransferTile extends StatelessWidget {
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 10.0),
-                  width: 5,
+                  width: 2.5,
                   decoration: BoxDecoration(
                     color: (activeAccount != null) &&
                             (activeAccount == transfer.accountFrom)
                         ? Colors.red
                         : Colors.green,
                     borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(4),
-                      topRight: Radius.circular(4),
+                      bottomRight: Radius.circular(2),
+                      topRight: Radius.circular(2),
                     ),
                   ),
                 ),

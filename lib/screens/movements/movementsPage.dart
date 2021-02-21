@@ -8,11 +8,14 @@ import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/models/transfer.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/accounts/components/AccountsBottomSheetWidget.dart';
+import 'package:moedeiro/screens/accounts/components/accountCharts.dart';
 import 'package:moedeiro/screens/accounts/components/accountWidgets.dart';
+import 'package:moedeiro/screens/charts/components/transactionsCharts.dart';
 import 'package:moedeiro/screens/movements/components/transactionWidgets.dart';
 import 'package:moedeiro/screens/movements/components/transfersWidgets.dart';
 import 'package:provider/provider.dart';
 import 'package:moedeiro/generated/l10n.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class AccountTransactionsPage extends StatefulWidget {
   final bool showAllTransactions;
@@ -23,6 +26,7 @@ class AccountTransactionsPage extends StatefulWidget {
 
 class AccountTransactionsPageState extends State<AccountTransactionsPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final controller = PageController(viewportFraction: 1);
 
   Account activeAccount;
   @override
@@ -153,6 +157,45 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
     });
   }
 
+  Widget flexibleSpace() {
+    return FlexibleSpaceBar(
+      stretchModes: [StretchMode.blurBackground],
+      collapseMode: CollapseMode.pin,
+      background: Column(
+        children: [
+          Container(
+            height: kToolbarHeight,
+          ),
+          Container(
+            height: 180,
+            margin: EdgeInsets.only(left: 0.0, right: 0, top: 2.0, bottom: 2.0),
+            child: PageView(
+              physics: BouncingScrollPhysics(),
+              controller: controller,
+              children: [
+                ExpensesByMonthChart(),
+                TransactionChart(),
+              ],
+              scrollDirection: Axis.horizontal,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(bottom: 40.0),
+            child: SmoothPageIndicator(
+              controller: controller,
+              count: 2,
+              effect: WormEffect(
+                  dotHeight: 7,
+                  activeDotColor: Colors.blue,
+                  dotWidth: 7,
+                  dotColor: Colors.grey),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,6 +214,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
                   : MoedeiroSliverOverlapAbsorberAppBar(
                       S.of(context).movementsTitle,
                       actions: buildActions(),
+                      flexibleSpace: flexibleSpace(),
                       tabs: buildTabs(),
                     )
             ];

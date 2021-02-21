@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "balance" : MessageLookupByLibrary.simpleMessage("Balance"),
     "budgetsTitle" : MessageLookupByLibrary.simpleMessage("Presupuestos"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancelar"),
+    "categories" : MessageLookupByLibrary.simpleMessage("Categorías"),
     "categoryError" : MessageLookupByLibrary.simpleMessage("Selecciona una categoria"),
     "categoryTitle" : MessageLookupByLibrary.simpleMessage("Categoría"),
     "changePassword" : MessageLookupByLibrary.simpleMessage("Cambiar contraseña"),
