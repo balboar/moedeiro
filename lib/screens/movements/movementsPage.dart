@@ -8,17 +8,16 @@ import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/models/transfer.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/accounts/components/AccountsBottomSheetWidget.dart';
-import 'package:moedeiro/screens/accounts/components/accountCharts.dart';
 import 'package:moedeiro/screens/accounts/components/accountWidgets.dart';
-import 'package:moedeiro/screens/charts/components/transactionsCharts.dart';
 import 'package:moedeiro/screens/movements/components/transactionWidgets.dart';
 import 'package:moedeiro/screens/movements/components/transfersWidgets.dart';
+import 'package:moedeiro/screens/summary/components/transactionsCharts.dart';
 import 'package:provider/provider.dart';
 import 'package:moedeiro/generated/l10n.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class AccountTransactionsPage extends StatefulWidget {
-  final bool showAllTransactions;
+  final bool? showAllTransactions;
   AccountTransactionsPage({this.showAllTransactions});
   @override
   AccountTransactionsPageState createState() => AccountTransactionsPageState();
@@ -28,7 +27,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final controller = PageController(viewportFraction: 1);
 
-  Account activeAccount;
+  Account? activeAccount;
   @override
   void initState() {
     activeAccount =
@@ -36,7 +35,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
     super.initState();
   }
 
-  List<Widget> buildActions() {
+  List<Widget>? buildActions() {
     if (activeAccount == null)
       return null;
     else
@@ -75,9 +74,9 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
 
   Widget buildTransactionsList() {
     return Consumer<TransactionModel>(
-        builder: (BuildContext context, TransactionModel model, Widget child) {
+        builder: (BuildContext context, TransactionModel model, Widget? child) {
       if (widget.showAllTransactions ?? true) {
-        return model.transactions.length == 0
+        return model.transactions!.length == 0
             ? SliverToBoxAdapter(
                 child: NoDataWidgetVertical(),
               )
@@ -85,15 +84,15 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
                 itemExtent: 80.0,
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    Transaction _transaction = model.transactions[index];
+                    Transaction _transaction = model.transactions![index];
                     return TransactionTile(_transaction);
                   },
-                  childCount: model.transactions.length,
+                  childCount: model.transactions!.length,
                 ),
               );
       } else {
         List<Transaction> accountTransactions =
-            model.getAccountTransactions(activeAccount.uuid);
+            model.getAccountTransactions(activeAccount!.uuid);
         return accountTransactions.length == 0
             ? SliverToBoxAdapter(
                 child: NoDataWidgetVertical(),
@@ -117,37 +116,37 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
 
   Widget buildTransfersList() {
     return Consumer<TransfersModel>(
-        builder: (BuildContext context, TransfersModel model, Widget child) {
+        builder: (BuildContext context, TransfersModel model, Widget? child) {
       if (widget.showAllTransactions ?? true) {
-        return model.transfers.length == 0
+        return model.transfers!.length == 0
             ? SliverToBoxAdapter(
                 child: NoDataWidgetVertical(),
               )
             : SliverFixedExtentList(
-                itemExtent: 75.0,
+                itemExtent: 80.0,
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    Transfer transfer = model.transfers[index];
+                    Transfer transfer = model.transfers![index];
                     return TransferTile(transfer);
                   },
-                  childCount: model.transfers.length,
+                  childCount: model.transfers!.length,
                 ),
               );
       } else {
         List<Transfer> accountTransfers =
-            model.getAccountTransfers(activeAccount.uuid);
+            model.getAccountTransfers(activeAccount!.uuid!);
         return accountTransfers.length == 0
             ? SliverToBoxAdapter(
                 child: NoDataWidgetVertical(),
               )
             : SliverFixedExtentList(
-                itemExtent: 75.0,
+                itemExtent: 80.0,
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     Transfer transfer = accountTransfers[index];
                     return TransferTile(
                       transfer,
-                      activeAccount: activeAccount.uuid,
+                      activeAccount: activeAccount!.uuid,
                     );
                   },
                   childCount: accountTransfers.length,

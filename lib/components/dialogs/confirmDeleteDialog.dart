@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class ComfirmDeleteDialog extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  const ComfirmDeleteDialog({Key key, this.icon, this.title, this.subtitle})
+  final IconData? icon;
+  final String? title;
+  final String? subtitle;
+  const ComfirmDeleteDialog({Key? key, this.icon, this.title, this.subtitle})
       : super(key: key);
 
   @override
@@ -51,20 +51,25 @@ class ComfirmDeleteDialog extends StatelessWidget {
       actions: <Widget>[
         ButtonBar(
           // crossAxisAlignment: CrossAxisAlignment.start,
-          alignment: MainAxisAlignment.center,
+          alignment: MainAxisAlignment.spaceAround,
           children: [
-            RaisedButton.icon(
-              color: Theme.of(context).dialogBackgroundColor,
-              elevation: 0,
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  primary: Colors.transparent,
+                  onPrimary: Theme.of(context).textTheme.bodyText1!.color),
               icon: Icon(Icons.cancel_outlined),
               label: Text(S.of(context).cancel),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
-            RaisedButton.icon(
+            ElevatedButton.icon(
               icon: Icon(Icons.delete_outline_outlined),
-              color: Theme.of(context).accentColor,
+              style: ElevatedButton.styleFrom(
+                  onPrimary: Theme.of(context).textTheme.button!.color,
+                  elevation: 2,
+                  primary: Theme.of(context).accentColor),
               label: Text(S.of(context).delete),
               onPressed: () {
                 Navigator.of(context).pop(true);

@@ -1,3 +1,5 @@
+
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/models/accounts.dart';
@@ -6,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class AccountBalanceChart extends StatefulWidget {
   final Account account;
-  AccountBalanceChart({this.account});
+  AccountBalanceChart({required this.account});
   @override
   _AccountBalanceChartState createState() => _AccountBalanceChartState();
 }
@@ -21,7 +23,7 @@ class _AccountBalanceChartState extends State<AccountBalanceChart> {
   double minY = -2000;
   double maxX = 50;
   List<FlSpot> spots = [FlSpot(0.0, 1.0)];
-  List<Map<String, dynamic>> chartData;
+  late List<Map<String, dynamic>> chartData;
 
   @override
   void initState() {
@@ -31,7 +33,7 @@ class _AccountBalanceChartState extends State<AccountBalanceChart> {
 
   void loadChartData() async {
     chartData = await Provider.of<AccountModel>(context, listen: false)
-        .getChartDataByAccountAndDay(widget.account.uuid);
+        .getChartDataByAccountAndDay(widget.account.uuid!);
 
     List<Map<String, dynamic>> chartDataParsed = [];
     Map<String, dynamic> el = {};
@@ -40,7 +42,7 @@ class _AccountBalanceChartState extends State<AccountBalanceChart> {
     for (var i = 1; i <= chartData.length; i++) {
       spots.clear();
       el['id'] = i;
-      if (i == 1) _total = widget.account.initialAmount;
+      if (i == 1) _total = widget.account.initialAmount!;
       _total = _total + chartData[i - 1]['amount'];
       el['amount'] = _total;
       chartDataParsed.add(Map.from(el));

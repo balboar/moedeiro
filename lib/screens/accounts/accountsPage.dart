@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class AccountsPage extends StatefulWidget {
-  AccountsPage({Key key}) : super(key: key);
+  AccountsPage({Key? key}) : super(key: key);
 
   @override
   _AccountsPageState createState() => _AccountsPageState();
@@ -18,7 +18,7 @@ class _AccountsPageState extends State<AccountsPage> {
 
   Widget _buildAccountsList() {
     return Consumer<AccountModel>(
-      builder: (BuildContext context, AccountModel model, Widget child) {
+      builder: (BuildContext context, AccountModel model, Widget? child) {
         if (model.accounts == null) {
           return CircularProgressIndicator();
         } else if (model.accounts.length == 0) {
@@ -47,7 +47,7 @@ class _AccountsPageState extends State<AccountsPage> {
                 (account) {
                   return AccountCard(
                     account: account,
-                    key: Key(account.uuid),
+                    key: Key(account.uuid!),
                   );
                 },
               ).toList(),
@@ -73,7 +73,8 @@ class _AccountsPageState extends State<AccountsPage> {
       floatingActionButton: FloatingActionButton.extended(
         label: Text(S.of(context).account),
         onPressed: () {
-          showCustomModalBottomSheet(context, AccountBottomSheet(null));
+          showCustomModalBottomSheet(context, AccountBottomSheet(null),
+              enableDrag: false);
         },
         icon: Icon(Icons.add_outlined),
       ),

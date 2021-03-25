@@ -10,7 +10,7 @@ class TransactionsListBottomSheet extends StatelessWidget {
   final String month;
   final String year;
   const TransactionsListBottomSheet(this.categoryUuid, this.month, this.year,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -27,16 +27,16 @@ class TransactionsListBottomSheet extends StatelessWidget {
             ),
             child: Consumer<TransactionModel>(
               builder:
-                  (BuildContext context, TransactionModel model, Widget child) {
+                  (BuildContext context, TransactionModel model, Widget? child) {
                 var transactions =
-                    model.transactions.where((Transaction value) {
+                    model.transactions!.where((Transaction value) {
                   return value.category == categoryUuid &&
-                      DateTime.fromMillisecondsSinceEpoch(value.timestamp)
+                      DateTime.fromMillisecondsSinceEpoch(value.timestamp!)
                               .month
                               .toString()
                               .padLeft(2, '0') ==
                           month &&
-                      DateTime.fromMillisecondsSinceEpoch(value.timestamp)
+                      DateTime.fromMillisecondsSinceEpoch(value.timestamp!)
                               .year
                               .toString() ==
                           year;

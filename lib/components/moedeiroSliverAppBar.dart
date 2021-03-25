@@ -1,13 +1,15 @@
+
+
 import 'package:flutter/material.dart';
 
 class MoedeiroSliverOverlapAbsorberAppBar extends StatefulWidget {
   final String titleName;
-  final List<Widget> actions;
-  final Widget tabs;
-  final Widget flexibleSpace;
+  final List<Widget>? actions;
+  final Widget? tabs;
+  final Widget? flexibleSpace;
 
   MoedeiroSliverOverlapAbsorberAppBar(this.titleName,
-      {this.actions, this.tabs, this.flexibleSpace, Key key})
+      {this.actions, this.tabs, this.flexibleSpace, Key? key})
       : super(key: key);
 
   @override
@@ -19,7 +21,7 @@ class _MoedeiroSliverOverlapAbsorberAppBarState
     extends State<MoedeiroSliverOverlapAbsorberAppBar> {
   double height = 200;
 
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
 
   bool lastStatus = true;
   @override
@@ -56,7 +58,7 @@ class _MoedeiroSliverOverlapAbsorberAppBarState
         top: false,
         sliver: SliverAppBar(
           title: Text(widget.titleName),
-          bottom: widget.tabs,
+          bottom: widget.tabs as PreferredSizeWidget?,
           floating: true,
           snap: false,
           centerTitle: true,
@@ -72,18 +74,18 @@ class _MoedeiroSliverOverlapAbsorberAppBarState
 
 class MoedeiroSliverAppBar extends StatelessWidget {
   final String titleName;
-  final List<Widget> actions;
-  final Widget tabs;
-  final Widget flexibleSpace;
+  final List<Widget>? actions;
+  final Widget? tabs;
+  final Widget? flexibleSpace;
   MoedeiroSliverAppBar(this.titleName,
-      {this.actions, this.tabs, this.flexibleSpace, Key key})
+      {this.actions, this.tabs, this.flexibleSpace, Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       title: Text(titleName),
-      bottom: tabs,
+      bottom: tabs as PreferredSizeWidget?,
       floating: false,
       snap: false,
       pinned: true,

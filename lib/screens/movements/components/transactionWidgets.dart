@@ -7,8 +7,8 @@ import 'package:moedeiro/util/utils.dart';
 
 class TransactionTile extends StatelessWidget {
   final Transaction transaction;
-  final double accountBalance;
-  const TransactionTile(this.transaction, {Key key, this.accountBalance})
+  final double? accountBalance;
+  const TransactionTile(this.transaction, {Key? key, this.accountBalance})
       : super(key: key);
 
   @override
@@ -45,12 +45,16 @@ class TransactionTile extends StatelessWidget {
                             height: 15,
                             color: Colors.grey[500],
                           ),
-                          visible: transaction.name.isNotEmpty,
+                          visible: transaction.name!.isNotEmpty,
                         ),
-                        Text(transaction.name ?? '',
-                            overflow: TextOverflow.clip,
+                        Flexible(
+                          child: Text(
+                            transaction.name ?? '',
+                            overflow: TextOverflow.ellipsis,
                             maxLines: 1,
-                            style: Theme.of(context).textTheme.subtitle2),
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                        ),
                       ],
                     ),
                     Row(
@@ -81,7 +85,7 @@ class TransactionTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        formatCurrency(context, transaction.amount),
+                        formatCurrency(context, transaction.amount!),
                         style:
                             // Theme.of(context).textTheme.bodyText1.copyWith(
 
@@ -94,7 +98,7 @@ class TransactionTile extends StatelessWidget {
                       Text(
                           DateFormat.yMd().format(
                             DateTime.fromMillisecondsSinceEpoch(
-                                transaction.timestamp),
+                                transaction.timestamp!),
                           ),
                           style: Theme.of(context).textTheme.subtitle2),
                       // Text(
@@ -112,7 +116,7 @@ class TransactionTile extends StatelessWidget {
               margin: EdgeInsets.symmetric(vertical: 10.0),
               width: 2.5,
               decoration: BoxDecoration(
-                color: transaction.amount > 0 ? Colors.green : Colors.red,
+                color: transaction.amount! > 0 ? Colors.green : Colors.red,
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(2),
                   topRight: Radius.circular(2),

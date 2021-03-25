@@ -15,7 +15,7 @@ class AccountModel extends ChangeNotifier {
   double incomes = 0;
   double _totalAmount = 0;
 
-  Account _activeAccount;
+  Account? _activeAccount;
 
   List<Account> get accounts => _accounts;
   double get totalAmount => _totalAmount;
@@ -32,9 +32,9 @@ class AccountModel extends ChangeNotifier {
           await DB.getExpensesLastMonth(element['uuid']);
       account.expensesMonth =
           double.tryParse(expendesLastMonth[0]['amount'].toString());
-      expenses = expenses + account.expensesMonth;
+      expenses = expenses + account.expensesMonth!;
       _accounts.add(account);
-      if (account.amount > 0) _totalAmount = _totalAmount + account.amount;
+      if (account.amount! > 0) _totalAmount = _totalAmount + account.amount!;
       notifyListeners();
     });
 
@@ -74,20 +74,20 @@ class AccountModel extends ChangeNotifier {
   }
 
   String getAccountName(String uuid) {
-    return accounts.firstWhere((Account element) => element.uuid == uuid).name;
+    return accounts.firstWhere((Account element) => element.uuid == uuid).name!;
   }
 
-  Account get getActiveAccount => _activeAccount;
+  Account? get getActiveAccount => _activeAccount;
 
   Future<bool> insertAccountIntoDb(Account accountData) async {
     if (accountData.uuid == null) {
       accountData.uuid = _uuid.v4();
-      if (_accounts != null) {
-        if (_accounts.length > 0) {
-          accountData.position = _accounts.length + 1;
-        } else
-          _accounts.length = 0;
-      }
+
+      if (_accounts.length > 0) {
+        accountData.position = _accounts.length + 1;
+      } else
+        _accounts.length = 0;
+
       await DB.insert(Account.table, accountData.toMap());
     } else
       await DB.update(Account.table, accountData.toMap());
@@ -103,15 +103,15 @@ class AccountModel extends ChangeNotifier {
 }
 
 class CategoryModel extends ChangeNotifier {
-  List<Categori> _incomeCategories;
-  List<Categori> _expenseCategories;
-  List<Map<String, dynamic>> _top5Categories;
+  List<Categori>? _incomeCategories;
+  List<Categori>? _expenseCategories;
+  List<Map<String, dynamic>>? _top5Categories;
   bool isLoading = false;
   Uuid _uuid = Uuid();
 
-  List<Categori> get incomecategories => _incomeCategories;
-  List<Categori> get expenseCategories => _expenseCategories;
-  List<Map<String, dynamic>> get top5Categories => _top5Categories;
+  List<Categori>? get incomecategories => _incomeCategories;
+  List<Categori>? get expenseCategories => _expenseCategories;
+  List<Map<String, dynamic>>? get top5Categories => _top5Categories;
 
   Future<bool> getCategories() async {
     final List<Map<String, dynamic>> mapIncome =
@@ -144,7 +144,7 @@ class CategoryModel extends ChangeNotifier {
 
   bool isExpense(String categoryUuid) {
     try {
-      incomecategories.firstWhere((Categori cat) => cat.uuid == categoryUuid);
+      incomecategories!.firstWhere((Categori cat) => cat.uuid == categoryUuid);
       return false;
     } catch (e) {
       return true;
@@ -153,22 +153,22 @@ class CategoryModel extends ChangeNotifier {
 
   Categori getCategory(String categoryUuid) {
     try {
-      return incomecategories
+      return incomecategories!
           .firstWhere((Categori cat) => cat.uuid == categoryUuid);
     } catch (e) {
-      return _expenseCategories
+      return _expenseCategories!
           .firstWhere((Categori cat) => cat.uuid == categoryUuid);
     }
   }
 
-  String getCategoryName(String uuid) {
-    String name;
+  String? getCategoryName(String uuid) {
+    String? name;
     try {
-      name = _expenseCategories
+      name = _expenseCategories!
           .firstWhere((Categori element) => element.uuid == uuid)
           .name;
     } catch (e) {
-      name = _incomeCategories
+      name = _incomeCategories!
           .firstWhere((Categori element) => element.uuid == uuid)
           .name;
     }
@@ -187,13 +187,13 @@ class CategoryModel extends ChangeNotifier {
 }
 
 class TransactionModel extends ChangeNotifier {
-  List<Transaction> _transactions;
+  List<Transaction>? _transactions;
   bool isLoading = false;
   Uuid _uuid = Uuid();
-  List<Map<String, dynamic>> monthlyTransactions;
-  List<Map<String, dynamic>> transactionsOfTheMonth;
+  List<Map<String, dynamic>> monthlyTransactions = [];
+  List<Map<String, dynamic>> transactionsOfTheMonth = [];
 
-  List<Transaction> get transactions => _transactions;
+  List<Transaction>? get transactions => _transactions;
 
   Future<bool> getTransactions() async {
     final List<Map<String, dynamic>> maps = await DB.getTransactions();
@@ -209,7 +209,7 @@ class TransactionModel extends ChangeNotifier {
     return await DB.getTrasactionsLast6Month();
   }
 
-  Future<List<Map<String, dynamic>>> getChartDataByAccount(String uuid) async {
+  Future<List<Map<String, dynamic>>> getChartDataByAccount(String? uuid) async {
     return await DB.getTrasactionsLast6MonthByAccount(uuid);
   }
 
@@ -222,8 +222,11 @@ class TransactionModel extends ChangeNotifier {
     DB.getTrasactionsGroupedByMonthAndCategory().then((value) {
       monthlyTransactions = value.reversed.toList();
       notifyListeners();
+      if (transactionsOfTheMonth.length == 0) {
+        getTrasactionsByMonthAndCategory(monthlyTransactions[0]['monthofyear'],
+            monthlyTransactions[0]['year']);
+      }
     });
-    ;
   }
 
   void getTrasactionsByMonthAndCategory(String month, String year) {
@@ -239,14 +242,14 @@ class TransactionModel extends ChangeNotifier {
     return await DB.getTrasactionsByCategoryMonth(month, year, uuid);
   }
 
-  List<Transaction> getAccountTransactions(String accountUuid) {
-    return _transactions
+  List<Transaction> getAccountTransactions(String? accountUuid) {
+    return _transactions!
         .where((element) => element.account == accountUuid)
         .toList();
   }
 
-  List<Transaction> getCategoryTransactions(String categoryUuid) {
-    return _transactions
+  List<Transaction> getCategoryTransactions(String? categoryUuid) {
+    return _transactions!
         .where((element) => element.category == categoryUuid)
         .toList();
   }
@@ -269,11 +272,11 @@ class TransactionModel extends ChangeNotifier {
 }
 
 class TransfersModel extends ChangeNotifier {
-  List<Transfer> _transfers;
+  List<Transfer>? _transfers;
   bool isLoading = false;
   Uuid _uuid = Uuid();
 
-  List<Transfer> get transfers => _transfers;
+  List<Transfer>? get transfers => _transfers;
 
   Future<bool> getTransfers() async {
     final List<Map<String, dynamic>> maps = await DB.getTransfers();
@@ -295,7 +298,7 @@ class TransfersModel extends ChangeNotifier {
   }
 
   List<Transfer> getAccountTransfers(String accountUuid) {
-    return _transfers.where((element) {
+    return _transfers!.where((element) {
       if (element.accountFrom == accountUuid) {
         return true;
       } else if (element.accountTo == accountUuid) {
@@ -311,12 +314,13 @@ class TransfersModel extends ChangeNotifier {
     return Future.value(true);
   }
 
-  insertTransferIntoDb(Transfer data) async {
+  Future<bool> insertTransferIntoDb(Transfer data) async {
     if (data.uuid == null) {
       data.uuid = _uuid.v4();
       await DB.insert(Transfer.table, data.toDbMap());
     } else
       await DB.update(Transfer.table, data.toDbMap());
-    getTransfers();
+    await getTransfers();
+    return Future.value(true);
   }
 }

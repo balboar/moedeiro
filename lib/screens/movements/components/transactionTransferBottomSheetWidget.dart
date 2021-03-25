@@ -6,8 +6,8 @@ import 'package:moedeiro/screens/movements/components/transactionBottomSheet.dar
 import 'package:moedeiro/screens/movements/components/transferBottomSheetWidget.dart';
 
 class TransactionTransferBottomSheet extends StatefulWidget {
-  final Transaction transaction;
-  final Transfer transfer;
+  final Transaction? transaction;
+  final Transfer? transfer;
   TransactionTransferBottomSheet({this.transaction, this.transfer});
   @override
   State<StatefulWidget> createState() {
@@ -18,9 +18,11 @@ class TransactionTransferBottomSheet extends StatefulWidget {
 class _TransactionTransferBottomSheetState
     extends State<TransactionTransferBottomSheet>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  late TabController _tabController;
 
-  final controller = PageController(viewportFraction: 1);
+  final controller = PageController(
+    viewportFraction: 1,
+  );
   @override
   void initState() {
     super.initState();
@@ -41,7 +43,8 @@ class _TransactionTransferBottomSheetState
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.only(
-            top: 10.0, bottom: MediaQuery.of(context).viewInsets.bottom),
+          top: 10.0,
+        ),
         child: Column(
           children: <Widget>[
             MoedeiroTransactionTransferButtons(controller),

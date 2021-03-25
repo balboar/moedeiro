@@ -1,13 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 
 class TransactionChart extends StatefulWidget {
-  final String accountUuid;
+  final String? accountUuid;
 
-  const TransactionChart({Key key, this.accountUuid}) : super(key: key);
+  const TransactionChart({Key? key, this.accountUuid}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => TransactionChartState();
@@ -22,7 +23,7 @@ class TransactionChartState extends State<TransactionChart> {
   List<BarChartGroupData> rawBarGroups = [];
   List<BarChartGroupData> showingBarGroups = [];
 
-  int touchedGroupIndex;
+  int? touchedGroupIndex;
 
   @override
   void initState() {
@@ -227,7 +228,7 @@ class TransactionChartState extends State<TransactionChart> {
     );
   }
 
-  BarChartGroupData makeGroupData(int x, double y1, double y2) {
+  BarChartGroupData makeGroupData(int x, double? y1, double? y2) {
     if (y1 == null) y1 = 0;
     if (y2 == null) y2 = 0;
     return BarChartGroupData(barsSpace: 4, x: x, barRods: [
@@ -246,7 +247,7 @@ class TransactionChartState extends State<TransactionChart> {
 }
 
 class ExpensesByMonthChart extends StatefulWidget {
-  final String accountUuid;
+  final String? accountUuid;
 
   ExpensesByMonthChart({this.accountUuid});
   @override
@@ -257,8 +258,8 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
   double maxY = 2000;
 
   List<BarChartGroupData> rawBarGroups = [];
-  List<BarChartGroupData> showingBarGroups;
-  List<Map<String, dynamic>> chartData;
+  List<BarChartGroupData> showingBarGroups = [];
+  List<Map<String, dynamic>> chartData = [];
   @override
   void initState() {
     super.initState();
@@ -308,7 +309,7 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
         BarChartRodData(
           y: y1,
           colors: [
-            Colors.red[900],
+            Colors.red,
           ],
           width: 7,
         ),
@@ -343,7 +344,7 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
                     touchTooltipData: BarTouchTooltipData(
                       tooltipBgColor: Colors.transparent,
                       tooltipPadding: const EdgeInsets.all(0),
-                      tooltipBottomMargin: 8,
+                      tooltipMargin: 8,
                       getTooltipItem: (
                         BarChartGroupData group,
                         int groupIndex,
@@ -424,7 +425,7 @@ class ExpensesByCategoryChart extends StatefulWidget {
 class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
   double maxY = 0;
   int index = 1;
-  int touchedIndex;
+  int? touchedIndex;
 
   List<BarChartGroupData> rawBarGroups = [];
   List<BarChartGroupData> showingBarGroups = [];
@@ -455,7 +456,7 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
   @override
   Widget build(BuildContext context) {
     return Consumer<TransactionModel>(
-        builder: (BuildContext context, TransactionModel model, Widget child) {
+        builder: (BuildContext context, TransactionModel model, Widget? child) {
       showingBarGroups.clear();
       index = 1;
       rawBarGroups.clear();
@@ -490,10 +491,10 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
                     touchCallback: (barTouchResponse) {
                       setState(() {
                         if (barTouchResponse.spot != null &&
-                            barTouchResponse.touchInput is! FlPanEnd &&
-                            barTouchResponse.touchInput is! FlLongPressEnd) {
+                            barTouchResponse.touchInput is! PointerUpEvent &&
+                            barTouchResponse.touchInput is! PointerExitEvent) {
                           touchedIndex =
-                              barTouchResponse.spot.touchedBarGroupIndex;
+                              barTouchResponse.spot!.touchedBarGroupIndex;
                         } else {
                           touchedIndex = -1;
                         }
@@ -502,7 +503,7 @@ class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
                     touchTooltipData: BarTouchTooltipData(
                       tooltipBgColor: Colors.transparent,
                       tooltipPadding: const EdgeInsets.all(0),
-                      tooltipBottomMargin: 8,
+                      tooltipMargin: 8,
                       getTooltipItem: (
                         BarChartGroupData group,
                         int groupIndex,
@@ -558,10 +559,10 @@ class Indicator extends StatelessWidget {
   final Color textColor;
 
   const Indicator({
-    Key key,
-    this.color,
-    this.text,
-    this.isSquare,
+    Key? key,
+    required this.color,
+    required this.text,
+    required this.isSquare,
     this.size = 16,
     this.textColor = Colors.white,
   }) : super(key: key);

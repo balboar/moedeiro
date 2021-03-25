@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class NoDataWidgetVertical extends StatelessWidget {
-  const NoDataWidgetVertical({Key key}) : super(key: key);
+  const NoDataWidgetVertical({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +33,8 @@ class OptionsCard extends StatelessWidget {
   final MaterialColor color;
   final Function onTap;
   final String label;
-  const OptionsCard(this.icon, this.color, this.onTap, this.label, {Key key})
-      : assert(icon != null),
-        assert(onTap != null),
-        assert(label != null),
-        super(key: key);
+  const OptionsCard(this.icon, this.color, this.onTap, this.label, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,58 +52,67 @@ class OptionsCard extends StatelessWidget {
         ),
         width: 85,
       ),
-      onTap: onTap,
+      onTap: onTap as void Function()?,
     );
   }
 }
 
 class MainPageSectionStateless extends StatelessWidget {
   final Function onTap;
-  final String label;
-  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final EdgeInsetsGeometry? padding;
 
-  const MainPageSectionStateless(this.label, this.onTap, this.icon, {Key key})
-      : assert(onTap != null),
-        assert(label != null),
-        assert(icon != null),
-        super(key: key);
+  const MainPageSectionStateless(this.title, this.onTap,
+      {this.subtitle, this.padding, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 20.0,
-          right: 10.0,
-          top: 15.0,
-        ),
-        child: Row(
-          children: [
-            // Icon(icon),
-            // Divider(
-            //   indent: 10.0,
-            // ),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.headline6.copyWith(
-                  fontWeight: FontWeight.normal), //TextStyle(fontSize: 20.0),
+        onTap: onTap as void Function()?,
+        child: Card(
+          child: Container(
+            padding: padding ??
+                EdgeInsets.only(
+                    left: 20.0, right: 10.0, top: 20.0, bottom: 20.0),
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                          fontWeight:
+                              FontWeight.normal), //TextStyle(fontSize: 20.0),
+                    ),
+                    Text(
+                      subtitle ?? '',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6, //TextStyle(fontSize: 20.0),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.arrow_forward),
+                  ),
+                )
+              ],
             ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Icon(Icons.arrow_forward),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+          ),
+          color: Colors.transparent,
+          elevation: 0.0,
+          margin: EdgeInsets.zero,
+        ));
   }
 }
 
 class NoDataWidgetHorizontal extends StatelessWidget {
-  const NoDataWidgetHorizontal({Key key}) : super(key: key);
+  const NoDataWidgetHorizontal({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -141,9 +147,9 @@ class NavigationPillWidget extends StatelessWidget {
               child: Center(
                   child: Wrap(children: <Widget>[
             Container(
-                width: 50,
+                width: 40,
                 margin: EdgeInsets.only(top: 10, bottom: 10),
-                height: 5,
+                height: 3,
                 decoration: new BoxDecoration(
                   color: Theme.of(context).accentColor,
                   shape: BoxShape.rectangle,
@@ -158,7 +164,7 @@ class MoedeiroTransactionTransferButtons extends StatefulWidget {
   final PageController tabController;
   MoedeiroTransactionTransferButtons(
     this.tabController, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -171,42 +177,48 @@ const double height = 40.0;
 const double borderRadius = 10.0;
 const double transactionAlign = -1;
 const double transferAlign = 1;
-const Color selectedColor = Colors.black;
-const Color normalColor = Colors.black;
 
 class _MoedeiroTransactionTransferButtonsState
     extends State<MoedeiroTransactionTransferButtons> {
-  double xAlign;
-  Color transactionColor;
-  Color transferColor;
+  late double xAlign;
+  Color? transactionColor;
+  Color? transferColor;
+
+  Color selectedColor = Colors.black;
+  Color normalColor = Colors.black;
 
   @override
   void initState() {
-    super.initState();
     xAlign = transactionAlign;
-    transactionColor = selectedColor;
-    transferColor = normalColor;
+
     widget.tabController.addListener(() {
       setState(() {
-        xAlign = -1 + (widget.tabController.page) * 2;
-        if (widget.tabController.page == 0) {
+        xAlign = -1 + widget.tabController.page! * 2;
+
+        if (widget.tabController.page! < 0.5) {
           transactionColor = selectedColor;
           transferColor = normalColor;
-        } else if (widget.tabController.page == 1) {
+        } else if (widget.tabController.page! > 0.5) {
           transferColor = selectedColor;
           transactionColor = normalColor;
         }
       });
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    selectedColor = Theme.of(context).backgroundColor;
+    normalColor = Theme.of(context).accentColor;
+    transferColor = transferColor ?? normalColor;
+    transactionColor = transactionColor ?? selectedColor;
+
     return Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.grey[700],
+        color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.all(
           Radius.circular(borderRadius),
         ),
@@ -221,16 +233,14 @@ class _MoedeiroTransactionTransferButtonsState
               height: height,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.0),
-                color: Colors.blue[300],
+                color: Theme.of(context).accentColor,
               ),
             ),
           ),
           GestureDetector(
             onTap: () {
-              widget.tabController.animateToPage(
+              widget.tabController.jumpToPage(
                 0,
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.fastOutSlowIn,
               );
 
               setState(() {
@@ -258,10 +268,8 @@ class _MoedeiroTransactionTransferButtonsState
           ),
           GestureDetector(
             onTap: () {
-              widget.tabController.animateToPage(
+              widget.tabController.jumpToPage(
                 1,
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.fastOutSlowIn,
               );
 
               setState(() {

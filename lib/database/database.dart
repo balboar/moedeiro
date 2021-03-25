@@ -9,7 +9,7 @@ class Helper {
 
   Helper(this.path);
 
-  Database _db;
+  Database? _db;
 
   static int get _version => 13;
   final _lock = new Lock();
@@ -109,7 +109,7 @@ class Helper {
     });
   }
 
-  Future<Database> getDb() async {
+  Future<Database?> getDb() async {
     if (_db == null) {
       await _lock.synchronized(() async {
         // Check again once entering the synchronized block
@@ -124,7 +124,7 @@ class Helper {
 }
 
 class DB {
-  static Database _db;
+  static Database? _db;
   static String dbName = 'moedeiro.db';
 
   static Future<void> init() async {
@@ -133,7 +133,7 @@ class DB {
     }
 
     try {
-      String _path = p.join(await getDatabasesPath(), dbName);
+      String _path = p.join(await (getDatabasesPath()), dbName);
       _db = await Helper(_path).getDb();
     } catch (ex) {
       print(ex);
@@ -141,8 +141,8 @@ class DB {
   }
 
   static Future<List<Map<String, dynamic>>> query(String table,
-      {String where, List<dynamic> whereArgs}) async {
-    return await _db.transaction(
+      {String? where, List<dynamic>? whereArgs}) async {
+    return await _db!.transaction(
       (txn) async {
         if (where != null && whereArgs != null)
           return await txn.query(table, where: where, whereArgs: whereArgs);
@@ -154,7 +154,7 @@ class DB {
 
   static Future<List<Map<String, dynamic>>> queryCategory(
       String table, String type) async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.query(table,
             where: 'type=?', whereArgs: [type], orderBy: 'name');
@@ -163,7 +163,7 @@ class DB {
   }
 
   static Future<List<Map<String, dynamic>>> getTransactions() async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
           'SELECT a.*,b.name accountName,c.name categoryName,coalesce(b.initialAmount,0.0) initialAmount FROM transactions a ' +
@@ -176,7 +176,7 @@ class DB {
 
   static Future<List<Map<String, dynamic>>> getAccountTransactions(
       String accountUuid) async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             'SELECT a.*,b.name accountName,c.name categoryName,coalesce(b.initialAmount,0.0) initialAmount FROM transactions a ' +
@@ -188,7 +188,7 @@ class DB {
   }
 
   static Future<List<Map<String, dynamic>>> getAccounts() async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             'select a.uuid,a.name,coalesce(a.initialAmount,0.0) initialAmount,a.position,a.icon,coalesce(a.initialAmount,0.0)+ ' +
@@ -202,7 +202,7 @@ class DB {
   }
 
   static Future<List<Map<String, dynamic>>> getTransfers() async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
           'SELECT a.*,b.name accountFromName,c.name accountToName FROM transfers a ' +
@@ -214,7 +214,7 @@ class DB {
   }
 
   static Future<List<Map<String, dynamic>>> getTransactionsPerWeek() async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
           'SELECT sum(abs(a.amount)) amount,a.account,strftime("%W",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS weekofyear  FROM transactions a ' +
@@ -226,7 +226,7 @@ class DB {
 
   static Future<List<Map<String, dynamic>>> getAllExpenses(
       String uuidAccount) async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             'SELECT coalesce(sum(amount),0) amount FROM transactions a ' +
@@ -240,7 +240,7 @@ class DB {
 
   static Future<List<Map<String, dynamic>>> getExpensesLastMonth(
       String uuidAccount) async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             'SELECT coalesce(sum(amount),0) amount FROM transactions a ' +
@@ -254,15 +254,15 @@ class DB {
   }
 
   static Future<List<Map<String, dynamic>>> getTrasactionsLast6MonthByAccount(
-      String uuidAccount) async {
-    return await _db.transaction(
+      String? uuidAccount) async {
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             '   SELECT sum(abs(a.amount)) amount,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
                 ' strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year,c.type   FROM transactions a '
                     'left outer join category c on c.uuid=a.category where a.account='
                     '"' +
-                uuidAccount +
+                uuidAccount! +
                 '" and date( substr(a.timestamp,1,10), "unixepoch") > date("now","-0.5 YEAR") ' +
                 ' group by 2,3,4 order by 3 ,2 ');
       },
@@ -271,7 +271,7 @@ class DB {
 
   static Future<List<Map<String, dynamic>>>
       getTrasactionsLast6MonthByAccountAndDay(String uuidAccount) async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery('SELECT round(sum(z.amount),2) amount, z.dayofYear, z.monthofyear, z.year FROM ' +
             '(SELECT sum(a.amount) amount, ' +
@@ -307,7 +307,7 @@ class DB {
   }
 
   static Future<List<Map<String, dynamic>>> getTrasactionsLast6Month() async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             '   SELECT sum(abs(a.amount)) amount,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
@@ -320,7 +320,7 @@ class DB {
 
   static Future<List<Map<String, dynamic>>> getTrasactionsByMonthAndCategory(
       String month, String year) async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             'SELECT round(sum(abs(a.amount)),2) amount,c.name,c.uuid,count(a.uuid) total  FROM transactions a '
@@ -334,7 +334,7 @@ class DB {
 
   static Future<List<Map<String, dynamic>>> getTrasactionsByCategoryMonth(
       String month, String year, String uuid) async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             'SELECT a.*  FROM transactions a '
@@ -348,7 +348,7 @@ class DB {
 
   static Future<List<Map<String, dynamic>>>
       getTrasactionsGroupedByMonthAndCategory() async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             '   SELECT round(sum(abs(a.amount)),2) amount,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
@@ -360,7 +360,7 @@ class DB {
 
   static Future<List<Map<String, dynamic>>>
       getTrasactionsLastMonthByCategory() async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             '   SELECT sum(abs(a.amount)) amount,c.name  FROM transactions a '
@@ -373,7 +373,7 @@ class DB {
 
   static Future<List<Map<String, dynamic>>> getAllIncomes(
       String uuidAccount) async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             'SELECT coalesce(sum(amount),0) amount FROM transactions a ' +
@@ -386,7 +386,7 @@ class DB {
   }
 
   static Future<List<Map<String, dynamic>>> getCategoryAndMovements() async {
-    return await _db.transaction(
+    return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             'SELECT  coalesce(sum(ABS(amount)),0) amount,c.name,c.uuid FROM transactions a ' +
@@ -436,18 +436,18 @@ class DB {
   // }
 
   static Future<int> insert(String table, Map<String, dynamic> item) async {
-    return await _db.transaction((txn) async {
+    return await _db!.transaction((txn) async {
       return await txn.insert(table, item,
           conflictAlgorithm: ConflictAlgorithm.replace);
     });
   }
 
   static Future<int> deleteItem(String table, String uuid) async {
-    return await _db.delete(table, where: "uuid=?", whereArgs: [uuid]);
+    return await _db!.delete(table, where: "uuid=?", whereArgs: [uuid]);
   }
 
   static Future<int> update(String table, Map<String, dynamic> item) async {
-    return await _db.update(
+    return await _db!.update(
       table,
       item,
       where: "uuid = ?",

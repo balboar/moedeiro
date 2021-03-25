@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -11,18 +12,17 @@ import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/lockScreen/components/passwordBottomSheet.dart';
 import 'package:moedeiro/screens/settings/components/appThemeSelectionDialog.dart';
 import 'package:moedeiro/screens/settings/components/languageSelectionDialog.dart';
+import 'package:moedeiro/screens/settings/components/settingsWidgets.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:package_info/package_info.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as db;
 import 'package:path/path.dart' as p;
 import 'package:moedeiro/generated/l10n.dart';
 
 class SettingsPage extends StatefulWidget {
-  SettingsPage({Key key}) : super(key: key);
+  SettingsPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -37,13 +37,13 @@ class _SettingsPageState extends State<SettingsPage> {
     version: 'Unknown',
     buildNumber: 'Unknown',
   );
-  Directory rootPath;
-  String filePath;
+  Directory? rootPath;
+  String? filePath;
   bool _lockApp = false;
   bool _useBiometrics = false;
-  String locale;
-  String theme;
-  SharedPreferences prefs;
+  String locale = 'default';
+  String theme = 'default';
+  late SharedPreferences prefs;
   @override
   void initState() {
     super.initState();
@@ -63,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     prefs = await SharedPreferences.getInstance();
 
-    var _locale = prefs.getString('locale') ?? 'default';
+    var _locale = prefs.getString('locale');
     if (_locale == 'default') {
       locale = S.of(context).systemDefaultTitle;
     } else {
@@ -72,7 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
       locale = activeLocale.value;
     }
 
-    var _theme = prefs.getString('theme') ?? 'default';
+    var _theme = prefs.getString('theme');
     if (_theme == 'default') {
       theme = S.of(context).systemDefaultTitle;
     } else {
@@ -87,37 +87,37 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _openDB(BuildContext context) async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.any,
       // allowedExtensions: ['db'],
       allowMultiple: false,
     );
     if (result != null) {
-      File file = File(result.files.single.path);
-      if (file != null) {
-        String _databasePath =
-            p.join(await db.getDatabasesPath(), 'moedeiro.db');
-        file.copySync(_databasePath);
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Exported!'),
-          ),
-        );
-      }
+      File file = File(result.files.single.path!);
+
+      String _databasePath =
+          p.join(await (db.getDatabasesPath()), 'moedeiro.db');
+      file.copySync(_databasePath);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Exported!'),
+        ),
+      );
     }
   }
 
   Future<void> _exportDB(BuildContext context) async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-    }
-    String _destination = await FilePicker.platform.getDirectoryPath();
+    // var status = await Permission.storage.status;
+    // if (!status.isGranted) {
+    //   await Permission.storage.request();
+    // }
+    String? _destination = await FilePicker.platform.getDirectoryPath();
     if (_destination != null && _destination != '/') {
-      String _databasePath = p.join(await db.getDatabasesPath(), 'moedeiro.db');
+      String _databasePath =
+          p.join(await (db.getDatabasesPath()), 'moedeiro.db');
       var _database = File(_databasePath);
       _database.copySync(_destination + '/moedeiro.db');
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Exported!'),
         ),
@@ -126,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _openFile(BuildContext context) async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.any,
       allowMultiple: false,
     );
@@ -137,14 +137,14 @@ class _SettingsPageState extends State<SettingsPage> {
     var income = Set();
     var expense = Set();
     if (result != null) {
-      File file = File(result.files.single.path);
+      File file = File(result.files.single.path!);
       List<String> contents = await file.readAsLines();
       contents.removeAt(0);
 
       contents.forEach((element) async {
         List<String> row = element.split(',');
         accounts.add(row[0]);
-        if (double.tryParse(row[4].toString().replaceAll('"', '')) >= 0)
+        if (double.tryParse(row[4].toString().replaceAll('"', ''))! >= 0)
           income.add(row[2].toString().replaceAll('"', ''));
         else
           expense.add(row[2].toString().replaceAll('"', ''));
@@ -157,7 +157,7 @@ class _SettingsPageState extends State<SettingsPage> {
           element = element.toString().replaceAll('"', '');
           List<Map<String, dynamic>> data = await DB.query('accounts',
               where: 'name=?', whereArgs: [element.toString()]);
-          if (data != null || data.isEmpty) {
+          if (data.isEmpty) {
             await Provider.of<AccountModel>(context, listen: false)
                 .insertAccountIntoDb(
               Account(name: element.toString(), initialAmount: 0),
@@ -219,16 +219,16 @@ class _SettingsPageState extends State<SettingsPage> {
             .firstWhere((element) =>
                 element.name == row[0].toString().replaceAll('"', ''))
             .uuid;
-        String cat;
-        if (double.tryParse(row[4].toString().replaceAll('"', '')) >= 0)
+        String? cat;
+        if (double.tryParse(row[4].toString().replaceAll('"', ''))! >= 0)
           cat = Provider.of<CategoryModel>(context, listen: false)
-              .incomecategories
+              .incomecategories!
               .firstWhere((element) =>
                   element.name == row[2].toString().replaceAll('"', ''))
               .uuid;
         else
           cat = Provider.of<CategoryModel>(context, listen: false)
-              .expenseCategories
+              .expenseCategories!
               .firstWhere((element) =>
                   element.name == row[2].toString().replaceAll('"', ''))
               .uuid;
@@ -250,7 +250,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  Future<bool> _showLanguageDialog() async {
+  Future<bool?> _showLanguageDialog() async {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -259,7 +259,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Future<bool> _showThemeDialog() async {
+  Future<bool?> _showThemeDialog() async {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -276,164 +276,147 @@ class _SettingsPageState extends State<SettingsPage> {
         shadowColor: Colors.transparent,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
-      body: SettingsList(
-        // backgroundColor: Colors.orange,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        sections: [
-          SettingsSection(
-            titlePadding: EdgeInsets.only(
-                left: 15.0, right: 15.0, bottom: 6.0, top: 10.0),
-            title: S.of(context).common,
-            // titleTextStyle: TextStyle(fontSize: 30),
-            tiles: [
-              SettingsTile(
-                title: S.of(context).language,
-                subtitle: locale,
-                leading: Icon(Icons.language),
-                onPressed: (BuildContext context) async {
-                  await _showLanguageDialog();
-                  var prefs = await SharedPreferences.getInstance();
-                  var _locale = prefs.getString('locale');
-                  if (_locale != null) {
-                    if (_locale == 'default') {
-                      setState(() {
-                        locale = S.of(context).systemDefaultTitle;
-                      });
-                    } else {
-                      var activeLocale = languageOptions
-                          .firstWhere((element) => element.key == _locale);
-                      setState(() {
-                        locale = activeLocale.value;
-                      });
-                    }
-                  }
-                },
-              ),
-              SettingsTile(
-                title: S.of(context).theme,
-                subtitle: theme,
-                leading: Icon(Icons.lightbulb_outline),
-                onPressed: (BuildContext context) async {
-                  await _showThemeDialog();
-                  var prefs = await SharedPreferences.getInstance();
-                  var _theme = prefs.getString('theme');
-                  if (_theme != null) {
-                    if (_theme == 'default') {
-                      setState(() {
-                        theme = S.of(context).systemDefaultTitle;
-                        Provider.of<ThemeModel>(context, listen: false)
-                            .setSystemDefault();
-                      });
-                    } else {
-                      var activeTheme = themeOptions
-                          .firstWhere((element) => element.key == _theme);
-                      setState(() {
-                        theme = activeTheme.value;
-                      });
-
-                      if (_theme == 'dark')
-                        Provider.of<ThemeModel>(context, listen: false)
-                            .setDark();
-                      else
-                        Provider.of<ThemeModel>(context, listen: false)
-                            .setLight();
-                    }
-                  }
-                },
-              ),
-            ],
-          ),
-          SettingsSection(
-            title: S.of(context).security,
-            tiles: [
-              SettingsTile.switchTile(
-                title: S.of(context).lockAppInBackGround,
-                leading: Icon(Icons.phonelink_lock),
-                switchValue: _lockApp,
-                onToggle: (bool value) async {
-                  setState(() {
-                    _lockApp = !_lockApp;
-                  });
-
-                  var prefs = await SharedPreferences.getInstance();
-                  prefs.setBool('lockApp', _lockApp);
-                  if (value) {
-                    showCustomModalBottomSheet(
-                      context,
-                      PasswordBottomSheet(),
-                    ).then((value) {
-                      var pin = prefs.getString('PIN');
-                      if (pin == null)
-                        setState(() {
-                          _lockApp = false;
-                        });
-                      prefs.setBool('lockApp', _lockApp);
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SectionName(S.of(context).common),
+            ListTile(
+              title: Text(S.of(context).language),
+              subtitle: Text(locale),
+              leading: Icon(Icons.language),
+              onTap: () async {
+                await _showLanguageDialog();
+                var prefs = await SharedPreferences.getInstance();
+                var _locale = prefs.getString('locale');
+                if (_locale != null) {
+                  if (_locale == 'default') {
+                    setState(() {
+                      locale = S.of(context).systemDefaultTitle;
                     });
                   } else {
-                    prefs.remove('PIN');
-                  }
-                },
-              ),
-              SettingsTile.switchTile(
-                  title: S.of(context).useFingerprint,
-                  leading: Icon(Icons.fingerprint),
-                  onToggle: (bool value) async {
+                    var activeLocale = languageOptions
+                        .firstWhere((element) => element.key == _locale);
                     setState(() {
-                      _useBiometrics = !_useBiometrics;
+                      locale = activeLocale.value;
                     });
-                    var prefs = await SharedPreferences.getInstance();
-                    prefs.setBool('useBiometrics', _useBiometrics);
-                  },
-                  switchValue: _useBiometrics),
-              SettingsTile(
-                title: S.of(context).changePassword,
-                leading: Icon(Icons.lock),
-                onPressed: (BuildContext context) {
+                  }
+                }
+              },
+            ),
+            ListTile(
+              title: Text(S.of(context).theme),
+              subtitle: Text(theme),
+              leading: Icon(Icons.lightbulb_outline),
+              onTap: () async {
+                await _showThemeDialog();
+                var prefs = await SharedPreferences.getInstance();
+                var _theme = prefs.getString('theme');
+                if (_theme != null) {
+                  if (_theme == 'default') {
+                    setState(() {
+                      theme = S.of(context).systemDefaultTitle;
+                      Provider.of<ThemeModel>(context, listen: false)
+                          .setSystemDefault();
+                    });
+                  } else {
+                    var activeTheme = themeOptions
+                        .firstWhere((element) => element.key == _theme);
+                    setState(() {
+                      theme = activeTheme.value;
+                    });
+
+                    if (_theme == 'dark')
+                      Provider.of<ThemeModel>(context, listen: false).setDark();
+                    else
+                      Provider.of<ThemeModel>(context, listen: false)
+                          .setLight();
+                  }
+                }
+              },
+            ),
+            SectionName(S.of(context).security),
+            SwitchListTile(
+              title: Text(S.of(context).lockAppInBackGround),
+              secondary: Icon(Icons.phonelink_lock),
+              value: _lockApp,
+              onChanged: (bool value) async {
+                setState(() {
+                  _lockApp = !_lockApp;
+                });
+
+                var prefs = await SharedPreferences.getInstance();
+                prefs.setBool('lockApp', _lockApp);
+                if (value) {
                   showCustomModalBottomSheet(
                     context,
                     PasswordBottomSheet(),
-                  );
-                },
-              ),
-            ],
-          ),
-          SettingsSection(
-            title: S.of(context).data,
-            tiles: [
-              SettingsTile(
-                title: S.of(context).importCSV,
-                leading: Icon(Icons.import_export_outlined),
-                onPressed: (BuildContext context) async {
-                  _openFile(context);
-                },
-              ),
-              SettingsTile(
-                title: S.of(context).importDb,
-                leading: Icon(Icons.arrow_downward_outlined),
-                onPressed: (BuildContext context) async {
-                  _openDB(context);
-                },
-              ),
-              SettingsTile(
-                title: S.of(context).exportDb,
-                leading: Icon(Icons.arrow_upward_outlined),
-                onPressed: (BuildContext context) async {
-                  _exportDB(context);
-                },
-              ),
-            ],
-          ),
-          CustomSection(
-            child: Column(
-              children: [
-                Text(
-                  '${S.of(context).version} ${_packageInfo.version}',
-                  style: TextStyle(color: Color(0xFF777777)),
-                ),
-              ],
+                    isScrollControlled: false,
+                    enableDrag: false,
+                  ).then((value) {
+                    var pin = prefs.getString('PIN');
+                    if (pin == null)
+                      setState(() {
+                        _lockApp = false;
+                      });
+                    prefs.setBool('lockApp', _lockApp);
+                  });
+                } else {
+                  prefs.remove('PIN');
+                }
+              },
             ),
-          ),
-        ],
+            SwitchListTile(
+                title: Text(S.of(context).useFingerprint),
+                secondary: Icon(Icons.fingerprint),
+                onChanged: (bool value) async {
+                  setState(() {
+                    _useBiometrics = !_useBiometrics;
+                  });
+                  var prefs = await SharedPreferences.getInstance();
+                  prefs.setBool('useBiometrics', _useBiometrics);
+                },
+                value: _useBiometrics),
+            ListTile(
+              title: Text(S.of(context).changePassword),
+              leading: Icon(Icons.lock),
+              onTap: () {
+                showCustomModalBottomSheet(
+                  context,
+                  PasswordBottomSheet(),
+                  isScrollControlled: false,
+                  enableDrag: false,
+                );
+              },
+            ),
+            SectionName(S.of(context).data),
+            ListTile(
+              title: Text(S.of(context).importCSV),
+              leading: Icon(Icons.import_export_outlined),
+              onTap: () async {
+                _openFile(context);
+              },
+            ),
+            ListTile(
+              title: Text(S.of(context).importDb),
+              leading: Icon(Icons.arrow_downward_outlined),
+              onTap: () async {
+                _openDB(context);
+              },
+            ),
+            ListTile(
+              title: Text(S.of(context).exportDb),
+              leading: Icon(Icons.arrow_upward_outlined),
+              onTap: () async {
+                _exportDB(context);
+              },
+            ),
+            AboutListTile(
+              applicationVersion:
+                  '${S.of(context).version} ${_packageInfo.version}',
+              applicationName: 'Moedeiro',
+            ),
+          ],
+        ),
       ),
     );
   }

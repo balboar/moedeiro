@@ -1,13 +1,15 @@
+
+
 import 'dart:convert';
 
 //  'CREATE TABLE Categori (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, parent TEXT, icon TEXT,type TEXT )',
 
 class Categori {
   static String table = 'category';
-  String uuid;
-  String name;
-  String parent;
-  String type;
+  String? uuid;
+  String? name;
+  String? parent;
+  String? type;
   Categori({
     this.uuid,
     this.name,
@@ -16,10 +18,10 @@ class Categori {
   });
 
   Categori copyWith({
-    String uuid,
-    String name,
-    String parent,
-    String type,
+    String? uuid,
+    String? name,
+    String? parent,
+    String? type,
   }) {
     return Categori(
       uuid: uuid ?? this.uuid,
@@ -39,8 +41,6 @@ class Categori {
   }
 
   factory Categori.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
     return Categori(
       uuid: map['uuid'],
       name: map['name'],

@@ -10,22 +10,22 @@ import 'package:provider/provider.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class CategoryPage extends StatefulWidget {
-  final String categoryUuid;
+  final String? categoryUuid;
 
-  const CategoryPage({Key key, this.categoryUuid}) : super(key: key);
+  const CategoryPage({Key? key, this.categoryUuid}) : super(key: key);
   @override
   _CategoryPageState createState() => _CategoryPageState();
 }
 
 class _CategoryPageState extends State<CategoryPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Categori category;
+  Categori? category;
 
   @override
   void initState() {
     if (widget.categoryUuid != null)
       category = Provider.of<CategoryModel>(context, listen: false)
-          .getCategory(widget.categoryUuid);
+          .getCategory(widget.categoryUuid!);
     super.initState();
   }
 
@@ -46,7 +46,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
   Widget buildTransactionsList() {
     return Consumer<TransactionModel>(
-        builder: (BuildContext context, TransactionModel model, Widget child) {
+        builder: (BuildContext context, TransactionModel model, Widget? child) {
       {
         List<Transaction> accountTransactions =
             model.getCategoryTransactions(widget.categoryUuid);
@@ -75,12 +75,16 @@ class _CategoryPageState extends State<CategoryPage> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            title: Text(category.name),
+            title: Text(category!.name!),
             actions: buildActions(),
             floating: false,
             expandedHeight: MediaQuery.of(context).size.height * 0.30,
           ),
-          buildTransactionsList()
+          SliverPadding(
+            padding: const EdgeInsets.only(
+                left: 10.0, right: 10, top: 0.0, bottom: 10.0),
+            sliver: buildTransactionsList(),
+          ),
         ],
       ),
     );

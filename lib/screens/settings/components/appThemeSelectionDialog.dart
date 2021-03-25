@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class AppThemeSelectionDialog extends StatelessWidget {
-  const AppThemeSelectionDialog({Key key}) : super(key: key);
+  const AppThemeSelectionDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +32,14 @@ class AppThemeSelectionDialog extends StatelessWidget {
 }
 
 class RadioButtons extends StatefulWidget {
-  RadioButtons({Key key}) : super(key: key);
+  RadioButtons({Key? key}) : super(key: key);
 
   @override
   _RadioButtonsState createState() => _RadioButtonsState();
 }
 
 class _RadioButtonsState extends State<RadioButtons> {
-  String _selectedValue = 'default';
+  String? _selectedValue = 'default';
 
   @override
   void initState() {
@@ -64,7 +64,7 @@ class _RadioButtonsState extends State<RadioButtons> {
               title: Text(e.value),
               value: e.key,
               groupValue: _selectedValue,
-              onChanged: (val) async {
+              onChanged: (dynamic val) async {
                 var prefs = await SharedPreferences.getInstance();
                 prefs.setString('theme', val.toString());
                 setState(() {

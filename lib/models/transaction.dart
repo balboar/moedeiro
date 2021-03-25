@@ -6,15 +6,15 @@ import 'dart:convert';
 
 class Transaction {
   static String table = 'transactions';
-  String name;
-  String uuid;
-  double amount;
-  String category;
-  String categoryName;
-  int timestamp;
-  String account;
-  String accountName;
-  double accountBalance;
+  String? name;
+  String? uuid;
+  double? amount;
+  String? category;
+  String? categoryName;
+  int? timestamp;
+  String? account;
+  String? accountName;
+  double? accountBalance;
   Transaction({
     this.name,
     this.uuid,
@@ -27,14 +27,14 @@ class Transaction {
   });
 
   Transaction copyWith({
-    String name,
-    String uuid,
-    double amount,
-    String category,
-    String categoryName,
-    int timestamp,
-    String account,
-    String accountName,
+    String? name,
+    String? uuid,
+    double? amount,
+    String? category,
+    String? categoryName,
+    int? timestamp,
+    String? account,
+    String? accountName,
   }) {
     return Transaction(
       name: name ?? this.name,
@@ -73,8 +73,6 @@ class Transaction {
   }
 
   factory Transaction.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
     return Transaction(
       name: map['name'],
       uuid: map['uuid'],

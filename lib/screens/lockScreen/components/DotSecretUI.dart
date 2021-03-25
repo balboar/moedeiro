@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/models/theme.dart';
@@ -26,9 +28,9 @@ class DotSecretUI extends StatefulWidget {
   final int dots;
 
   const DotSecretUI({
-    @required this.enteredLengthStream,
-    @required this.dots,
-    @required this.validateStream,
+    required this.enteredLengthStream,
+    required this.dots,
+    required this.validateStream,
     this.config = const DotSecretConfig(),
   });
 
@@ -38,9 +40,9 @@ class DotSecretUI extends StatefulWidget {
 
 class _DotSecretUIState extends State<DotSecretUI>
     with SingleTickerProviderStateMixin {
-  Animation<Offset> _animation;
-  AnimationController _animationController;
-  Color enabledColor;
+  late Animation<Offset> _animation;
+  late AnimationController _animationController;
+  Color? enabledColor;
 
   @override
   void initState() {
@@ -92,7 +94,7 @@ class _DotSecretUIState extends State<DotSecretUI>
                 children: List<Widget>.generate(
                   widget.dots,
                   // index less than the input digit is true
-                  (index) => _buildCircle(index < snapshot.data),
+                  (index) => _buildCircle(index < snapshot.data!),
                 ),
               );
             } else {

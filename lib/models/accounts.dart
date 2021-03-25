@@ -1,16 +1,18 @@
+
+
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
 
 class Account {
   static String table = 'accounts';
-  String uuid;
-  String name;
-  double initialAmount = 0;
-  double amount = 0;
-  double expensesMonth = 0;
-  int position;
-  String icon;
+  String? uuid;
+  String? name;
+  double? initialAmount = 0;
+  double? amount = 0;
+  double? expensesMonth = 0;
+  int? position;
+  String? icon;
   Account(
       {this.uuid,
       this.name,
@@ -20,9 +22,9 @@ class Account {
       this.icon});
 
   Account copyWith({
-    String uuid,
-    String name,
-    double initialAmount,
+    String? uuid,
+    String? name,
+    double? initialAmount,
   }) {
     return Account(
       uuid: uuid ?? this.uuid,
@@ -45,8 +47,6 @@ class Account {
   }
 
   factory Account.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
     return Account(
       uuid: map['uuid'],
       name: map['name'],

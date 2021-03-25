@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-Future<String> showCustomModalBottomSheet(BuildContext context, Widget page) {
+Future<String?> showCustomModalBottomSheet(BuildContext context, Widget page,
+    {bool isScrollControlled = true, bool enableDrag = true}) {
   return showModalBottomSheet(
-      enableDrag: true,
+      enableDrag: false,
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: isScrollControlled,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
       ),
       builder: (BuildContext context) {
         return page;

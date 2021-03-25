@@ -25,15 +25,15 @@ class ThemeModel extends ChangeNotifier {
   ThemeMode getThemeMode() {
     switch (themeMode) {
       case ThemeMode.system:
-        var brightness = SchedulerBinding.instance.window.platformBrightness;
+        var brightness = SchedulerBinding.instance!.window.platformBrightness;
         if (Brightness.dark == brightness)
           return ThemeMode.dark;
         else
           return ThemeMode.light;
-        break;
+
       case ThemeMode.dark:
         return ThemeMode.dark;
-        break;
+
       default:
         return ThemeMode.light;
     }

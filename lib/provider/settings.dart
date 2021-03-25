@@ -1,13 +1,15 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum ThemeOptions { light, dark, amoled }
 
 class SettingsProvider extends ChangeNotifier {
-  Locale appLang;
-  Color accentColor;
-  ThemeOptions theme;
-  bool biometricsEnabled;
+  Locale? appLang;
+  Color? accentColor;
+  ThemeOptions? theme;
+  late bool biometricsEnabled;
 
   setAppLanguage(Locale locale) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

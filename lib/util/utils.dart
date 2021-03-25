@@ -9,6 +9,12 @@ String formatCurrency(BuildContext context, double amount) {
   return format.format(amount);
 }
 
+String formatHiddenCurrency(BuildContext context) {
+  Locale locale = Localizations.localeOf(context);
+  var format = NumberFormat.simpleCurrency(locale: locale.toString());
+  return '${format.positivePrefix}*****${format.positiveSuffix}';
+}
+
 class LanguageValue {
   final String key;
   final String value;

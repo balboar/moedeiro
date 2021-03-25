@@ -1,3 +1,5 @@
+
+
 import 'dart:convert';
 
 // 'CREATE TABLE transfers (uuid TEXT PRIMARY KEY NOT NULL,amount REAL, ' +
@@ -7,13 +9,13 @@ import 'dart:convert';
 
 class Transfer {
   static String table = 'transfers';
-  String uuid;
-  double amount;
-  int timestamp;
-  String accountFrom;
-  String accountFromName;
-  String accountTo;
-  String accountToName;
+  String? uuid;
+  double? amount;
+  int? timestamp;
+  String? accountFrom;
+  String? accountFromName;
+  String? accountTo;
+  String? accountToName;
   Transfer({
     this.uuid,
     this.amount = 0,
@@ -25,13 +27,13 @@ class Transfer {
   });
 
   Transfer copyWith({
-    String uuid,
-    double amount,
-    int timestamp,
-    String accountFrom,
-    String accountFromName,
-    String accountTo,
-    String accountToName,
+    String? uuid,
+    double? amount,
+    int? timestamp,
+    String? accountFrom,
+    String? accountFromName,
+    String? accountTo,
+    String? accountToName,
   }) {
     return Transfer(
       uuid: uuid ?? this.uuid,
@@ -67,8 +69,6 @@ class Transfer {
   }
 
   factory Transfer.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
     return Transfer(
       uuid: map['uuid'],
       amount: map['amount'],

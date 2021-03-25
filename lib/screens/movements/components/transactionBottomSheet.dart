@@ -19,14 +19,14 @@ class TransactionBottomSheet extends StatefulWidget {
 }
 
 class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
-  Map<String, dynamic> _data;
+  late Map<String, dynamic> _data;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
   TextEditingController _categoryController = TextEditingController();
   TextEditingController _accountController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
-  bool isExpense;
+  bool? isExpense;
   double space = 7.0;
 
   @override
@@ -46,14 +46,14 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
 
     _categoryController.text = _data['categoryName'] ?? '';
     _accountController.text = _data['accountName'] ?? '';
-    _amountController.text = _data['amount'].toString() ?? '';
+    _amountController.text = _data['amount'].toString();
 
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    if (_data.containsKey('category') && isExpense == null)
+    if (_data['category'] != null && isExpense == null)
       isExpense = Provider.of<CategoryModel>(context, listen: false)
           .isExpense(_data['category']);
     if (_data['account'] == null) {
@@ -84,9 +84,9 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   }
 
   // ignore: missing_return
-  Future<int> _selectDate(BuildContext context) async {
+  Future<int?> _selectDate(BuildContext context) async {
     DateTime _date = DateTime.fromMillisecondsSinceEpoch(_data['timestamp']);
-    final DateTime picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _date,
       firstDate: DateTime(2015, 8),
@@ -97,8 +97,9 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     }
   }
 
-  Future<int> _selectTime(BuildContext context) async {
-    final TimeOfDay picked = await showTimePicker(
+  // ignore: missing_return
+  Future<int?> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(
         DateTime.fromMillisecondsSinceEpoch(_data['timestamp']),
@@ -118,7 +119,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     }
   }
 
-  Future<bool> _showMyDialog() async {
+  Future<bool?> _showMyDialog() async {
     return showDialog<bool>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -132,7 +133,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     if (_data['uuid'] != null) {
       _showMyDialog().then(
         (value) {
-          if (value) {
+          if (value!) {
             model.delete(_data['uuid']).then(
               (value) {
                 Provider.of<AccountModel>(context, listen: false).getAccounts();
@@ -146,9 +147,9 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   }
 
   void _submitForm(Function save) {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      if (isExpense) _data['amount'] = -1 * _data['amount'].abs();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      if (isExpense!) _data['amount'] = -1 * _data['amount'].abs();
       save(Transaction.fromMap(_data)).then(
         (value) {
           Provider.of<AccountModel>(context, listen: false).getAccounts();
@@ -161,195 +162,189 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding:
-                EdgeInsets.only(right: 20.0, left: 20, top: 5, bottom: 5.0),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: space,
+      child: Form(
+        key: _formKey,
+        child: Padding(
+          padding: EdgeInsets.only(right: 20.0, left: 20, top: 5, bottom: 5.0),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: space,
+              ),
+              TextFormField(
+                initialValue: _data['name'] ?? '',
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.description),
+                  labelText: S.of(context).description,
                 ),
-                TextFormField(
-                  initialValue: _data['name'] ?? '',
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.description),
-                    labelText: S.of(context).description,
+                onSaved: (String? value) {
+                  _data['name'] = value;
+                },
+              ),
+              SizedBox(
+                height: space,
+              ),
+              TextFormField(
+                controller: _amountController,
+                onTap: () {
+                  if (double.tryParse(_amountController.text)!.round() == 0) {
+                    _amountController.text = '';
+                  }
+                },
+                validator: (value) {
+                  if (value!.isEmpty || double.tryParse(value) == 0) {
+                    return S.of(context).amountError;
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.euro_outlined),
+                  labelText: S.of(context).amount,
+                ),
+                onSaved: (String? value) {
+                  _data['amount'] = double.parse(value!);
+                },
+              ),
+              SizedBox(
+                height: space,
+              ),
+              TextFormField(
+                readOnly: true,
+                controller: _categoryController,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.dashboard_outlined,
                   ),
-                  onSaved: (String value) {
-                    _data['name'] = value;
-                  },
+                  labelText: S.of(context).categoryTitle,
                 ),
-                SizedBox(
-                  height: space,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return S.of(context).categoryError;
+                  }
+                  return null;
+                },
+                onTap: () async {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  Map<String, dynamic>? result = await Navigator.pushNamed(
+                      context, '/categoriesPage',
+                      arguments: 'newTransaction');
+                  if (result != null) {
+                    _data['category'] = result['uuid'];
+                    _categoryController.text = result['name'];
+                    _data['categoryName'] = result['name'];
+                    isExpense = result['type'] == 'E';
+                  }
+                },
+              ),
+              SizedBox(
+                height: space,
+              ),
+              TextFormField(
+                readOnly: true,
+                controller: _accountController,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.account_balance_wallet),
+                  labelText: S.of(context).account,
                 ),
-                TextFormField(
-                  controller: _amountController,
-                  onTap: () {
-                    if (double.tryParse(_amountController.text).round() == 0) {
-                      _amountController.text = '';
-                    }
-                  },
-                  validator: (value) {
-                    if (value.isEmpty || double.tryParse(value) == 0) {
-                      return S.of(context).amountError;
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.euro_outlined),
-                    labelText: S.of(context).amount,
-                  ),
-                  onSaved: (String value) {
-                    _data['amount'] = double.parse(value);
-                  },
-                ),
-                SizedBox(
-                  height: space,
-                ),
-                TextFormField(
-                  readOnly: true,
-                  controller: _categoryController,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.dashboard_outlined,
-                    ),
-                    labelText: S.of(context).categoryTitle,
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return S.of(context).categoryError;
-                    }
-                    return null;
-                  },
-                  onTap: () async {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    Map<String, dynamic> result = await Navigator.pushNamed(
-                        context, '/categoriesPage',
-                        arguments: 'newTransaction');
-                    if (result != null) {
-                      _data['category'] = result['uuid'];
-                      _categoryController.text = result['name'];
-                      _data['categoryName'] = result['name'];
-                      isExpense = result['type'] == 'E';
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: space,
-                ),
-                TextFormField(
-                  readOnly: true,
-                  controller: _accountController,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.account_balance_wallet),
-                    labelText: S.of(context).account,
-                  ),
-                  validator: (value) {
-                    if (_accountController.text.isEmpty) {
-                      return S.of(context).accountSelectError;
-                    }
-                    return null;
-                  },
-                  onTap: () async {
-                    FocusScope.of(context).requestFocus(FocusNode());
+                validator: (value) {
+                  if (_accountController.text.isEmpty) {
+                    return S.of(context).accountSelectError;
+                  }
+                  return null;
+                },
+                onTap: () async {
+                  FocusScope.of(context).requestFocus(FocusNode());
 
-                    showCustomModalBottomSheet(
-                            context, AccountListBottomSheet())
-                        .then(
-                      (value) {
-                        if (value != null) {
-                          _data['account'] = value;
-                          _accountController.text =
-                              Provider.of<AccountModel>(context, listen: false)
-                                  .getAccountName(value);
-                          _data['accountName'] = _accountController.text;
-                        }
+                  showCustomModalBottomSheet(
+                    context,
+                    AccountListBottomSheet(),
+                    isScrollControlled: true,
+                  ).then(
+                    (value) {
+                      if (value != null) {
+                        _data['account'] = value;
+                        _accountController.text =
+                            Provider.of<AccountModel>(context, listen: false)
+                                .getAccountName(value);
+                        _data['accountName'] = _accountController.text;
+                      }
+                    },
+                  );
+                },
+              ),
+              SizedBox(
+                height: space,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      readOnly: true,
+                      controller: _dateController,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.calendar_today),
+                        labelText: S.of(context).date,
+                      ),
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        _selectDate(context).then((int? value) {
+                          if (value != null)
+                            setState(() {
+                              _dateController.text = DateFormat.yMMMd().format(
+                                DateTime.fromMillisecondsSinceEpoch(value),
+                              );
+                              _data['timestamp'] = value;
+                            });
+                        });
                       },
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: space,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        readOnly: true,
-                        controller: _dateController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.calendar_today),
-                          labelText: S.of(context).date,
-                        ),
-                        onTap: () {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          _selectDate(context).then((int value) {
-                            if (value != null)
-                              setState(() {
-                                _dateController.text =
-                                    DateFormat.yMMMd().format(
-                                  DateTime.fromMillisecondsSinceEpoch(value),
-                                );
-                                _data['timestamp'] = value;
-                              });
-                          });
-                        },
+                    ),
+                  ),
+                  SizedBox(
+                    width: space,
+                  ),
+                  Container(
+                    child: TextFormField(
+                      readOnly: true,
+                      controller: _timeController,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.hourglass_bottom_outlined),
+                        labelText: S.of(context).time,
                       ),
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        _selectTime(context).then((int? value) {
+                          if (value != null)
+                            setState(() {
+                              _timeController.text = DateFormat.Hm().format(
+                                DateTime.fromMillisecondsSinceEpoch(value),
+                              );
+                              _data['timestamp'] = value;
+                            });
+                        });
+                      },
                     ),
-                    SizedBox(
-                      width: space,
-                    ),
-                    Container(
-                      child: TextFormField(
-                        readOnly: true,
-                        controller: _timeController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.hourglass_bottom_outlined),
-                          labelText: S.of(context).time,
-                        ),
-                        onTap: () {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          _selectTime(context).then((int value) {
-                            if (value != null)
-                              setState(() {
-                                _timeController.text = DateFormat.Hm().format(
-                                  DateTime.fromMillisecondsSinceEpoch(value),
-                                );
-                                _data['timestamp'] = value;
-                              });
-                          });
-                        },
-                      ),
-                      width: 130,
-                    ),
-                  ],
-                ),
-                Consumer<TransactionModel>(
-                  builder: (BuildContext context, TransactionModel model,
-                      Widget widget) {
-                    return ButtonBar(
-                      buttonHeight: 40.0,
-                      buttonMinWidth: 140.0,
-                      alignment: MainAxisAlignment.center,
-                      children: [
-                        DeleteButton(() {
-                          deleteTransaction(model);
-                        }),
-                        SaveButton(() {
-                          _submitForm(model.insertTransactiontIntoDb);
-                        }),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
+                    width: 130,
+                  ),
+                ],
+              ),
+              Consumer<TransactionModel>(
+                builder: (BuildContext context, TransactionModel model,
+                    Widget? widget) {
+                  return ButtonBar(
+                    buttonMinWidth: 140.0,
+                    children: [
+                      DeleteButton(() {
+                        deleteTransaction(model);
+                      }),
+                      SaveButton(() {
+                        _submitForm(model.insertTransactiontIntoDb);
+                      }),
+                    ],
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),

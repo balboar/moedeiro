@@ -1,12 +1,14 @@
+
+
 import 'package:flutter/material.dart';
 
 class InputButtonConfig {
   // final double fontSize;
   /// default `MediaQuery.of(context).size.width * 0.095`
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
   final Color backgroundColor;
   final double backgroundOpacity;
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
 
   const InputButtonConfig({
     this.textStyle,
@@ -23,8 +25,8 @@ class InputButton extends StatelessWidget {
   final Sink<String> enteredSink;
 
   InputButton({
-    @required this.text,
-    @required this.enteredSink,
+    required this.text,
+    required this.enteredSink,
     this.config = const InputButtonConfig(),
   });
 
@@ -35,7 +37,7 @@ class InputButton extends StatelessWidget {
           fontSize: MediaQuery.of(context).size.width * 0.095,
         );
 
-    return FlatButton(
+    return TextButton(
       child: Text(
         text,
         style: textStyle,

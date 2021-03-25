@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/models/accounts.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/accounts/components/accountCharts.dart';
-import 'package:moedeiro/screens/charts/components/transactionsCharts.dart';
+import 'package:moedeiro/screens/summary/components/transactionsCharts.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class AccountCard extends StatefulWidget {
-  final Account account;
-  AccountCard({Key key, this.account}) : super(key: key);
+  final Account? account;
+  AccountCard({Key? key, this.account}) : super(key: key);
 
   @override
   _AccountCardState createState() => _AccountCardState();
@@ -31,33 +31,33 @@ class _AccountCardState extends State<AccountCard> {
       child: ListTile(
         onTap: () {
           Provider.of<AccountModel>(context, listen: false).setActiveAccount =
-              widget.account.uuid;
+              widget.account!.uuid!;
           Navigator.pushNamed(context, '/accountTransactionsPage',
               arguments: false);
         },
         leading: CircleAvatar(
-          backgroundImage: widget.account.icon != null
+          backgroundImage: widget.account!.icon != null
               ? FileImage(
-                  File(widget.account.icon),
+                  File(widget.account!.icon!),
                 )
               : null,
           backgroundColor: Colors.transparent,
           radius: 20,
         ),
         title: Text(
-          widget.account.name, //
+          widget.account!.name!, //
           overflow: TextOverflow.clip,
           maxLines: 1,
         ),
         subtitle: Text(
-          '${formatCurrency(context, widget.account.amount)}',
+          '${formatCurrency(context, widget.account!.amount!)}',
         ),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(S.of(context).expensesMonth),
             Text(
-              '${formatCurrency(context, widget.account.expensesMonth)}',
+              '${formatCurrency(context, widget.account!.expensesMonth!)}',
               style: Theme.of(context).textTheme.bodyText2,
             ),
           ],
@@ -68,8 +68,8 @@ class _AccountCardState extends State<AccountCard> {
 }
 
 class AccountMiniCard extends StatefulWidget {
-  final Account account;
-  AccountMiniCard({Key key, this.account}) : super(key: key);
+  final Account? account;
+  AccountMiniCard({Key? key, this.account}) : super(key: key);
 
   @override
   _AccountMiniCardState createState() => _AccountMiniCardState();
@@ -99,22 +99,22 @@ class _AccountMiniCardState extends State<AccountMiniCard> {
                     children: [
                       Expanded(
                         child: Text(
-                          widget.account.name, //
+                          widget.account!.name!, //
                           overflow: TextOverflow.clip,
                           maxLines: 1,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color:
-                                  Theme.of(context).textTheme.bodyText1.color,
+                                  Theme.of(context).textTheme.bodyText1!.color,
                               fontSize: 17.0),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(right: 5.0),
                         child: CircleAvatar(
-                          backgroundImage: widget.account.icon != null
+                          backgroundImage: widget.account!.icon != null
                               ? FileImage(
-                                  File(widget.account.icon),
+                                  File(widget.account!.icon!),
                                 )
                               : null,
                           backgroundColor: Colors.transparent,
@@ -126,7 +126,7 @@ class _AccountMiniCardState extends State<AccountMiniCard> {
                   const Spacer(),
                   Align(
                     child: Text(
-                      '${formatCurrency(context, widget.account.amount)}',
+                      '${formatCurrency(context, widget.account!.amount!)}',
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     alignment: Alignment.centerLeft,
@@ -138,7 +138,7 @@ class _AccountMiniCardState extends State<AccountMiniCard> {
           ),
           onTap: () {
             Provider.of<AccountModel>(context, listen: false).setActiveAccount =
-                widget.account.uuid;
+                widget.account!.uuid!;
             Navigator.pushNamed(context, '/accountTransactionsPage',
                 arguments: false);
           }),
@@ -148,11 +148,11 @@ class _AccountMiniCardState extends State<AccountMiniCard> {
 }
 
 class AccountPageAppBar extends StatefulWidget {
-  final Account activeAccount;
-  final List<Widget> actions;
-  final Widget tabs;
+  final Account? activeAccount;
+  final List<Widget>? actions;
+  final Widget? tabs;
 
-  AccountPageAppBar(this.activeAccount, {this.actions, this.tabs, Key key})
+  AccountPageAppBar(this.activeAccount, {this.actions, this.tabs, Key? key})
       : super(key: key);
 
   @override
@@ -163,7 +163,7 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
   double height = 200;
   final controller = PageController(viewportFraction: 1);
 
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
 
   bool lastStatus = true;
   @override
@@ -198,10 +198,10 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
       handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
       sliver: SliverAppBar(
         centerTitle: true,
-        title: Text(widget.activeAccount.name +
+        title: Text(widget.activeAccount!.name! +
             ' ' +
-            formatCurrency(context, widget.activeAccount.amount)),
-        bottom: widget.tabs,
+            formatCurrency(context, widget.activeAccount!.amount!)),
+        bottom: widget.tabs as PreferredSizeWidget?,
         floating: false,
         snap: false,
         pinned: true,
@@ -223,9 +223,9 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
                   controller: controller,
                   children: [
                     ExpensesByMonthChart(
-                        accountUuid: widget.activeAccount.uuid),
-                    AccountBalanceChart(account: widget.activeAccount),
-                    TransactionChart(accountUuid: widget.activeAccount.uuid),
+                        accountUuid: widget.activeAccount!.uuid),
+                    AccountBalanceChart(account: widget.activeAccount!),
+                    TransactionChart(accountUuid: widget.activeAccount!.uuid),
                   ],
                   scrollDirection: Axis.horizontal,
                 ),
