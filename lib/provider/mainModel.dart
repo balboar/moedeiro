@@ -184,6 +184,12 @@ class CategoryModel extends ChangeNotifier {
       await DB.update(Categori.table, categoryData.toMap());
     getCategories();
   }
+
+  Future<bool> delete(String uuid) async {
+    await DB.deleteItem(Categori.table, uuid);
+    await getCategories();
+    return Future.value(true);
+  }
 }
 
 class TransactionModel extends ChangeNotifier {
@@ -205,8 +211,20 @@ class TransactionModel extends ChangeNotifier {
     return Future.value(true);
   }
 
+  Future<List<Transaction>> searchTransactions(String query) async {
+    final List<Map<String, dynamic>> maps = await DB.searchTransactions(query);
+    return List.generate(maps.length, (i) {
+      return Transaction.fromMap(maps[i]);
+    });
+  }
+
   Future<List<Map<String, dynamic>>> getChartData() async {
     return await DB.getTrasactionsLast6Month();
+  }
+
+  Future<List<Map<String, dynamic>>> getPieChartData(
+      String month, String year) async {
+    return await DB.getTrasactionSummaryByMonthAndCategory(month, year);
   }
 
   Future<List<Map<String, dynamic>>> getChartDataByAccount(String? uuid) async {

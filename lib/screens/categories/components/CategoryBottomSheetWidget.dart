@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/components/buttons.dart';
+import 'package:moedeiro/components/dialogs/InfoDialog.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/generated/l10n.dart';
 import 'package:moedeiro/models/categories.dart';
@@ -10,8 +11,9 @@ enum CategoryType { income, expense }
 
 class CategoryBottomSheet extends StatefulWidget {
   final Categori? category;
+  final bool emptyCategory;
 
-  CategoryBottomSheet(this.category);
+  CategoryBottomSheet(this.category, this.emptyCategory);
   @override
   State<StatefulWidget> createState() {
     return CategoryBottomSheetState();
@@ -36,16 +38,37 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return ComfirmDeleteDialog();
+        return ComfirmDeleteDialog(
+          icon: Icons.dashboard_outlined,
+          title: S.of(context).deleteCategory,
+          subtitle: S.of(context).deleteCategorytDescription,
+        );
+      },
+    );
+  }
+
+  Future<bool?> _showCategoryNotEmptyDialog() async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return InfoDialog(
+          icon: Icons.error_outline,
+          title: S.of(context).deleteCategoryError,
+          subtitle: S.of(context).deleteCategorytDescriptionError,
+        );
       },
     );
   }
 
   void deleteCategory(CategoryModel model) {
-    if (category.uuid != null) {
+    if (!widget.emptyCategory)
+      _showCategoryNotEmptyDialog().then((value) => Navigator.pop(context));
+    else if (category.uuid != null) {
       _showMyDialog().then((value) {
         if (value!) {
-          //   model.delete(_data['uuid']);
+          model.delete(category.uuid!);
+          Navigator.pop(context);
           Navigator.pop(context);
         }
       });

@@ -18,6 +18,7 @@ class TransactionTile extends StatelessWidget {
         showCustomModalBottomSheet(
           context,
           TransactionBottomSheet(transaction),
+          isScrollControlled: true,
         );
       },
       child: Card(

@@ -1,6 +1,5 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class MoedeiroSliverOverlapAbsorberAppBar extends StatefulWidget {
   final String titleName;
@@ -59,13 +58,13 @@ class _MoedeiroSliverOverlapAbsorberAppBarState
         sliver: SliverAppBar(
           title: Text(widget.titleName),
           bottom: widget.tabs as PreferredSizeWidget?,
-          floating: true,
+          floating: false,
           snap: false,
-          centerTitle: true,
           pinned: true,
+          centerTitle: true,
           flexibleSpace: widget.flexibleSpace,
           actions: widget.actions,
-          expandedHeight: 270,
+          expandedHeight: 290,
         ),
       ),
     );
@@ -92,6 +91,59 @@ class MoedeiroSliverAppBar extends StatelessWidget {
       actions: actions,
       flexibleSpace: flexibleSpace,
       expandedHeight: 270,
+    );
+  }
+}
+
+class SearchBar extends StatefulWidget {
+  SearchBar({Key? key}) : super(key: key);
+
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  Icon _searchIcon = Icon(
+    Icons.search,
+  );
+  bool isSearchClicked = true;
+  final TextEditingController _filter = new TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return FlexibleSpaceBar(
+      titlePadding: EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      centerTitle: true,
+      title: Container(
+        padding: EdgeInsets.only(bottom: 2),
+        constraints: BoxConstraints(minHeight: 40, maxHeight: 40),
+        child: TextField(
+          onChanged: (String value) {},
+          controller: _filter,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            hintText: S.of(context).search,
+            hintStyle: TextStyle(
+              color: Color(0xffC4C6CC),
+              fontSize: 14.0,
+            ),
+            prefixIcon: Icon(
+              Icons.search,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(style: BorderStyle.solid, width: 1.0),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(
+                  color: Color(0xffF0F1F5),
+                  style: BorderStyle.solid,
+                  width: 1.0),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

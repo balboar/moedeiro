@@ -17,7 +17,7 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => MainPage());
+        return MaterialPageRoute(builder: (_) => MainPage(),);
       case '/lockScreen':
         if (args is Map<String, dynamic>) {
           route = MaterialPageRoute(

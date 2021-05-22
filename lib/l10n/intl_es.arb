@@ -59,7 +59,12 @@
   "confirmPin":"Confirma el PIN",
   "balance":"Balance",
   "pinErrorLenght":"El PIN tiene que tener 4 numeros",
-  "categories":"Categorías"
+  "categories":"Categorías",
+  "deleteCategory":"¿Borrar categoría?",
+  "deleteCategoryDescription":"Se va a borrar una categoría, ¿estás seguro?",
+  "deleteCategoryError":"No se puede borrar la categoría",
+  "deleteCategorytDescriptionError":"Esta categoría tiene transacciones, borrar o moverlas primero",
+  "search":"Buscar.."
 
 
 }

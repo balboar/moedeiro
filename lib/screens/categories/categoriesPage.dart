@@ -109,7 +109,7 @@ class CategoriesPage extends StatelessWidget {
           onPressed: () {
             showCustomModalBottomSheet(
               context,
-              CategoryBottomSheet(null),
+              CategoryBottomSheet(null, true),
             );
           },
         ),

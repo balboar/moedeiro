@@ -1,7 +1,3 @@
-
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -26,7 +22,6 @@ Future<void> main() async {
   ThemeModel model;
   SharedPreferences prefs;
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
   await DB.init();
 
   prefs = await SharedPreferences.getInstance();
@@ -34,7 +29,6 @@ Future<void> main() async {
   _lockApp = prefs.getBool('lockApp') ?? false;
   _useBiometrics = prefs.getBool('useBiometrics') ?? false;
   theme = prefs.getString('theme') ?? 'system';
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   var _locale = prefs.getString('locale') ?? 'default';
   pin = prefs.getString('PIN') ?? '0000';

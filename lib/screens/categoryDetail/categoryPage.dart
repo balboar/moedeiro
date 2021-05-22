@@ -20,6 +20,7 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Categori? category;
+  bool emptyCategory = false;
 
   @override
   void initState() {
@@ -37,7 +38,7 @@ class _CategoryPageState extends State<CategoryPage> {
         onPressed: () {
           showCustomModalBottomSheet(
             context,
-            CategoryBottomSheet(category),
+            CategoryBottomSheet(category, emptyCategory),
           );
         },
       ),
@@ -50,6 +51,7 @@ class _CategoryPageState extends State<CategoryPage> {
       {
         List<Transaction> accountTransactions =
             model.getCategoryTransactions(widget.categoryUuid);
+        emptyCategory = accountTransactions.length == 0;
         return accountTransactions.length == 0
             ? SliverToBoxAdapter(
                 child: NoDataWidgetVertical(),
@@ -78,6 +80,8 @@ class _CategoryPageState extends State<CategoryPage> {
             title: Text(category!.name!),
             actions: buildActions(),
             floating: false,
+          snap: false,
+          pinned: true,
             expandedHeight: MediaQuery.of(context).size.height * 0.30,
           ),
           SliverPadding(

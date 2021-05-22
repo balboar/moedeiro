@@ -174,6 +174,19 @@ class DB {
     );
   }
 
+  static Future<List<Map<String, dynamic>>> searchTransactions(
+      String query) async {
+    return await _db!.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+          'SELECT a.*,b.name accountName,c.name categoryName,coalesce(b.initialAmount,0.0) initialAmount FROM transactions a ' +
+              'left outer join accounts b on b.uuid=a.account ' +
+              "left outer join category c on c.uuid=a.category where a.name LIKE  '%$query%'  order by a.timestamp desc",
+        );
+      },
+    );
+  }
+
   static Future<List<Map<String, dynamic>>> getAccountTransactions(
       String accountUuid) async {
     return await _db!.transaction(
@@ -328,6 +341,20 @@ class DB {
                 ' strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))=? and ' +
                 'strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) =?    group by 2,3 order by 1 desc ,2  desc',
             [month, year]);
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>>
+      getTrasactionSummaryByMonthAndCategory(String month, String year) async {
+    return await _db!.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            ' SELECT round(sum(abs(a.amount)),2) amount,c.type,count(a.uuid) total  FROM transactions a ' +
+                'left outer join category c on c.uuid=a.category where ' +
+                ' strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))=? and ' +
+                'strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) =?    group by 2 order by 1 desc ,2  desc',
+            [month.padLeft(2, '0'), year]);
       },
     );
   }
