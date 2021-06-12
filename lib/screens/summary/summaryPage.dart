@@ -6,6 +6,7 @@ import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:intl/intl.dart';
 
 import 'components/TransactionsListBottonSheet.dart';
 import 'components/monthDetail.dart';
@@ -45,22 +46,16 @@ class _MonthViewerState extends State<MonthViewer> {
   String year = '';
 
   final controllerCharts = PageController(viewportFraction: 1);
-  List<String> _months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
+
   @override
   void initState() {
+    var date = new DateTime.now().toString();
+
+    var dateParse = DateTime.parse(date);
+    month = dateParse.month.toString().padLeft(2, '0');
+    year = dateParse.year.toString();
+    Provider.of<TransactionModel>(context, listen: false)
+        .getTrasactionsByMonthAndCategory(month, year);
     Provider.of<TransactionModel>(context, listen: false)
         .getTrasactionsGroupedByMonthAndCategory();
     super.initState();
@@ -95,8 +90,8 @@ class _MonthViewerState extends State<MonthViewer> {
                             ? NoDataWidgetVertical()
                             : ListView.builder(
                                 reverse: true,
+                                itemExtent: 50.0,
                                 itemCount: model.transactionsOfTheMonth.length,
-                                itemExtent: 70.0,
                                 itemBuilder: (BuildContext context, int index) {
                                   return CustomCard(
                                       model.transactionsOfTheMonth[index],
@@ -118,9 +113,8 @@ class _MonthViewerState extends State<MonthViewer> {
                           itemBuilder: (BuildContext context, int index) {
                             return MonthDetail(
                               model.monthlyTransactions[index]['amount'],
-                              _months[int.parse(model.monthlyTransactions[index]
-                                      ['monthofyear']) -
-                                  1],
+                              model.monthlyTransactions[index]['monthofyear'],
+                              model.monthlyTransactions[index]['year'],
                             );
                           },
                           itemCount: model.monthlyTransactions.length,
@@ -162,42 +156,42 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LinearPercentIndicator(
-      linearStrokeCap: LinearStrokeCap.butt,
+      linearStrokeCap: LinearStrokeCap.round,
       padding: EdgeInsets.zero,
       progressColor: Colors.red.withOpacity(0.2),
       backgroundColor: Colors.transparent,
-      lineHeight: 60,
-      center: ListTile(
-        onTap: () {
-          showModalBottomSheet(
-              enableDrag: true,
-              context: context,
-              isScrollControlled: true,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              builder: (BuildContext context) {
-                return TransactionsListBottomSheet(data['uuid'], month, year);
-              });
-        },
-        title: Text(
-          data['name'] ?? '',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: Theme.of(context).textTheme.subtitle1!.fontSize,
-              color: Theme.of(context).textTheme.subtitle1!.color),
-        ),
-        subtitle: Text(
-          '${data['total'].toString()}x',
-        ),
-        trailing: Text(
-          formatCurrency(context, data['amount']),
-          style: TextStyle(
-            fontSize: 18.0,
+      lineHeight: 50,
+      percent: data['amount'] / total,
+      center: Container(
+        height: 50.0,
+        child: ListTile(
+          onTap: () {
+            showModalBottomSheet(
+                enableDrag: true,
+                context: context,
+                isScrollControlled: true,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                builder: (BuildContext context) {
+                  return TransactionsListBottomSheet(data['uuid'], month, year);
+                });
+          },
+          title: Text(
+            data['name'] ?? '',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: Theme.of(context).textTheme.subtitle1!.fontSize,
+                color: Theme.of(context).textTheme.subtitle1!.color),
+          ),
+          trailing: Text(
+            formatCurrency(context, data['amount']),
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
           ),
         ),
       ),
-      percent: data['amount'] / total,
     );
   }
 }

@@ -64,7 +64,7 @@ class _MoedeiroSliverOverlapAbsorberAppBarState
           centerTitle: true,
           flexibleSpace: widget.flexibleSpace,
           actions: widget.actions,
-          expandedHeight: 290,
+          expandedHeight: MediaQuery.of(context).size.height / 2,
         ),
       ),
     );
@@ -90,7 +90,7 @@ class MoedeiroSliverAppBar extends StatelessWidget {
       pinned: true,
       actions: actions,
       flexibleSpace: flexibleSpace,
-      expandedHeight: 270,
+      expandedHeight: MediaQuery.of(context).size.height / 2,
     );
   }
 }

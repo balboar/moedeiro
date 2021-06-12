@@ -212,10 +212,12 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
           background: Column(
             children: [
               Container(
-                height: kToolbarHeight,
+                height: kToolbarHeight + 20,
               ),
               Container(
-                height: 180,
+                height: (MediaQuery.of(context).size.height / 2) -
+                    kToolbarHeight -
+                    50,
                 margin:
                     EdgeInsets.only(left: 0.0, right: 0, top: 2.0, bottom: 2.0),
                 child: PageView(
@@ -245,7 +247,7 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
             ],
           ),
         ),
-        expandedHeight: 270,
+        expandedHeight: MediaQuery.of(context).size.height / 2,
       ),
     );
   }

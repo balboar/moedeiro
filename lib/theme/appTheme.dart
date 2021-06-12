@@ -5,26 +5,30 @@ class AppTheme {
 
   // Light Theme
   static final ThemeData lightTheme = ThemeData(
-    accentColor: Colors.black, // Colors.blue[300],
+    // primarySwatch: Colors.blueGrey,
+    accentColor: Colors.black,
     buttonBarTheme: ButtonBarThemeData(
         alignment: MainAxisAlignment.spaceAround, buttonHeight: 40.0),
-    // textSelectionTheme: TextSelectionThemeData(selectionColor: Colors.black),
+    textSelectionTheme: TextSelectionThemeData(selectionColor: Colors.black),
     cardColor: Colors.white,
+    iconTheme: IconThemeData(color: Colors.black),
     textTheme: TextTheme(
         button: TextStyle(color: Colors.white),
         bodyText1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
     canvasColor: Colors.grey[50],
+    primaryTextTheme: TextTheme(
+      headline6: TextStyle(color: Colors.black),
+      bodyText1: TextStyle(color: Colors.black),
+    ),
     brightness: Brightness.light,
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
     ),
-    iconTheme: IconThemeData(color: Colors.black),
     appBarTheme: AppBarTheme(
+      iconTheme: IconThemeData(color: Colors.black),
       color: Colors.grey[50],
       actionsIconTheme: IconThemeData(color: Colors.black),
-      iconTheme: IconThemeData(color: Colors.black),
       elevation: 0.0,
-      brightness: Brightness.light,
       centerTitle: true,
     ),
   );

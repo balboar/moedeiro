@@ -236,19 +236,17 @@ class TransactionModel extends ChangeNotifier {
   }
 
   void getTrasactionsGroupedByMonthAndCategory() {
-    //  monthlyTransactions.clear();
     DB.getTrasactionsGroupedByMonthAndCategory().then((value) {
       monthlyTransactions = value.reversed.toList();
       notifyListeners();
-      if (transactionsOfTheMonth.length == 0) {
-        getTrasactionsByMonthAndCategory(monthlyTransactions[0]['monthofyear'],
-            monthlyTransactions[0]['year']);
-      }
+      // if (transactionsOfTheMonth.length == 0) {
+      //   getTrasactionsByMonthAndCategory(monthlyTransactions[0]['monthofyear'],
+      //       monthlyTransactions[0]['year']);
+      // }
     });
   }
 
   void getTrasactionsByMonthAndCategory(String month, String year) {
-    // transactionsOfTheMonth.clear();
     DB.getTrasactionsByMonthAndCategory(month, year).then((value) {
       transactionsOfTheMonth = value;
       notifyListeners();

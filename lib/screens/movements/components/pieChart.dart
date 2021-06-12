@@ -55,9 +55,11 @@ class PieChartState extends State {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          height: 150,
+          alignment: Alignment.bottomCenter,
+          height: (MediaQuery.of(context).size.height / 2) - 140,
           child: PieChart(
             PieChartData(
                 pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
@@ -78,7 +80,8 @@ class PieChartState extends State {
                   show: false,
                 ),
                 sectionsSpace: 2,
-                centerSpaceRadius: 60,
+                centerSpaceRadius:
+                    (MediaQuery.of(context).size.height / 2) * 0.23,
                 sections: showingSections()),
           ),
         ),
@@ -142,7 +145,7 @@ class PieChartState extends State {
               titleStyle: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black),
+                  color: Theme.of(context).textTheme.subtitle1?.color),
             );
           }).toList()
         : [
@@ -156,7 +159,7 @@ class PieChartState extends State {
                 style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black),
+                    color: Theme.of(context).textTheme.subtitle1?.color),
               )),
               badgePositionPercentageOffset: -7,
               radius: 8.0,

@@ -276,7 +276,7 @@ class DB {
                     'left outer join category c on c.uuid=a.category where a.account='
                     '"' +
                 uuidAccount! +
-                '" and date( substr(a.timestamp,1,10), "unixepoch") > date("now","-0.5 YEAR") ' +
+                '" and date( substr(a.timestamp,1,10), "unixepoch") > date("now","-0.3 YEAR") ' +
                 ' group by 2,3,4 order by 3 ,2 ');
       },
     );
@@ -294,7 +294,7 @@ class DB {
             'FROM transactions a   WHERE a.account=   "' +
             uuidAccount +
             '" ' +
-            '  AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.5 YEAR")  ' +
+            '  AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.4 YEAR")  ' +
             'GROUP BY 2,  3, 4  ' +
             'UNION SELECT sum(a.amount) amount, ' +
             '           strftime("%d", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS dayofyear, ' +
@@ -303,7 +303,7 @@ class DB {
             'FROM transfers a WHERE a.accountTo= "' +
             uuidAccount +
             '" ' +
-            'AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.5 YEAR") ' +
+            'AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.4 YEAR") ' +
             'GROUP BY 2,   3,  4 ' +
             'UNION SELECT -sum(a.amount) amount, ' +
             '             strftime("%d", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS dayofyear, ' +
@@ -312,7 +312,7 @@ class DB {
             'FROM transfers a WHERE a.accountFrom= "' +
             uuidAccount +
             '" ' +
-            'AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.5 YEAR") ' +
+            'AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.4 YEAR") ' +
             'GROUP BY 2, 3, 4   ORDER BY 4,  3,  2) AS z ' +
             'GROUP BY 2, 3, 4 ORDER BY 4, 3,  2');
       },
@@ -325,7 +325,7 @@ class DB {
         return await txn.rawQuery(
             '   SELECT sum(abs(a.amount)) amount,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
                 ' strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year,c.type   FROM transactions a '
-                    'left outer join category c on c.uuid=a.category where date( substr(a.timestamp,1,10), "unixepoch") > date("now","-0.5 YEAR") ' +
+                    'left outer join category c on c.uuid=a.category where date( substr(a.timestamp,1,10), "unixepoch") > date("now","-0.3 YEAR") ' +
                 ' group by 2,3,4 order by 3 ,2 ');
       },
     );

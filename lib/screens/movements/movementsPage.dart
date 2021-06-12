@@ -177,7 +177,6 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
             height: kToolbarHeight,
           ),
           Container(
-            height: 200,
             child: MPieChart(),
             margin:
                 EdgeInsets.only(left: 0.0, right: 0, top: 10.0, bottom: 0.0),
