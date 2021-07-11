@@ -1,61 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:moedeiro/models/theme.dart';
+import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/generated/l10n.dart';
 import 'package:moedeiro/util/routeGenerator.dart';
-import 'package:moedeiro/util/utils.dart';
 
 Future<void> main() async {
 //   debugPaintPointersEnabled = true;
 //   debugPaintBaselinesEnabled = true;
 //   debugPaintLayerBordersEnabled = true;
-  bool _lockApp = false;
-  bool _useBiometrics = false;
-  Locale? locale;
-  String theme;
-  String pin;
-  ThemeModel model;
-  SharedPreferences prefs;
+
+  SettingsModel model;
   WidgetsFlutterBinding.ensureInitialized();
   await DB.init();
-
-  prefs = await SharedPreferences.getInstance();
-
-  _lockApp = prefs.getBool('lockApp') ?? false;
-  _useBiometrics = prefs.getBool('useBiometrics') ?? false;
-  theme = prefs.getString('theme') ?? 'system';
-
-  var _locale = prefs.getString('locale') ?? 'default';
-  pin = prefs.getString('PIN') ?? '0000';
-
-  if (_locale == 'default') {
-    locale = null;
-  } else {
-    var activeLocale =
-        languageOptions.firstWhere((element) => element.key == _locale);
-    locale = Locale.fromSubtags(languageCode: activeLocale.key);
-  }
-  model = ThemeModel();
-  if (theme == 'system')
-    model.setSystemDefault();
-  else if (theme == 'dark')
-    model.setDark();
-  else
-    model.setLight();
+  model = SettingsModel();
+  await model.initPrefs();
 
   runApp(
-    ChangeNotifierProvider<ThemeModel>(
+    ChangeNotifierProvider<SettingsModel>(
       create: (BuildContext context) => model,
       child: MyApp(
-        locale: locale,
-        lockScreen: _lockApp,
-        useBiometrics: _useBiometrics,
-        pin: pin,
+        locale: model.locale,
+        lockScreen: model.lockScreen,
+        useBiometrics: model.useBiometrics,
+        pin: model.pin,
       ),
     ),
   );
@@ -94,9 +64,9 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        theme: Provider.of<ThemeModel>(context, listen: true).lightTheme,
-        darkTheme: Provider.of<ThemeModel>(context, listen: true).darkTheme,
-        themeMode: Provider.of<ThemeModel>(context, listen: true).themeMode,
+        theme: Provider.of<SettingsModel>(context, listen: true).lightTheme,
+        darkTheme: Provider.of<SettingsModel>(context, listen: true).darkTheme,
+        themeMode: Provider.of<SettingsModel>(context, listen: true).themeMode,
         onGenerateRoute: RouteGenerator.generateRoute,
         initialRoute: lockScreen ? '/lockScreen' : '/',
         onGenerateInitialRoutes: (String initialRouteName) {

@@ -45,6 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "confirmPin": MessageLookupByLibrary.simpleMessage("Confirm PIN"),
         "data": MessageLookupByLibrary.simpleMessage("Data"),
         "date": MessageLookupByLibrary.simpleMessage("Date"),
+        "defaultAccount":
+            MessageLookupByLibrary.simpleMessage("Default Account"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteAccount":
             MessageLookupByLibrary.simpleMessage("Delete account?"),
@@ -63,6 +65,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteMovementDescription": MessageLookupByLibrary.simpleMessage(
             "A movement is going to be deleted, are you sure?"),
         "description": MessageLookupByLibrary.simpleMessage("Description"),
+        "discreetMode": MessageLookupByLibrary.simpleMessage("Discreet mode"),
+        "discreetModeExplanation": MessageLookupByLibrary.simpleMessage(
+            "Discreet mode hides the amounts"),
         "expense": MessageLookupByLibrary.simpleMessage("Expense"),
         "expenses": MessageLookupByLibrary.simpleMessage("Expenses"),
         "expensesMonth": MessageLookupByLibrary.simpleMessage("Expenses month"),

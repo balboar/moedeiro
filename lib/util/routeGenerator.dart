@@ -10,6 +10,23 @@ import 'package:moedeiro/screens/summary/summaryPage.dart';
 
 class RouteGenerator {
   // ignore: missing_return
+
+  static Route<Map<String, dynamic>> moedeiroPageRoute(Widget page) {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, anotherAnimation) {
+          return page;
+        },
+        transitionDuration: Duration(milliseconds: 750),
+        transitionsBuilder: (context, animation, anotherAnimation, child) {
+          animation = CurvedAnimation(
+              curve: Curves.fastLinearToSlowEaseIn, parent: animation);
+          return ScaleTransition(
+            scale: animation,
+            child: child,
+          );
+        });
+  }
+
   static Route<Map<String, dynamic>> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
     final args = settings.arguments;
@@ -17,7 +34,7 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => MainPage(),);
+        return moedeiroPageRoute(MainPage());
       case '/lockScreen':
         if (args is Map<String, dynamic>) {
           route = MaterialPageRoute(
@@ -33,28 +50,21 @@ class RouteGenerator {
 
       case '/accountTransactionsPage':
         if (args is bool) {
-          route = MaterialPageRoute(
-            builder: (_) => AccountTransactionsPage(
-              showAllTransactions: args,
-            ),
-          );
+          route = moedeiroPageRoute(AccountTransactionsPage(
+            showAllTransactions: args,
+          ));
         } else
-          route = MaterialPageRoute(
-            builder: (_) => AccountTransactionsPage(),
-          );
+          route = moedeiroPageRoute(AccountTransactionsPage());
 
         return route;
       case '/categoriesPage':
         if (args is String) {
-          route = MaterialPageRoute(
-            builder: (_) => CategoriesPage(
-              data: args,
-            ),
-          );
+          route = moedeiroPageRoute(CategoriesPage(
+            data: args,
+          ));
         } else
-          route = MaterialPageRoute(
-            builder: (_) => CategoriesPage(),
-          );
+          route = moedeiroPageRoute(CategoriesPage());
+
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
         return route;
@@ -63,21 +73,19 @@ class RouteGenerator {
         // return MaterialPageRoute(builder: (_) => CategoriesPage());
         // Validation of correct data type
         if (args is String) {
-          route = MaterialPageRoute(
-            builder: (_) => CategoryPage(
-              categoryUuid: args,
-            ),
-          );
+          route = moedeiroPageRoute(CategoryPage(
+            categoryUuid: args,
+          ));
         } else
           route = _errorRoute() as Route<Map<String, dynamic>>;
         return route;
 
       case '/accountsPage':
-        return MaterialPageRoute(builder: (_) => AccountsPage());
+        return moedeiroPageRoute(AccountsPage());
       case '/settingsPage':
-        return MaterialPageRoute(builder: (_) => SettingsPage());
+        return moedeiroPageRoute(SettingsPage());
       case '/chartsPage':
-        return MaterialPageRoute(builder: (_) => SummaryPage());
+        return moedeiroPageRoute(SummaryPage());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute() as Route<Map<String, dynamic>>;

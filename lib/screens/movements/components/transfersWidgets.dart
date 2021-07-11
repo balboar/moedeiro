@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
@@ -32,52 +30,37 @@ class TransferTile extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Row(children: [
                       Icon(
-                        Icons.account_balance_wallet_outlined,
+                        Icons.account_balance_wallet,
+                        color: Colors.red,
                         size: 16,
                       ),
                       Container(
                         width: 5,
                       ),
-                      Text(
-                        transfer.accountFromName ?? '',
-                        overflow: TextOverflow.clip,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontSize:
-                                Theme.of(context).textTheme.subtitle1!.fontSize,
-                            color: Theme.of(context).textTheme.subtitle1!.color),
-                      ),
+                      Text(transfer.accountFromName ?? '',
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                          style: Theme.of(context).textTheme.subtitle1),
                     ]),
-                    Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      size: 20,
-                      color: Colors.blue,
-                    ),
                     Row(
                       children: [
                         Icon(
-                          Icons.account_balance_wallet_outlined,
+                          Icons.account_balance_wallet,
+                          color: Colors.green,
                           size: 16,
                         ),
                         Container(
                           width: 5,
                         ),
-                        Text(
-                          transfer.accountToName ?? '',
-                          overflow: TextOverflow.clip,
-                          maxLines: 1,
-                          style: TextStyle(
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1!
-                                  .fontSize,
-                              color:
-                                  Theme.of(context).textTheme.subtitle1!.color),
-                        ),
+                        Text(transfer.accountToName ?? '',
+                            overflow: TextOverflow.clip,
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.subtitle1),
                       ],
                     ),
                   ],
@@ -100,20 +83,14 @@ class TransferTile extends StatelessWidget {
                                     (activeAccount == transfer.accountFrom)
                                 ? transfer.amount! * -1
                                 : transfer.amount!),
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                       Text(
-                        DateFormat.yMd().format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              transfer.timestamp!),
-                        ),
-                        style: TextStyle(
-                            fontSize:
-                                Theme.of(context).textTheme.subtitle2!.fontSize,
-                            color: Theme.of(context).textTheme.subtitle2!.color),
-                      ),
+                          DateFormat.yMd().format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                transfer.timestamp!),
+                          ),
+                          style: Theme.of(context).textTheme.subtitle2),
                     ],
                   ),
                   SizedBox(

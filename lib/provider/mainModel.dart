@@ -235,15 +235,10 @@ class TransactionModel extends ChangeNotifier {
     return await DB.getTrasactionsLastMonthByCategory();
   }
 
-  void getTrasactionsGroupedByMonthAndCategory() {
-    DB.getTrasactionsGroupedByMonthAndCategory().then((value) {
-      monthlyTransactions = value.reversed.toList();
-      notifyListeners();
-      // if (transactionsOfTheMonth.length == 0) {
-      //   getTrasactionsByMonthAndCategory(monthlyTransactions[0]['monthofyear'],
-      //       monthlyTransactions[0]['year']);
-      // }
-    });
+  Future<bool> getTrasactionsGroupedByMonthAndCategory() async {
+    var value = await DB.getTrasactionsGroupedByMonthAndCategory();
+    monthlyTransactions = value.reversed.toList();
+    return Future.value(true);
   }
 
   void getTrasactionsByMonthAndCategory(String month, String year) {

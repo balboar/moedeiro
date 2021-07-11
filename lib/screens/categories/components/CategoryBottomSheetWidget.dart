@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/dialogs/InfoDialog.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
+import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/generated/l10n.dart';
 import 'package:moedeiro/models/categories.dart';
 import 'package:moedeiro/provider/mainModel.dart';
+import 'package:moedeiro/screens/accounts/components/AccountsListBottonSheet.dart';
 import 'package:provider/provider.dart';
 
 enum CategoryType { income, expense }
@@ -22,6 +24,8 @@ class CategoryBottomSheet extends StatefulWidget {
 
 class CategoryBottomSheetState extends State<CategoryBottomSheet> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  TextEditingController _accountController = TextEditingController();
   late Categori category;
   CategoryType? _categoryType = CategoryType.income;
   double space = 7.0;
@@ -30,7 +34,17 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
   void initState() {
     category = widget.category ?? Categori(type: 'E');
     if (category.type == 'E') _categoryType = CategoryType.expense;
+    _accountController.text = category.accountName ?? '';
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+
+    _accountController.dispose();
+    super.dispose();
   }
 
   Future<bool?> _showMyDialog() async {
@@ -89,8 +103,11 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
       child: Form(
         key: _formKey,
         child: Padding(
-            padding:
-                EdgeInsets.only(right: 20.0, left: 20, top: 5, bottom: 5.0),
+            padding: EdgeInsets.only(
+                right: 20.0,
+                left: 20,
+                top: 5,
+                bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
               children: <Widget>[
                 SizedBox(
@@ -99,6 +116,7 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                 TextFormField(
                   initialValue: category.name,
                   decoration: InputDecoration(
+                    enabledBorder: InputBorder.none,
                     prefixIcon: Icon(Icons.dashboard_outlined),
                     labelStyle: TextStyle(fontSize: 20.0),
                     labelText: S.of(context).name,
@@ -112,6 +130,43 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                   onSaved: (String? value) {
                     category.name = value;
                   },
+                ),
+                TextFormField(
+                  readOnly: true,
+                  controller: _accountController,
+                  decoration: InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      prefixIcon: Icon(Icons.account_balance_wallet),
+                      labelStyle: TextStyle(fontSize: 20.0),
+                      labelText: S.of(context).defaultAccount),
+                  validator: (value) {
+                    if (_accountController.text.isEmpty) {
+                      return S.of(context).accountSelectError;
+                    }
+                    return null;
+                  },
+                  onTap: () async {
+                    FocusScope.of(context).requestFocus(FocusNode());
+
+                    showCustomModalBottomSheet(
+                      context,
+                      AccountListBottomSheet(),
+                      isScrollControlled: true,
+                    ).then(
+                      (value) {
+                        if (value != null) {
+                          category.defaultAccount = value;
+                          _accountController.text =
+                              Provider.of<AccountModel>(context, listen: false)
+                                  .getAccountName(value);
+                          category.accountName = _accountController.text;
+                        }
+                      },
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 20,
                 ),
                 RadioListTile(
                   title: Text(S.of(context).income),

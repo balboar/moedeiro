@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/accounts/components/AccountsBottomSheetWidget.dart';
-import 'package:moedeiro/screens/accounts/components/accountCharts.dart';
 import 'package:moedeiro/screens/accounts/components/accountWidgets.dart';
 import 'package:moedeiro/screens/summary/components/transactionsCharts.dart';
 import 'package:provider/provider.dart';
@@ -63,9 +62,7 @@ class _AccountsPageState extends State<AccountsPage> {
   Widget _buildAccountsList() {
     return Consumer<AccountModel>(
       builder: (BuildContext context, AccountModel model, Widget? child) {
-        if (model.accounts == null) {
-          return SliverToBoxAdapter(child: CircularProgressIndicator());
-        } else if (model.accounts.length == 0) {
+        if (model.accounts.length == 0) {
           return SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

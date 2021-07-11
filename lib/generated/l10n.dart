@@ -699,6 +699,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Discreet mode`
+  String get discreetMode {
+    return Intl.message(
+      'Discreet mode',
+      name: 'discreetMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Discreet mode hides the amounts`
+  String get discreetModeExplanation {
+    return Intl.message(
+      'Discreet mode hides the amounts',
+      name: 'discreetModeExplanation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Default Account`
+  String get defaultAccount {
+    return Intl.message(
+      'Default Account',
+      name: 'defaultAccount',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

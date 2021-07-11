@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moedeiro/components/moedeiroWidgets.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
-import 'package:moedeiro/models/theme.dart';
+import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/models/transfer.dart';
 import 'package:moedeiro/provider/mainModel.dart';
@@ -25,7 +25,6 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> with WidgetsBindingObserver {
   late bool lockScreen;
   bool? useBiometrics;
-  bool ammountVisible = true;
   String? pin;
   @override
   void initState() {
@@ -70,11 +69,11 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 
   void loadSettings() async {
-    var prefs = await SharedPreferences.getInstance();
+    lockScreen = Provider.of<SettingsModel>(context, listen: false).lockScreen;
 
-    lockScreen = prefs.getBool('lockApp') ?? false;
-    useBiometrics = prefs.getBool('useBiometrics') ?? false;
-    pin = prefs.getString('PIN') ?? '0000';
+    useBiometrics =
+        Provider.of<SettingsModel>(context, listen: false).useBiometrics;
+    pin = Provider.of<SettingsModel>(context, listen: false).pin;
   }
 
   @override
@@ -103,12 +102,12 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
         statusBarIconBrightness:
-            Provider.of<ThemeModel>(context, listen: false).getThemeMode() ==
+            Provider.of<SettingsModel>(context, listen: false).themeMode ==
                     ThemeMode.dark
                 ? Brightness.light
                 : Brightness.dark,
         systemNavigationBarIconBrightness:
-            Provider.of<ThemeModel>(context, listen: false).getThemeMode() ==
+            Provider.of<SettingsModel>(context, listen: false).themeMode ==
                     ThemeMode.dark
                 ? Brightness.light
                 : Brightness.dark,
@@ -129,19 +128,6 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
             slivers: [
               SliverAppBar(
                 actions: [
-                  IconButton(
-                    icon: Icon(ammountVisible
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined),
-                    tooltip: S.of(context).settings,
-                    padding: EdgeInsets.symmetric(vertical: 22, horizontal: 10),
-                    iconSize: 30,
-                    onPressed: () {
-                      setState(() {
-                        ammountVisible = !ammountVisible;
-                      });
-                    },
-                  ),
                   IconButton(
                     icon: const Icon(
                       Icons.settings_outlined,
@@ -184,9 +170,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                         Consumer<AccountModel>(builder: (BuildContext context,
                             AccountModel model, Widget? child) {
                           return Text(
-                            ammountVisible == true
-                                ? '${formatCurrency(context, model.totalAmount)}'
-                                : '${formatHiddenCurrency(context)}',
+                            '${formatCurrency(context, model.totalAmount)}',
                             style: Theme.of(context).textTheme.headline4,
                           );
                         }),
@@ -320,7 +304,6 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                             height: 100,
                             margin: EdgeInsets.only(
                                 left: 10.0, right: 10, top: 0.0, bottom: 10.0),
-                            child: NoDataWidgetHorizontal(),
                           );
                         else
                           return Container(

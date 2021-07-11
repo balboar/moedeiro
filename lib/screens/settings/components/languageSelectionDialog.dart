@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/util/utils.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
@@ -51,10 +53,9 @@ class _RadioButtonsState extends State<RadioButtons> {
   }
 
   void getLocale() async {
-    var prefs = await SharedPreferences.getInstance();
-    var locale = prefs.getString('locale');
     setState(() {
-      _selectedValue = locale ?? 'default';
+      _selectedValue =
+          Provider.of<SettingsModel>(context, listen: false).localeString;
     });
   }
 
@@ -68,8 +69,9 @@ class _RadioButtonsState extends State<RadioButtons> {
               value: e.key,
               groupValue: _selectedValue,
               onChanged: (dynamic val) async {
-                var prefs = await SharedPreferences.getInstance();
-                prefs.setString('locale', val.toString());
+                Provider.of<SettingsModel>(context, listen: false)
+                    .localeString = val.toString();
+
                 setState(() {
                   _selectedValue = val;
                 });

@@ -138,7 +138,11 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
       child: Form(
         key: _formKey,
         child: Padding(
-          padding: EdgeInsets.only(right: 20.0, left: 20, top: 5, bottom: 5.0),
+          padding: EdgeInsets.only(
+              right: 20.0,
+              left: 20,
+              top: 5,
+              bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Column(
             children: <Widget>[
               SizedBox(
@@ -147,6 +151,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
               TextFormField(
                 initialValue: _data['name'] ?? '',
                 decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
                   prefixIcon: Icon(Icons.description),
                   labelText: S.of(context).description,
                 ),
@@ -172,6 +177,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                 },
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
                   prefixIcon: Icon(Icons.euro_outlined),
                   labelText: S.of(context).amount,
                 ),
@@ -185,7 +191,11 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
               TextFormField(
                 controller: _accountFromController,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.account_balance_wallet),
+                  enabledBorder: InputBorder.none,
+                  prefixIcon: Icon(
+                    Icons.account_balance_wallet,
+                    color: Colors.red,
+                  ),
                   labelText: S.of(context).from,
                 ),
                 validator: (value) {
@@ -216,7 +226,11 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
               TextFormField(
                 controller: _accountToController,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.account_balance_wallet),
+                  enabledBorder: InputBorder.none,
+                  prefixIcon: Icon(
+                    Icons.account_balance_wallet,
+                    color: Colors.green[500],
+                  ),
                   labelText: S.of(context).to,
                 ),
                 validator: (value) {
@@ -252,6 +266,7 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                       readOnly: true,
                       controller: _dateController,
                       decoration: InputDecoration(
+                        enabledBorder: InputBorder.none,
                         prefixIcon: Icon(Icons.calendar_today),
                         labelText: S.of(context).date,
                       ),
@@ -277,7 +292,8 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                       readOnly: true,
                       controller: _timeController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.hourglass_bottom_outlined),
+                        enabledBorder: InputBorder.none,
+                        prefixIcon: Icon(Icons.access_time),
                         labelText: S.of(context).time,
                       ),
                       onTap: () {
@@ -304,9 +320,12 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                   buttonMinWidth: 140.0,
                   alignment: MainAxisAlignment.spaceAround,
                   children: [
-                    DeleteButton(() {
-                      deleteTransfer(model);
-                    }),
+                    Visibility(
+                      visible: _data['uuid'] != null,
+                      child: DeleteButton(() {
+                        deleteTransfer(model);
+                      }),
+                    ),
                     SaveButton(() {
                       _submitForm(model.insertTransferIntoDb);
                     }),

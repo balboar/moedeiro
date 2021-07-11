@@ -6,7 +6,6 @@ import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:intl/intl.dart';
 
 import 'components/TransactionsListBottonSheet.dart';
 import 'components/monthDetail.dart';
@@ -17,12 +16,6 @@ class SummaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   actions: [
-      //     DropdownButtonFilter(),
-      //   ],
-      //   title: Text(S.of(context).movementsTitle),
-      // ),
       body: SafeArea(
         child: MonthViewer(),
       ),
@@ -49,16 +42,23 @@ class _MonthViewerState extends State<MonthViewer> {
 
   @override
   void initState() {
-    var date = new DateTime.now().toString();
+    loadData();
+    super.initState();
+  }
 
-    var dateParse = DateTime.parse(date);
-    month = dateParse.month.toString().padLeft(2, '0');
-    year = dateParse.year.toString();
+  void loadData() async {
+    await Provider.of<TransactionModel>(context, listen: false)
+        .getTrasactionsGroupedByMonthAndCategory();
+
+    month = Provider.of<TransactionModel>(context, listen: false)
+        .monthlyTransactions
+        .last['monthofyear'];
+    year = Provider.of<TransactionModel>(context, listen: false)
+        .monthlyTransactions
+        .last['year'];
+
     Provider.of<TransactionModel>(context, listen: false)
         .getTrasactionsByMonthAndCategory(month, year);
-    Provider.of<TransactionModel>(context, listen: false)
-        .getTrasactionsGroupedByMonthAndCategory();
-    super.initState();
   }
 
   @override

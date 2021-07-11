@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/util/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class AppThemeSelectionDialog extends StatelessWidget {
@@ -39,7 +40,7 @@ class RadioButtons extends StatefulWidget {
 }
 
 class _RadioButtonsState extends State<RadioButtons> {
-  String? _selectedValue = 'default';
+  String? _selectedValue = 'system';
 
   @override
   void initState() {
@@ -48,10 +49,9 @@ class _RadioButtonsState extends State<RadioButtons> {
   }
 
   void getLocale() async {
-    var prefs = await SharedPreferences.getInstance();
-    var locale = prefs.getString('theme');
     setState(() {
-      _selectedValue = locale ?? 'default';
+      _selectedValue =
+          Provider.of<SettingsModel>(context, listen: false).activeTheme;
     });
   }
 
@@ -65,8 +65,9 @@ class _RadioButtonsState extends State<RadioButtons> {
               value: e.key,
               groupValue: _selectedValue,
               onChanged: (dynamic val) async {
-                var prefs = await SharedPreferences.getInstance();
-                prefs.setString('theme', val.toString());
+                Provider.of<SettingsModel>(context, listen: false).activeTheme =
+                    val.toString();
+
                 setState(() {
                   _selectedValue = val;
                 });

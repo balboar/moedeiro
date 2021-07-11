@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/generated/l10n.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:moedeiro/models/settings.dart';
+import 'package:provider/provider.dart';
 
 class PasswordBottomSheet extends StatefulWidget {
   @override
@@ -14,8 +15,8 @@ class _PasswordBottomSheetState extends State<PasswordBottomSheet> {
   TextEditingController _controller = TextEditingController();
   double space = 7.0;
   FocusNode? focusNode;
-  String? firstPassword;
-  String? secondPassword;
+  String firstPassword = '';
+  String secondPassword = '';
   String? pinText;
 
   @override
@@ -32,7 +33,7 @@ class _PasswordBottomSheetState extends State<PasswordBottomSheet> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
 
-        if (firstPassword == null) {
+        if (firstPassword.length > 0) {
           firstPassword = _controller.text;
           _controller.clear();
           setState(() {
@@ -41,8 +42,8 @@ class _PasswordBottomSheetState extends State<PasswordBottomSheet> {
         } else
           secondPassword = _controller.text;
         if (firstPassword == secondPassword) {
-          var prefs = await SharedPreferences.getInstance();
-          prefs.setString('PIN', firstPassword!);
+          Provider.of<SettingsModel>(context, listen: false).pin =
+              firstPassword;
           Navigator.pop(context);
         }
       }
@@ -52,8 +53,11 @@ class _PasswordBottomSheetState extends State<PasswordBottomSheet> {
       child: Form(
         key: _formKey,
         child: Padding(
-            padding:
-                EdgeInsets.only(right: 20.0, left: 20, top: 5, bottom: 20.0),
+            padding: EdgeInsets.only(
+                right: 20.0,
+                left: 20,
+                top: 5,
+                bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
               children: <Widget>[
                 SizedBox(
@@ -79,9 +83,6 @@ class _PasswordBottomSheetState extends State<PasswordBottomSheet> {
                           keyboardType: TextInputType.numberWithOptions(
                               decimal: false, signed: false),
                           validator: (value) {
-                            // if (value.isEmpty) {
-                            //   return S.of(context).pinEmpty;
-                            // } else
                             {
                               var pin = int.tryParse(value!);
                               if (pin == null) {

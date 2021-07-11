@@ -64,7 +64,10 @@
   "deleteCategorytDescription":"A category is going to be deleted, are you sure?",
   "deleteCategoryError":"Can't delete category",
   "deleteCategorytDescriptionError":"This category has transactions, remove or move those transactions first",
-  "search":"Search.."
+  "search":"Search..",
+  "discreetMode":"Discreet mode",
+  "discreetModeExplanation":"Discreet mode hides the amounts",
+  "defaultAccount":"Default Account"
 
 
 }

@@ -10,13 +10,13 @@ class NoDataWidgetVertical extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        SizedBox(
+          height: 35.0,
+        ),
         Text(
           '🤷‍♂️',
           style: TextStyle(fontSize: 90),
         ),
-        // Image(
-        //   image: AssetImage('lib/assets/icons/not-found.png'),
-        // ),
         SizedBox(
           height: 35.0,
         ),

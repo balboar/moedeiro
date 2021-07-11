@@ -40,7 +40,9 @@ class CategoriesPage extends StatelessWidget {
                         Navigator.pop(context, {
                           'uuid': model.incomecategories![index].uuid,
                           'name': model.incomecategories![index].name,
-                          'type': model.incomecategories![index].type
+                          'type': model.incomecategories![index].type,
+                          'defaultAccount':
+                              model.incomecategories![index].defaultAccount,
                         })
                       else
                         Navigator.pushNamed(context, '/categoryPage',
@@ -72,7 +74,9 @@ class CategoriesPage extends StatelessWidget {
                         Navigator.pop(context, {
                           'uuid': model.expenseCategories![index].uuid,
                           'name': model.expenseCategories![index].name,
-                          'type': model.expenseCategories![index].type
+                          'type': model.expenseCategories![index].type,
+                          'defaultAccount':
+                              model.expenseCategories![index].defaultAccount,
                         })
                       else
                         Navigator.pushNamed(context, '/categoryPage',

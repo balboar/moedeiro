@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/components/moedeiroSliverAppBar.dart';
 import 'package:moedeiro/components/moedeiroSliverList.dart';
-import 'package:moedeiro/components/moedeiroWidgets.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/models/accounts.dart';
 import 'package:moedeiro/models/transaction.dart';
@@ -89,7 +88,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
       if (widget.showAllTransactions ?? true) {
         return model.transactions!.length == 0
             ? SliverToBoxAdapter(
-                child: NoDataWidgetVertical(),
+                child: Container(),
               )
             : SliverFixedExtentList(
                 itemExtent: 80.0,
@@ -106,7 +105,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
             model.getAccountTransactions(activeAccount!.uuid);
         return accountTransactions.length == 0
             ? SliverToBoxAdapter(
-                child: NoDataWidgetVertical(),
+                child: Container(),
               )
             : SliverFixedExtentList(
                 itemExtent: 80.0,
@@ -131,7 +130,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
       if (widget.showAllTransactions ?? true) {
         return model.transfers!.length == 0
             ? SliverToBoxAdapter(
-                child: NoDataWidgetVertical(),
+                child: Container(),
               )
             : SliverFixedExtentList(
                 itemExtent: 80.0,
@@ -148,7 +147,7 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
             model.getAccountTransfers(activeAccount!.uuid!);
         return accountTransfers.length == 0
             ? SliverToBoxAdapter(
-                child: NoDataWidgetVertical(),
+                child: Container(),
               )
             : SliverFixedExtentList(
                 itemExtent: 80.0,

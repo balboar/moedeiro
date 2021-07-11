@@ -43,8 +43,7 @@ class _TransactionTransferBottomSheetState
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.only(
-          top: 10.0,
-        ),
+            top: 10.0, bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           children: <Widget>[
             MoedeiroTransactionTransferButtons(controller),

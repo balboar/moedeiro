@@ -165,7 +165,11 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
       child: Form(
         key: _formKey,
         child: Padding(
-          padding: EdgeInsets.only(right: 20.0, left: 20, top: 5, bottom: 5.0),
+          padding: EdgeInsets.only(
+              right: 20.0,
+              left: 20,
+              top: 5,
+              bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Column(
             children: <Widget>[
               SizedBox(
@@ -174,6 +178,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
               TextFormField(
                 initialValue: _data['name'] ?? '',
                 decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
                   prefixIcon: Icon(Icons.description),
                   labelText: S.of(context).description,
                 ),
@@ -199,6 +204,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                 },
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
                   prefixIcon: Icon(Icons.euro_outlined),
                   labelText: S.of(context).amount,
                 ),
@@ -213,6 +219,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                 readOnly: true,
                 controller: _categoryController,
                 decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
                   prefixIcon: Icon(
                     Icons.dashboard_outlined,
                   ),
@@ -233,6 +240,13 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                     _data['category'] = result['uuid'];
                     _categoryController.text = result['name'];
                     _data['categoryName'] = result['name'];
+                    if (result['defaultAccount'] != null) {
+                      _data['account'] = result['defaultAccount'];
+                      _accountController.text =
+                          Provider.of<AccountModel>(context, listen: false)
+                              .getAccountName(result['defaultAccount']);
+                      _data['accountName'] = _accountController.text;
+                    }
                     isExpense = result['type'] == 'E';
                   }
                 },
@@ -244,6 +258,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                 readOnly: true,
                 controller: _accountController,
                 decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
                   prefixIcon: Icon(Icons.account_balance_wallet),
                   labelText: S.of(context).account,
                 ),
@@ -283,6 +298,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                       readOnly: true,
                       controller: _dateController,
                       decoration: InputDecoration(
+                        enabledBorder: InputBorder.none,
                         prefixIcon: Icon(Icons.calendar_today),
                         labelText: S.of(context).date,
                       ),
@@ -308,7 +324,8 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                       readOnly: true,
                       controller: _timeController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.hourglass_bottom_outlined),
+                        enabledBorder: InputBorder.none,
+                        prefixIcon: Icon(Icons.access_time),
                         labelText: S.of(context).time,
                       ),
                       onTap: () {
@@ -332,11 +349,16 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                 builder: (BuildContext context, TransactionModel model,
                     Widget? widget) {
                   return ButtonBar(
+                    buttonHeight: 40.0,
                     buttonMinWidth: 140.0,
+                    alignment: MainAxisAlignment.spaceAround,
                     children: [
-                      DeleteButton(() {
-                        deleteTransaction(model);
-                      }),
+                      Visibility(
+                        visible: _data['uuid'] != null,
+                        child: DeleteButton(() {
+                          deleteTransaction(model);
+                        }),
+                      ),
                       SaveButton(() {
                         _submitForm(model.insertTransactiontIntoDb);
                       }),

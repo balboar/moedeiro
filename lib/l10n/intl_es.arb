@@ -64,7 +64,10 @@
   "deleteCategoryDescription":"Se va a borrar una categoría, ¿estás seguro?",
   "deleteCategoryError":"No se puede borrar la categoría",
   "deleteCategorytDescriptionError":"Esta categoría tiene transacciones, borrar o moverlas primero",
-  "search":"Buscar.."
+  "search":"Buscar..",
+  "discreetMode":"Modo discreto",
+  "discreetModeExplanation":"El modo discreto oculta los importes",
+  "defaultAccount":"Cuenta por defecto"
 
 
 }

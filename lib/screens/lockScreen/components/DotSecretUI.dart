@@ -1,8 +1,6 @@
-
-
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:moedeiro/models/theme.dart';
+import 'package:moedeiro/models/settings.dart';
 import 'package:provider/provider.dart';
 
 class DotSecretConfig {
@@ -49,7 +47,7 @@ class _DotSecretUIState extends State<DotSecretUI>
     super.initState();
 
     var themeMode =
-        Provider.of<ThemeModel>(context, listen: false).getThemeMode();
+        Provider.of<SettingsModel>(context, listen: false).themeMode;
 
     if (ThemeMode.dark == themeMode)
       enabledColor = Colors.white;

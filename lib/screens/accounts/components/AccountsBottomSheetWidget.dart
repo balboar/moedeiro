@@ -6,7 +6,6 @@ import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/models/accounts.dart';
 import 'package:moedeiro/provider/mainModel.dart';
-import 'package:moedeiro/util/utils.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -106,8 +105,11 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
       child: Form(
         key: _formKey,
         child: Padding(
-          padding:
-              EdgeInsets.only(right: 20.0, left: 20.0, top: 20, bottom: 5.0),
+          padding: EdgeInsets.only(
+              right: 20.0,
+              left: 20.0,
+              top: 20,
+              bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Column(
             children: <Widget>[
               GestureDetector(
@@ -129,6 +131,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
               TextFormField(
                 initialValue: activeAccount.name,
                 decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
                   prefixIcon: Icon(Icons.account_balance_wallet),
                   labelStyle: TextStyle(fontSize: 20.0),
                   // icon: Icon(Icons.account_balance_wallet),
@@ -148,10 +151,10 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                 height: _space,
               ),
               TextFormField(
-                initialValue:
-                    formatCurrency(context, activeAccount.initialAmount!),
+                initialValue: activeAccount.initialAmount.toString(),
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
                   prefixIcon: Icon(Icons.euro),
                   // icon: Icon(Icons.euro),
                   labelText: S.of(context).initialAmount,

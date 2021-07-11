@@ -11,7 +11,7 @@ class Helper {
 
   Database? _db;
 
-  static int get _version => 13;
+  static int get _version => 15;
   final _lock = new Lock();
 
   static void _onCreate(Database db, int version) async {
@@ -21,7 +21,7 @@ class Helper {
       );
 
       await txn.execute(
-        'CREATE TABLE category (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, parent TEXT, icon TEXT,type TEXT )',
+        'CREATE TABLE category (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, parent TEXT, icon TEXT,type TEXT,defaultAccount TEXT ,FOREIGN KEY(account) REFERENCES accounts(uuid) )',
       );
 
       await txn.execute(
@@ -35,6 +35,7 @@ class Helper {
             ' accountFrom TEXT,accountTo TEXT, timestamp INTEGER,FOREIGN KEY(accountFrom) REFERENCES accounts(uuid), ' +
             'FOREIGN KEY(accountTo) REFERENCES accounts(uuid) )',
       );
+
       await txn.insert('category', {
         'uuid': '465c88a7-2234-4a69-804c-cddee611ee6d',
         'name': 'Intereses',
@@ -102,9 +103,10 @@ class Helper {
     // Database version is updated, alter the table
     await db.transaction((txn) async {
       await txn.execute(
-        'CREATE TABLE transfers (uuid TEXT PRIMARY KEY NOT NULL,amount REAL, ' +
-            ' accountFrom TEXT,accountTo TEXT, timestamp INTEGER,FOREIGN KEY(accountFrom) REFERENCES accounts(uuid), ' +
-            'FOREIGN KEY(accountTo) REFERENCES accounts(uuid) )',
+        'ALTER TABLE category ADD COLUMN account TEXT',
+      );
+      await txn.execute(
+        'ALTER TABLE category rename column account to defaultAccount',
       );
     });
   }
@@ -156,8 +158,14 @@ class DB {
       String table, String type) async {
     return await _db!.transaction(
       (txn) async {
-        return await txn.query(table,
-            where: 'type=?', whereArgs: [type], orderBy: 'name');
+        return await txn.rawQuery(
+          'SELECT a.*,b.name accountName  FROM category a ' +
+              'left outer join accounts b on b.uuid=a.defaultAccount ' +
+              'WHERE A.TYPE=? order by a.NAME',
+          [type],
+        );
+        //     return await txn.query(table,
+        //         where: 'type=?', whereArgs: [type], orderBy: 'name');
       },
     );
   }

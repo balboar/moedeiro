@@ -1,11 +1,9 @@
-
-
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:moedeiro/models/theme.dart';
+import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/screens/lockScreen/components/DotSecretUI.dart';
 import 'package:moedeiro/screens/lockScreen/components/lockScreenButton.dart';
 import 'package:provider/provider.dart';
@@ -253,12 +251,12 @@ class _LockScreenState extends State<LockScreen> {
           statusBarColor: Colors.transparent,
           systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
           statusBarIconBrightness:
-              Provider.of<ThemeModel>(context, listen: false).getThemeMode() ==
+              Provider.of<SettingsModel>(context, listen: false).themeMode ==
                       ThemeMode.dark
                   ? Brightness.light
                   : Brightness.dark,
           systemNavigationBarIconBrightness:
-              Provider.of<ThemeModel>(context, listen: false).getThemeMode() ==
+              Provider.of<SettingsModel>(context, listen: false).themeMode ==
                       ThemeMode.dark
                   ? Brightness.light
                   : Brightness.dark,

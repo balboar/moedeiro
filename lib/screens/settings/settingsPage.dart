@@ -6,7 +6,7 @@ import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/models/accounts.dart';
 import 'package:moedeiro/models/categories.dart';
-import 'package:moedeiro/models/theme.dart';
+import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/lockScreen/components/passwordBottomSheet.dart';
@@ -16,7 +16,6 @@ import 'package:moedeiro/screens/settings/components/settingsWidgets.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as db;
 import 'package:path/path.dart' as p;
 import 'package:moedeiro/generated/l10n.dart';
@@ -41,48 +40,31 @@ class _SettingsPageState extends State<SettingsPage> {
   String? filePath;
   bool _lockApp = false;
   bool _useBiometrics = false;
-  String locale = 'default';
-  String theme = 'default';
-  late SharedPreferences prefs;
+  String _localeString = '';
+  String _localeLabel = '';
+  String _activeTheme = '';
+  String _activeThemeLabel = '';
   @override
   void initState() {
+    initSettings();
     super.initState();
-    getSettings();
-    _initPackageInfo();
   }
 
-  Future<void> _initPackageInfo() async {
-    final PackageInfo info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
-  }
-
-  void getSettings() async {
+  void initSettings() async {
     rootPath = Directory('/storage/emulated/0/Downloads');
 
-    prefs = await SharedPreferences.getInstance();
+    _localeString =
+        Provider.of<SettingsModel>(context, listen: false).localeString;
+    _activeTheme =
+        Provider.of<SettingsModel>(context, listen: false).activeTheme;
 
-    var _locale = prefs.getString('locale');
-    if (_locale == 'default') {
-      locale = S.of(context).systemDefaultTitle;
-    } else {
-      var activeLocale =
-          languageOptions.firstWhere((element) => element.key == _locale);
-      locale = activeLocale.value;
-    }
+    final PackageInfo info = await PackageInfo.fromPlatform();
 
-    var _theme = prefs.getString('theme');
-    if (_theme == 'default') {
-      theme = S.of(context).systemDefaultTitle;
-    } else {
-      var activeAheme =
-          themeOptions.firstWhere((element) => element.key == _theme);
-      theme = activeAheme.value;
-    }
     setState(() {
-      _lockApp = prefs.getBool('lockApp') ?? false;
-      _useBiometrics = prefs.getBool('useBiometrics') ?? false;
+      _lockApp = Provider.of<SettingsModel>(context, listen: false).lockScreen;
+      _useBiometrics =
+          Provider.of<SettingsModel>(context, listen: false).useBiometrics;
+      _packageInfo = info;
     });
   }
 
@@ -268,7 +250,29 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  String _getLocaleLabel(String locale) {
+    if (locale == 'default') {
+      return S.of(context).systemDefaultTitle;
+    } else {
+      var activeLocale =
+          languageOptions.firstWhere((element) => element.key == locale);
+      return activeLocale.value;
+    }
+  }
+
+  String _getActiveThemeLabel(String theme) {
+    if (theme == 'system') {
+      return S.of(context).systemDefaultTitle;
+    } else {
+      var activeAheme =
+          themeOptions.firstWhere((element) => element.key == theme);
+      return activeAheme.value;
+    }
+  }
+
   Widget _buildBody() {
+    _localeLabel = _getLocaleLabel(_localeString);
+    _activeThemeLabel = _getActiveThemeLabel(_activeTheme);
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).settings),
@@ -277,146 +281,140 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SectionName(S.of(context).common),
-            ListTile(
-              title: Text(S.of(context).language),
-              subtitle: Text(locale),
-              leading: Icon(Icons.language),
-              onTap: () async {
-                await _showLanguageDialog();
-                var prefs = await SharedPreferences.getInstance();
-                var _locale = prefs.getString('locale');
-                if (_locale != null) {
-                  if (_locale == 'default') {
-                    setState(() {
-                      locale = S.of(context).systemDefaultTitle;
+        child: Consumer<SettingsModel>(builder:
+            (BuildContext context, SettingsModel model, Widget? child) {
+          return Column(
+            children: [
+              SectionName(S.of(context).common),
+              ListTile(
+                title: Text(S.of(context).language),
+                subtitle: Text(_localeLabel),
+                leading: Icon(Icons.language),
+                onTap: () async {
+                  await _showLanguageDialog();
+                  _localeString =
+                      Provider.of<SettingsModel>(context, listen: false)
+                          .localeString;
+                  setState(() {
+                    _localeLabel = _getLocaleLabel(_localeString);
+                  });
+                },
+              ),
+              ListTile(
+                title: Text(S.of(context).theme),
+                subtitle: Text(_activeThemeLabel),
+                leading: Icon(Icons.lightbulb_outline),
+                onTap: () async {
+                  await _showThemeDialog();
+
+                  _activeTheme =
+                      Provider.of<SettingsModel>(context, listen: false)
+                          .activeTheme;
+
+                  setState(() {
+                    _activeThemeLabel = _getActiveThemeLabel(_activeTheme);
+                  });
+                },
+              ),
+              SectionName(S.of(context).security),
+              SwitchListTile(
+                title: Text(S.of(context).lockAppInBackGround),
+                secondary: Icon(Icons.phonelink_lock),
+                value: _lockApp,
+                onChanged: (bool value) async {
+                  setState(() {
+                    _lockApp = !_lockApp;
+                  });
+
+                  Provider.of<SettingsModel>(context, listen: false)
+                      .lockScreen = value;
+                  if (value) {
+                    showCustomModalBottomSheet(
+                      context,
+                      PasswordBottomSheet(),
+                      isScrollControlled: false,
+                      enableDrag: false,
+                    ).then((value) {
+                      var pin =
+                          Provider.of<SettingsModel>(context, listen: false)
+                              .pin;
+                      if (pin == '')
+                        setState(() {
+                          _lockApp = false;
+                        });
+                      Provider.of<SettingsModel>(context, listen: false)
+                          .lockScreen = _lockApp;
                     });
                   } else {
-                    var activeLocale = languageOptions
-                        .firstWhere((element) => element.key == _locale);
-                    setState(() {
-                      locale = activeLocale.value;
-                    });
+                    Provider.of<SettingsModel>(context, listen: false)
+                        .removePin();
                   }
-                }
-              },
-            ),
-            ListTile(
-              title: Text(S.of(context).theme),
-              subtitle: Text(theme),
-              leading: Icon(Icons.lightbulb_outline),
-              onTap: () async {
-                await _showThemeDialog();
-                var prefs = await SharedPreferences.getInstance();
-                var _theme = prefs.getString('theme');
-                if (_theme != null) {
-                  if (_theme == 'default') {
+                },
+              ),
+              SwitchListTile(
+                  title: Text(S.of(context).useFingerprint),
+                  secondary: Icon(Icons.fingerprint),
+                  onChanged: (bool value) async {
                     setState(() {
-                      theme = S.of(context).systemDefaultTitle;
-                      Provider.of<ThemeModel>(context, listen: false)
-                          .setSystemDefault();
-                    });
-                  } else {
-                    var activeTheme = themeOptions
-                        .firstWhere((element) => element.key == _theme);
-                    setState(() {
-                      theme = activeTheme.value;
+                      _useBiometrics = !_useBiometrics;
                     });
 
-                    if (_theme == 'dark')
-                      Provider.of<ThemeModel>(context, listen: false).setDark();
-                    else
-                      Provider.of<ThemeModel>(context, listen: false)
-                          .setLight();
-                  }
-                }
-              },
-            ),
-            SectionName(S.of(context).security),
-            SwitchListTile(
-              title: Text(S.of(context).lockAppInBackGround),
-              secondary: Icon(Icons.phonelink_lock),
-              value: _lockApp,
-              onChanged: (bool value) async {
-                setState(() {
-                  _lockApp = !_lockApp;
-                });
-
-                var prefs = await SharedPreferences.getInstance();
-                prefs.setBool('lockApp', _lockApp);
-                if (value) {
+                    Provider.of<SettingsModel>(context, listen: false)
+                        .useBiometrics = value;
+                  },
+                  value: _useBiometrics),
+              ListTile(
+                title: Text(S.of(context).changePassword),
+                leading: Icon(Icons.lock),
+                onTap: () {
                   showCustomModalBottomSheet(
                     context,
                     PasswordBottomSheet(),
                     isScrollControlled: false,
                     enableDrag: false,
-                  ).then((value) {
-                    var pin = prefs.getString('PIN');
-                    if (pin == null)
-                      setState(() {
-                        _lockApp = false;
-                      });
-                    prefs.setBool('lockApp', _lockApp);
-                  });
-                } else {
-                  prefs.remove('PIN');
-                }
-              },
-            ),
-            SwitchListTile(
-                title: Text(S.of(context).useFingerprint),
-                secondary: Icon(Icons.fingerprint),
-                onChanged: (bool value) async {
-                  setState(() {
-                    _useBiometrics = !_useBiometrics;
-                  });
-                  var prefs = await SharedPreferences.getInstance();
-                  prefs.setBool('useBiometrics', _useBiometrics);
+                  );
                 },
-                value: _useBiometrics),
-            ListTile(
-              title: Text(S.of(context).changePassword),
-              leading: Icon(Icons.lock),
-              onTap: () {
-                showCustomModalBottomSheet(
-                  context,
-                  PasswordBottomSheet(),
-                  isScrollControlled: false,
-                  enableDrag: false,
-                );
-              },
-            ),
-            SectionName(S.of(context).data),
-            ListTile(
-              title: Text(S.of(context).importCSV),
-              leading: Icon(Icons.import_export_outlined),
-              onTap: () async {
-                _openFile(context);
-              },
-            ),
-            ListTile(
-              title: Text(S.of(context).importDb),
-              leading: Icon(Icons.arrow_downward_outlined),
-              onTap: () async {
-                _openDB(context);
-              },
-            ),
-            ListTile(
-              title: Text(S.of(context).exportDb),
-              leading: Icon(Icons.arrow_upward_outlined),
-              onTap: () async {
-                _exportDB(context);
-              },
-            ),
-            AboutListTile(
-              applicationVersion:
-                  '${S.of(context).version} ${_packageInfo.version}',
-              applicationName: 'Moedeiro',
-            ),
-          ],
-        ),
+              ),
+              SwitchListTile(
+                  title: Text(S.of(context).discreetMode),
+                  subtitle: Text(S.of(context).discreetModeExplanation),
+                  secondary: Icon(Icons.visibility_outlined),
+                  onChanged: (bool value) async {
+                    setState(() {
+                      model.discreetMode = !model.discreetMode;
+                    });
+                  },
+                  value: model.discreetMode),
+              SectionName(S.of(context).data),
+              ListTile(
+                title: Text(S.of(context).importCSV),
+                leading: Icon(Icons.import_export_outlined),
+                onTap: () async {
+                  _openFile(context);
+                },
+              ),
+              ListTile(
+                title: Text(S.of(context).importDb),
+                leading: Icon(Icons.arrow_downward_outlined),
+                onTap: () async {
+                  _openDB(context);
+                },
+              ),
+              ListTile(
+                title: Text(S.of(context).exportDb),
+                leading: Icon(Icons.arrow_upward_outlined),
+                onTap: () async {
+                  _exportDB(context);
+                },
+              ),
+              AboutListTile(
+                applicationVersion:
+                    '${S.of(context).version} ${_packageInfo.version}',
+                applicationName: 'Moedeiro',
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
