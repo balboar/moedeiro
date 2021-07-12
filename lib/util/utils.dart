@@ -33,7 +33,7 @@ class LanguageValue {
 }
 
 List<LanguageValue> languageOptions = [
-  LanguageValue('default', 'Usar idioma del sistema'),
+  LanguageValue('system', 'Usar idioma del sistema'),
   LanguageValue('en', 'English'),
   LanguageValue('es', 'Español')
 ];

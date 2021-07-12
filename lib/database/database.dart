@@ -21,7 +21,7 @@ class Helper {
       );
 
       await txn.execute(
-        'CREATE TABLE category (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, parent TEXT, icon TEXT,type TEXT,defaultAccount TEXT ,FOREIGN KEY(account) REFERENCES accounts(uuid) )',
+        'CREATE TABLE category (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, parent TEXT, icon TEXT,type TEXT,defaultAccount TEXT ,FOREIGN KEY(defaultAccount) REFERENCES accounts(uuid) )',
       );
 
       await txn.execute(

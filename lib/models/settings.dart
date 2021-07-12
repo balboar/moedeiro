@@ -45,6 +45,7 @@ class SettingsModel extends ChangeNotifier {
 
   void removePin() {
     prefs.remove('PIN');
+    _pin = '';
   }
 
   String get localeString => _localeString;

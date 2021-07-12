@@ -251,7 +251,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   String _getLocaleLabel(String locale) {
-    if (locale == 'default') {
+    if (locale == 'system') {
       return S.of(context).systemDefaultTitle;
     } else {
       var activeLocale =
@@ -289,7 +289,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 title: Text(S.of(context).language),
                 subtitle: Text(_localeLabel),
-                leading: Icon(Icons.language),
+                // leading: Icon(Icons.language),
                 onTap: () async {
                   await _showLanguageDialog();
                   _localeString =
@@ -303,7 +303,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 title: Text(S.of(context).theme),
                 subtitle: Text(_activeThemeLabel),
-                leading: Icon(Icons.lightbulb_outline),
+                //   leading: Icon(Icons.lightbulb_outline),
                 onTap: () async {
                   await _showThemeDialog();
 
@@ -319,7 +319,7 @@ class _SettingsPageState extends State<SettingsPage> {
               SectionName(S.of(context).security),
               SwitchListTile(
                 title: Text(S.of(context).lockAppInBackGround),
-                secondary: Icon(Icons.phonelink_lock),
+                //   secondary: Icon(Icons.phonelink_lock),
                 value: _lockApp,
                 onChanged: (bool value) async {
                   setState(() {
@@ -353,7 +353,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               SwitchListTile(
                   title: Text(S.of(context).useFingerprint),
-                  secondary: Icon(Icons.fingerprint),
+                  //   secondary: Icon(Icons.fingerprint),
                   onChanged: (bool value) async {
                     setState(() {
                       _useBiometrics = !_useBiometrics;
@@ -365,7 +365,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   value: _useBiometrics),
               ListTile(
                 title: Text(S.of(context).changePassword),
-                leading: Icon(Icons.lock),
+                //   leading: Icon(Icons.lock),
                 onTap: () {
                   showCustomModalBottomSheet(
                     context,
@@ -378,7 +378,7 @@ class _SettingsPageState extends State<SettingsPage> {
               SwitchListTile(
                   title: Text(S.of(context).discreetMode),
                   subtitle: Text(S.of(context).discreetModeExplanation),
-                  secondary: Icon(Icons.visibility_outlined),
+                  //    secondary: Icon(Icons.visibility_outlined),
                   onChanged: (bool value) async {
                     setState(() {
                       model.discreetMode = !model.discreetMode;
@@ -386,23 +386,23 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   value: model.discreetMode),
               SectionName(S.of(context).data),
-              ListTile(
-                title: Text(S.of(context).importCSV),
-                leading: Icon(Icons.import_export_outlined),
-                onTap: () async {
-                  _openFile(context);
-                },
-              ),
+              // ListTile(
+              //   title: Text(S.of(context).importCSV),
+              //   //   leading: Icon(Icons.import_export_outlined),
+              //   onTap: () async {
+              //     _openFile(context);
+              //   },
+              // ),
               ListTile(
                 title: Text(S.of(context).importDb),
-                leading: Icon(Icons.arrow_downward_outlined),
+                //   leading: Icon(Icons.arrow_downward_outlined),
                 onTap: () async {
                   _openDB(context);
                 },
               ),
               ListTile(
                 title: Text(S.of(context).exportDb),
-                leading: Icon(Icons.arrow_upward_outlined),
+                //    leading: Icon(Icons.arrow_upward_outlined),
                 onTap: () async {
                   _exportDB(context);
                 },

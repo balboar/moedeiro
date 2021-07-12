@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class SectionName extends StatelessWidget {
@@ -20,7 +18,7 @@ class SectionName extends StatelessWidget {
         child: Text(
           title,
           style: TextStyle(
-            color: Theme.of(context).accentColor,
+            //   color: Theme.of(context).accentColor,
             fontWeight: FontWeight.bold,
           ),
           overflow: TextOverflow.ellipsis,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class LanguageSelectionDialog extends StatelessWidget {
@@ -44,7 +43,7 @@ class RadioButtons extends StatefulWidget {
 }
 
 class _RadioButtonsState extends State<RadioButtons> {
-  String? _selectedValue = 'default';
+  String? _selectedValue = 'system';
 
   @override
   void initState() {

@@ -15,7 +15,6 @@ import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:moedeiro/generated/l10n.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -128,16 +127,14 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
             slivers: [
               SliverAppBar(
                 actions: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.settings_outlined,
-                    ),
-                    tooltip: S.of(context).settings,
-                    padding: EdgeInsets.symmetric(vertical: 22, horizontal: 10),
-                    iconSize: 30,
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/settingsPage'),
-                  ),
+                  //   IconButton(
+                  //     icon: const Icon(Icons.settings_outlined),
+                  //     tooltip: S.of(context).settings,
+                  //     padding: EdgeInsets.symmetric(vertical: 22, horizontal: 10),
+                  //     iconSize: 30,
+                  //     onPressed: () =>
+                  //         Navigator.pushNamed(context, '/settingsPage'),
+                  //   ),
                 ],
                 pinned: false,
                 expandedHeight: 200,
@@ -329,6 +326,15 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                             ),
                           );
                       },
+                    ),
+                    MainPageSectionStateless(
+                      S.of(context).settings,
+                      () {
+                        Navigator.pushNamed(context, '/settingsPage',
+                            arguments: true);
+                      },
+                      padding: EdgeInsets.only(
+                          left: 20.0, right: 10.0, top: 20.0, bottom: 0.0),
                     ),
                   ],
                 ),

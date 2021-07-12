@@ -33,7 +33,7 @@ class _PasswordBottomSheetState extends State<PasswordBottomSheet> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
 
-        if (firstPassword.length > 0) {
+        if (firstPassword.length ==0) {
           firstPassword = _controller.text;
           _controller.clear();
           setState(() {
