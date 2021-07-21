@@ -140,9 +140,6 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                       labelStyle: TextStyle(fontSize: 20.0),
                       labelText: S.of(context).defaultAccount),
                   validator: (value) {
-                    if (_accountController.text.isEmpty) {
-                      return S.of(context).accountSelectError;
-                    }
                     return null;
                   },
                   onTap: () async {
@@ -197,9 +194,12 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                     buttonMinWidth: 140.0,
                     alignment: MainAxisAlignment.spaceAround,
                     children: [
-                      DeleteButton(() {
-                        deleteCategory(model);
-                      }),
+                      Visibility(
+                        child: DeleteButton(() {
+                          deleteCategory(model);
+                        }),
+                        visible: category.uuid != null,
+                      ),
                       SaveButton(() {
                         _submitForm(model.insertCategoryIntoDb);
                       }),

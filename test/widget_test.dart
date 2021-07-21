@@ -16,6 +16,7 @@ void main() {
     await tester.pumpWidget(MyApp(
       lockScreen: false,
       useBiometrics: false,
+      firstTime: false,
     ));
 
     // Verify that our counter starts at 0.

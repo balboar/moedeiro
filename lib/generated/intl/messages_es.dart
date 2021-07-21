@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "accountSelectError":
             MessageLookupByLibrary.simpleMessage("Selecciona una cuenta"),
         "accountsTitle": MessageLookupByLibrary.simpleMessage("Cuentas"),
+        "allSet": MessageLookupByLibrary.simpleMessage("Bienvenido a Moedeiro"),
         "amount": MessageLookupByLibrary.simpleMessage("Importe"),
         "amountError": MessageLookupByLibrary.simpleMessage(
             "La cantidad tiene que ser mayor a 0"),
@@ -44,6 +45,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Cambiar contraseña"),
         "common": MessageLookupByLibrary.simpleMessage("Generales"),
         "confirmPin": MessageLookupByLibrary.simpleMessage("Confirma el PIN"),
+        "createAccountError": MessageLookupByLibrary.simpleMessage(
+            "Es necesario crear una cuenta"),
+        "createAccountSuccess": MessageLookupByLibrary.simpleMessage(
+            "Cuenta creada, puedes crear otra o continuar"),
+        "createAccountText":
+            MessageLookupByLibrary.simpleMessage("Crea tu primera cuenta"),
         "data": MessageLookupByLibrary.simpleMessage("Datos"),
         "date": MessageLookupByLibrary.simpleMessage("Fecha"),
         "defaultAccount":
@@ -67,11 +74,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "discreetMode": MessageLookupByLibrary.simpleMessage("Modo discreto"),
         "discreetModeExplanation": MessageLookupByLibrary.simpleMessage(
             "El modo discreto oculta los importes"),
+        "errorText":
+            MessageLookupByLibrary.simpleMessage("Se ha producido un error"),
         "expense": MessageLookupByLibrary.simpleMessage("Gasto"),
         "expenses": MessageLookupByLibrary.simpleMessage("Gastos"),
         "expensesMonth": MessageLookupByLibrary.simpleMessage("Gastos mes"),
         "exportDb":
             MessageLookupByLibrary.simpleMessage("Exportar base de datos"),
+        "finishText": MessageLookupByLibrary.simpleMessage("TERMINADO"),
         "from": MessageLookupByLibrary.simpleMessage("De"),
         "importCSV": MessageLookupByLibrary.simpleMessage("Importar desde CSV"),
         "importDb":
@@ -85,11 +95,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "language": MessageLookupByLibrary.simpleMessage("Idioma"),
         "lockAppInBackGround": MessageLookupByLibrary.simpleMessage(
             "Bloquear aplicación en segundo plano"),
+        "lockScreenPrompt":
+            MessageLookupByLibrary.simpleMessage("Iniciar sesión con huella"),
         "movementsTitle": MessageLookupByLibrary.simpleMessage("Movimientos"),
         "name": MessageLookupByLibrary.simpleMessage("Nombre"),
         "nameError": MessageLookupByLibrary.simpleMessage(
             "El nombre no puede estar vacio"),
+        "next": MessageLookupByLibrary.simpleMessage("SIGUIENTE"),
         "noDataLabel": MessageLookupByLibrary.simpleMessage("Sin datos"),
+        "ofText": MessageLookupByLibrary.simpleMessage("DE"),
         "pin": MessageLookupByLibrary.simpleMessage("PIN"),
         "pinEmpty":
             MessageLookupByLibrary.simpleMessage("El PIN no puede estar vacio"),
@@ -97,10 +111,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "El PIN tiene que ser un valor numérico"),
         "pinErrorLenght": MessageLookupByLibrary.simpleMessage(
             "El PIN tiene que tener 4 numeros"),
+        "prev": MessageLookupByLibrary.simpleMessage("ANTERIOR"),
+        "restartMoedeiro": MessageLookupByLibrary.simpleMessage(
+            "Importado, reinicia Moedeiro"),
         "save": MessageLookupByLibrary.simpleMessage("Guardar"),
         "search": MessageLookupByLibrary.simpleMessage("Buscar.."),
         "security": MessageLookupByLibrary.simpleMessage("Seguridad"),
+        "setUpMoedeiro":
+            MessageLookupByLibrary.simpleMessage("Configuremos Moedeiro"),
         "settings": MessageLookupByLibrary.simpleMessage("Ajustes"),
+        "step": MessageLookupByLibrary.simpleMessage("PASO"),
         "systemDefaultTitle":
             MessageLookupByLibrary.simpleMessage("Por defecto del sistema"),
         "theme": MessageLookupByLibrary.simpleMessage("Tema"),

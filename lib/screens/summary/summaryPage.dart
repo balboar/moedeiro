@@ -49,16 +49,20 @@ class _MonthViewerState extends State<MonthViewer> {
   void loadData() async {
     await Provider.of<TransactionModel>(context, listen: false)
         .getTrasactionsGroupedByMonthAndCategory();
+    if (Provider.of<TransactionModel>(context, listen: false)
+            .monthlyTransactions
+            .length >
+        0) {
+      month = Provider.of<TransactionModel>(context, listen: false)
+          .monthlyTransactions
+          .first['monthofyear'];
+      year = Provider.of<TransactionModel>(context, listen: false)
+          .monthlyTransactions
+          .first['year'];
 
-    month = Provider.of<TransactionModel>(context, listen: false)
-        .monthlyTransactions
-        .last['monthofyear'];
-    year = Provider.of<TransactionModel>(context, listen: false)
-        .monthlyTransactions
-        .last['year'];
-
-    Provider.of<TransactionModel>(context, listen: false)
-        .getTrasactionsByMonthAndCategory(month, year);
+      Provider.of<TransactionModel>(context, listen: false)
+          .getTrasactionsByMonthAndCategory(month, year);
+    }
   }
 
   @override

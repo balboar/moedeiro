@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:moedeiro/components/dialogs/InfoDialog.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/models/accounts.dart';
@@ -15,10 +16,12 @@ import 'package:moedeiro/screens/settings/components/languageSelectionDialog.dar
 import 'package:moedeiro/screens/settings/components/settingsWidgets.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:package_info/package_info.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart' as db;
 import 'package:path/path.dart' as p;
 import 'package:moedeiro/generated/l10n.dart';
+import 'package:device_info/device_info.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key? key}) : super(key: key);
@@ -82,28 +85,53 @@ class _SettingsPageState extends State<SettingsPage> {
       file.copySync(_databasePath);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Exported!'),
+          content: Text(S.of(context).restartMoedeiro),
         ),
       );
     }
   }
 
   Future<void> _exportDB(BuildContext context) async {
-    // var status = await Permission.storage.status;
-    // if (!status.isGranted) {
-    //   await Permission.storage.request();
-    // }
+    PermissionStatus status;
+    DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    final androidInfo = await deviceInfoPlugin.androidInfo;
+    if (androidInfo.version.sdkInt > 29) {
+      status = await Permission.manageExternalStorage.status;
+      if (!status.isGranted) {
+        await Permission.manageExternalStorage.request();
+      }
+    } else
+      {status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }}
+
     String? _destination = await FilePicker.platform.getDirectoryPath();
     if (_destination != null && _destination != '/') {
       String _databasePath =
           p.join(await (db.getDatabasesPath()), 'moedeiro.db');
       var _database = File(_databasePath);
-      _database.copySync(_destination + '/moedeiro.db');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Exported!'),
-        ),
-      );
+
+      try {
+        _database.copySync(_destination + '/moedeiro.db');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).Exported),
+          ),
+        );
+      } on FileSystemException catch (e) {
+        showDialog<bool>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return InfoDialog(
+              icon: Icons.error_outline,
+              title: S.of(context).errorText,
+              subtitle: e.message,
+            );
+          },
+        );
+      }
     }
   }
 

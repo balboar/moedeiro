@@ -101,14 +101,7 @@ class Helper {
 
   static void _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // Database version is updated, alter the table
-    await db.transaction((txn) async {
-      await txn.execute(
-        'ALTER TABLE category ADD COLUMN account TEXT',
-      );
-      await txn.execute(
-        'ALTER TABLE category rename column account to defaultAccount',
-      );
-    });
+    // await db.transaction((txn) async {});
   }
 
   Future<Database?> getDb() async {

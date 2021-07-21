@@ -26,6 +26,7 @@ Future<void> main() async {
         lockScreen: model.lockScreen,
         useBiometrics: model.useBiometrics,
         pin: model.pin,
+        firstTime: model.firstTime,
       ),
     ),
   );
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
   final bool lockScreen;
   final bool useBiometrics;
   final String? pin;
+  final bool firstTime;
   final String theme = 'dark';
 
   MyApp({
@@ -43,6 +45,7 @@ class MyApp extends StatelessWidget {
     this.locale,
     required this.lockScreen,
     required this.useBiometrics,
+    required this.firstTime,
     this.pin,
   }) : super(key: key);
 
@@ -68,12 +71,18 @@ class MyApp extends StatelessWidget {
         darkTheme: Provider.of<SettingsModel>(context, listen: true).darkTheme,
         themeMode: Provider.of<SettingsModel>(context, listen: true).themeMode,
         onGenerateRoute: RouteGenerator.generateRoute,
-        initialRoute: lockScreen ? '/lockScreen' : '/',
+        initialRoute: lockScreen
+            ? '/lockScreen'
+            : firstTime
+                ? '/welcomePage'
+                : '/',
         onGenerateInitialRoutes: (String initialRouteName) {
           return [
-            RouteGenerator.generateRoute(RouteSettings(
-                name: initialRouteName,
-                arguments: {"pin": pin, "useBiometrics": useBiometrics})),
+            RouteGenerator.generateRoute(
+                RouteSettings(name: initialRouteName, arguments: {
+              "pin": pin,
+              "useBiometrics": useBiometrics,
+            })),
           ];
         },
         localizationsDelegates: [

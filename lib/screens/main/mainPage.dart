@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:moedeiro/components/moedeiroWidgets.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
@@ -25,16 +26,19 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
   late bool lockScreen;
   bool? useBiometrics;
   String? pin;
+  bool _visible = true;
+  final QuickActions quickActions = QuickActions();
+  ScrollController _scrollController = ScrollController();
   @override
   void initState() {
-    loadSettings();
+    init();
     Provider.of<AccountModel>(context, listen: false).getAccounts();
     Provider.of<CategoryModel>(context, listen: false).getCategories();
     Provider.of<TransactionModel>(context, listen: false).getTransactions();
     Provider.of<TransfersModel>(context, listen: false).getTransfers();
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-    final QuickActions quickActions = QuickActions();
+
     quickActions.initialize((String shortcutType) {
       // AppLock.of(context).showLockScreen();
       if (shortcutType == 'transaction') {
@@ -49,6 +53,15 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                 Transfer(timestamp: DateTime.now().millisecondsSinceEpoch)));
       }
     });
+    handleScroll();
+  }
+
+  void init() async {
+    lockScreen = Provider.of<SettingsModel>(context, listen: false).lockScreen;
+
+    useBiometrics =
+        Provider.of<SettingsModel>(context, listen: false).useBiometrics;
+    pin = Provider.of<SettingsModel>(context, listen: false).pin;
 
     quickActions.setShortcutItems(<ShortcutItem>[
       // NOTE: This first action icon will only work on iOS.
@@ -67,14 +80,6 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
     ]);
   }
 
-  void loadSettings() async {
-    lockScreen = Provider.of<SettingsModel>(context, listen: false).lockScreen;
-
-    useBiometrics =
-        Provider.of<SettingsModel>(context, listen: false).useBiometrics;
-    pin = Provider.of<SettingsModel>(context, listen: false).pin;
-  }
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -91,7 +96,33 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
+    _scrollController.removeListener(() {});
     super.dispose();
+  }
+
+  void showFloationButton() {
+    setState(() {
+      _visible = true;
+    });
+  }
+
+  void hideFloationButton() {
+    setState(() {
+      _visible = false;
+    });
+  }
+
+  void handleScroll() async {
+    _scrollController.addListener(() {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        hideFloationButton();
+      }
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        showFloationButton();
+      }
+    });
   }
 
   @override
@@ -113,17 +144,22 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
       ),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showCustomModalBottomSheet(
-              context,
-              TransactionTransferBottomSheet(),
-            );
-          },
-          child: Icon(Icons.add_outlined),
+        floatingActionButton: AnimatedOpacity(
+          opacity: _visible ? 1.0 : 0.0,
+          duration: Duration(milliseconds: 300),
+          child: FloatingActionButton(
+            onPressed: () {
+              showCustomModalBottomSheet(
+                context,
+                TransactionTransferBottomSheet(),
+              );
+            },
+            child: Icon(Icons.add_outlined),
+          ),
         ),
         body: SafeArea(
           child: CustomScrollView(
+            controller: _scrollController,
             slivers: [
               SliverAppBar(
                 actions: [
@@ -336,6 +372,9 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                       padding: EdgeInsets.only(
                           left: 20.0, right: 10.0, top: 20.0, bottom: 0.0),
                     ),
+                    SizedBox(
+                      height: 100,
+                    )
                   ],
                 ),
               ),

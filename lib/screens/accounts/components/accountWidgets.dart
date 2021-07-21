@@ -226,7 +226,7 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
                   children: [
                     ExpensesByMonthChart(
                         accountUuid: widget.activeAccount!.uuid),
-                    AccountBalanceChart(account: widget.activeAccount!),
+                    // AccountBalanceChart(account: widget.activeAccount!),
                     TransactionChart(accountUuid: widget.activeAccount!.uuid),
                   ],
                   scrollDirection: Axis.horizontal,
@@ -236,7 +236,7 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
                 margin: EdgeInsets.only(bottom: 40.0),
                 child: SmoothPageIndicator(
                   controller: controller,
-                  count: 3,
+                  count: 2,
                   effect: WormEffect(
                       dotHeight: 7,
                       activeDotColor: Colors.blue,

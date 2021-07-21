@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/screens/lockScreen/components/DotSecretUI.dart';
 import 'package:moedeiro/screens/lockScreen/components/lockScreenButton.dart';
 import 'package:provider/provider.dart';
+import 'package:moedeiro/generated/l10n.dart';
 
 class LockScreen extends StatefulWidget {
   final String? correctString;
@@ -95,7 +97,13 @@ class _LockScreenState extends State<LockScreen> {
       try {
         isAuthenticated = await _localAuthentication.authenticate(
           biometricOnly: true,
-          localizedReason: 'Authenticate to show data',
+          androidAuthStrings: AndroidAuthMessages(
+            biometricHint: '',
+            signInTitle: 'Moedeiro',
+            biometricRequiredTitle: 'Moedeiro',
+            cancelButton: S.of(context).cancel,
+          ),
+          localizedReason: S.of(context).lockScreenPrompt,
           stickyAuth: true,
         );
       } on PlatformException catch (e) {

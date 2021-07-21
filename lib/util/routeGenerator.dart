@@ -7,6 +7,7 @@ import 'package:moedeiro/screens/main/mainPage.dart';
 import 'package:moedeiro/screens/movements/movementsPage.dart';
 import 'package:moedeiro/screens/settings/settingsPage.dart';
 import 'package:moedeiro/screens/summary/summaryPage.dart';
+import 'package:moedeiro/screens/welcome/welcomePage.dart';
 
 class RouteGenerator {
   // ignore: missing_return
@@ -35,6 +36,8 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return moedeiroPageRoute(MainPage());
+      case '/welcomePage':
+        return moedeiroPageRoute(WelcomePage());
       case '/lockScreen':
         if (args is Map<String, dynamic>) {
           route = MaterialPageRoute(

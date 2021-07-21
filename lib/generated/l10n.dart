@@ -729,6 +729,146 @@ class S {
       args: [],
     );
   }
+
+  /// `Log in with fingerprint`
+  String get lockScreenPrompt {
+    return Intl.message(
+      'Log in with fingerprint',
+      name: 'lockScreenPrompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Imported, restart Moedeiro`
+  String get restartMoedeiro {
+    return Intl.message(
+      'Imported, restart Moedeiro',
+      name: 'restartMoedeiro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exported`
+  String get Exported {
+    return Intl.message(
+      'Exported',
+      name: 'Exported',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There's been an error`
+  String get errorText {
+    return Intl.message(
+      'There\'s been an error',
+      name: 'errorText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Let's set up Moedeiro`
+  String get setUpMoedeiro {
+    return Intl.message(
+      'Let\'s set up Moedeiro',
+      name: 'setUpMoedeiro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create the first account`
+  String get createAccountText {
+    return Intl.message(
+      'Create the first account',
+      name: 'createAccountText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `It's mandatory to create an account`
+  String get createAccountError {
+    return Intl.message(
+      'It\'s mandatory to create an account',
+      name: 'createAccountError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account created, you can create more accounts or continue`
+  String get createAccountSuccess {
+    return Intl.message(
+      'Account created, you can create more accounts or continue',
+      name: 'createAccountSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All set, welcome to Moedeiro`
+  String get allSet {
+    return Intl.message(
+      'All set, welcome to Moedeiro',
+      name: 'allSet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NEXT`
+  String get next {
+    return Intl.message(
+      'NEXT',
+      name: 'next',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PREV`
+  String get prev {
+    return Intl.message(
+      'PREV',
+      name: 'prev',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `STEP`
+  String get step {
+    return Intl.message(
+      'STEP',
+      name: 'step',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OF`
+  String get ofText {
+    return Intl.message(
+      'OF',
+      name: 'ofText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FINISH`
+  String get finishText {
+    return Intl.message(
+      'FINISH',
+      name: 'finishText',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

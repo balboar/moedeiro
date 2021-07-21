@@ -67,7 +67,20 @@
   "search":"Buscar..",
   "discreetMode":"Modo discreto",
   "discreetModeExplanation":"El modo discreto oculta los importes",
-  "defaultAccount":"Cuenta por defecto"
+  "defaultAccount":"Cuenta por defecto",
+  "lockScreenPrompt":"Iniciar sesión con huella",
+  "restartMoedeiro":"Importado, reinicia Moedeiro",
+  "exported":"Exportado",
+  "errorText":"Se ha producido un error",
+  "setUpMoedeiro":"Configuremos Moedeiro",
+  "createAccountText":"Crea tu primera cuenta",
+  "createAccountError":"Es necesario crear una cuenta",  "createAccountSuccess":"Cuenta creada, puedes crear otra o continuar",
+  "allSet":"Bienvenido a Moedeiro",
+  "next":"SIGUIENTE",
+  "prev":"ANTERIOR",
+  "step":"PASO",
+  "ofText":"DE",
+  "finishText":"TERMINADO"
 
 
 }

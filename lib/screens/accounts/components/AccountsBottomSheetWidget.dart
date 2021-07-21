@@ -86,6 +86,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
         if (value!) {
           model.deleteAccount(activeAccount.uuid!);
           Navigator.pop(context);
+          Navigator.pop(context);
         }
       });
     }
@@ -97,7 +98,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         insertAccount(activeAccount);
-        Navigator.pop(context);
+        Navigator.pop(context, true);
       }
     }
 
@@ -177,9 +178,12 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                     buttonMinWidth: 140.0,
                     alignment: MainAxisAlignment.spaceAround,
                     children: [
-                      DeleteButton(() {
-                        deleteAccount(model);
-                      }),
+                      Visibility(
+                        child: DeleteButton(() {
+                          deleteAccount(model);
+                        }),
+                        visible: activeAccount.uuid != null,
+                      ),
                       SaveButton(() {
                         _submitForm(model.insertAccountIntoDb);
                       }),

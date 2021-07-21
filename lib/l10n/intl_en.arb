@@ -67,7 +67,21 @@
   "search":"Search..",
   "discreetMode":"Discreet mode",
   "discreetModeExplanation":"Discreet mode hides the amounts",
-  "defaultAccount":"Default Account"
+  "defaultAccount":"Default Account",
+  "lockScreenPrompt":"Log in with fingerprint",
+  "restartMoedeiro":"Imported, restart Moedeiro",
+  "Exported":"Exported",
+  "errorText":"There's been an error",
+  "setUpMoedeiro":"Let's set up Moedeiro",
+  "createAccountText":"Create the first account",
+  "createAccountError":"It's mandatory to create an account",
+  "createAccountSuccess":"Account created, you can create more accounts or continue",
+  "allSet":"All set, welcome to Moedeiro",
+  "next":"NEXT",
+  "prev":"PREV",
+  "step":"STEP",
+  "ofText":"OF",
+  "finishText":"FINISH"
 
 
 }

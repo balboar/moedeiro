@@ -26,6 +26,20 @@ class TransferTile extends StatelessWidget {
         elevation: 0,
         child: Row(
           children: [
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 10.0),
+              width: 2.5,
+              decoration: BoxDecoration(
+                color: (activeAccount != null) &&
+                        (activeAccount == transfer.accountFrom)
+                    ? Colors.red
+                    : Colors.green,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(2),
+                  topLeft: Radius.circular(2),
+                ),
+              ),
+            ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
@@ -95,20 +109,6 @@ class TransferTile extends StatelessWidget {
                   ),
                   SizedBox(
                     width: 5,
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 10.0),
-                    width: 2.5,
-                    decoration: BoxDecoration(
-                      color: (activeAccount != null) &&
-                              (activeAccount == transfer.accountFrom)
-                          ? Colors.red
-                          : Colors.green,
-                      borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(2),
-                        topRight: Radius.circular(2),
-                      ),
-                    ),
                   ),
                 ],
               ),

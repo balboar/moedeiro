@@ -27,6 +27,17 @@ class TransactionTile extends StatelessWidget {
         elevation: 0,
         child: Row(
           children: [
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 10.0),
+              width: 2.5,
+              decoration: BoxDecoration(
+                color: transaction.amount! > 0 ? Colors.green : Colors.red,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(2),
+                  topLeft: Radius.circular(2),
+                ),
+              ),
+            ),
             Expanded(
               flex: 1,
               child: Padding(
@@ -111,17 +122,6 @@ class TransactionTile extends StatelessWidget {
                     ],
                   ),
                 ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10.0),
-              width: 2.5,
-              decoration: BoxDecoration(
-                color: transaction.amount! > 0 ? Colors.green : Colors.red,
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(2),
-                  topRight: Radius.circular(2),
-                ),
               ),
             ),
           ],

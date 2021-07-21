@@ -21,11 +21,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "Exported": MessageLookupByLibrary.simpleMessage("Exported"),
         "account": MessageLookupByLibrary.simpleMessage("Account"),
         "accountName": MessageLookupByLibrary.simpleMessage("Account name"),
         "accountSelectError":
             MessageLookupByLibrary.simpleMessage("Select an account"),
         "accountsTitle": MessageLookupByLibrary.simpleMessage("Accounts"),
+        "allSet": MessageLookupByLibrary.simpleMessage(
+            "All set, welcome to Moedeiro"),
         "amount": MessageLookupByLibrary.simpleMessage("Amount"),
         "amountError": MessageLookupByLibrary.simpleMessage(
             "Amount should be greater than 0"),
@@ -43,6 +46,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Change Password"),
         "common": MessageLookupByLibrary.simpleMessage("Common"),
         "confirmPin": MessageLookupByLibrary.simpleMessage("Confirm PIN"),
+        "createAccountError": MessageLookupByLibrary.simpleMessage(
+            "It\'s mandatory to create an account"),
+        "createAccountSuccess": MessageLookupByLibrary.simpleMessage(
+            "Account created, you can create more accounts or continue"),
+        "createAccountText":
+            MessageLookupByLibrary.simpleMessage("Create the first account"),
         "data": MessageLookupByLibrary.simpleMessage("Data"),
         "date": MessageLookupByLibrary.simpleMessage("Date"),
         "defaultAccount":
@@ -68,10 +77,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "discreetMode": MessageLookupByLibrary.simpleMessage("Discreet mode"),
         "discreetModeExplanation": MessageLookupByLibrary.simpleMessage(
             "Discreet mode hides the amounts"),
+        "errorText":
+            MessageLookupByLibrary.simpleMessage("There\'s been an error"),
         "expense": MessageLookupByLibrary.simpleMessage("Expense"),
         "expenses": MessageLookupByLibrary.simpleMessage("Expenses"),
         "expensesMonth": MessageLookupByLibrary.simpleMessage("Expenses month"),
         "exportDb": MessageLookupByLibrary.simpleMessage("Export database"),
+        "finishText": MessageLookupByLibrary.simpleMessage("FINISH"),
         "from": MessageLookupByLibrary.simpleMessage("From"),
         "importCSV": MessageLookupByLibrary.simpleMessage("Import from CSV"),
         "importDb": MessageLookupByLibrary.simpleMessage("Import database"),
@@ -83,11 +95,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "language": MessageLookupByLibrary.simpleMessage("Language"),
         "lockAppInBackGround":
             MessageLookupByLibrary.simpleMessage("Lock app in background"),
+        "lockScreenPrompt":
+            MessageLookupByLibrary.simpleMessage("Log in with fingerprint"),
         "movementsTitle": MessageLookupByLibrary.simpleMessage("Movements"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "nameError":
             MessageLookupByLibrary.simpleMessage("Name can not be empty"),
+        "next": MessageLookupByLibrary.simpleMessage("NEXT"),
         "noDataLabel": MessageLookupByLibrary.simpleMessage("No data"),
+        "ofText": MessageLookupByLibrary.simpleMessage("OF"),
         "pin": MessageLookupByLibrary.simpleMessage("PIN"),
         "pinEmpty":
             MessageLookupByLibrary.simpleMessage("PIN can not be empty"),
@@ -95,10 +111,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("PIN must be a numeric value"),
         "pinErrorLenght":
             MessageLookupByLibrary.simpleMessage("PIN must have four numbers"),
+        "prev": MessageLookupByLibrary.simpleMessage("PREV"),
+        "restartMoedeiro":
+            MessageLookupByLibrary.simpleMessage("Imported, restart Moedeiro"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "search": MessageLookupByLibrary.simpleMessage("Search.."),
         "security": MessageLookupByLibrary.simpleMessage("Security"),
+        "setUpMoedeiro":
+            MessageLookupByLibrary.simpleMessage("Let\'s set up Moedeiro"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "step": MessageLookupByLibrary.simpleMessage("STEP"),
         "systemDefaultTitle":
             MessageLookupByLibrary.simpleMessage("Use system default"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),

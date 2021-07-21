@@ -16,6 +16,7 @@ class SettingsModel extends ChangeNotifier {
   late SharedPreferences prefs;
   String _localeString = '';
   Locale? locale;
+  bool _firstTime = true;
 
   Future<bool> initPrefs() async {
     prefs = await SharedPreferences.getInstance();
@@ -23,6 +24,7 @@ class SettingsModel extends ChangeNotifier {
     _lockScreen = prefs.getBool('lockApp') ?? false;
     _useBiometrics = prefs.getBool('useBiometrics') ?? false;
     _pin = prefs.getString('PIN') ?? '0000';
+    _firstTime = prefs.getBool('firstTime') ?? true;
     _localeString = prefs.getString('locale') ?? 'system';
     if (_localeString == 'system') {
       locale = null;
@@ -34,6 +36,13 @@ class SettingsModel extends ChangeNotifier {
     _activeTheme = prefs.getString('theme') ?? 'system';
     setActiveTheme(_activeTheme);
     return Future.value(true);
+  }
+
+  bool get firstTime => _firstTime;
+  set firstTime(bool value) {
+    _firstTime = value;
+    notifyListeners();
+    prefs.setBool('firstTime', value);
   }
 
   String get pin => _pin;
