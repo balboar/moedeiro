@@ -25,8 +25,40 @@ class _WelcomePageState extends State<WelcomePage> {
   bool _accountCreated = false;
 
   @override
+  void initState() {
+    super.initState();
+    _successText = S.of(context).createAccountText;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final steps = [
+      CoolStep(
+        title: '',
+        subtitle: '',
+        isHeaderEnabled: false,
+        content: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 150,
+            ),
+            Text(
+              S.of(context).allSet,
+              style: Theme.of(context).textTheme.headline3,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              S.of(context).setUpMoedeiro,
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ],
+        ),
+        validation: () {
+          return null;
+        },
+      ),
       CoolStep(
         title: '',
         isHeaderEnabled: false,
@@ -34,23 +66,26 @@ class _WelcomePageState extends State<WelcomePage> {
         content: Column(
           children: [
             SizedBox(
-              height: 60,
+              height: 150,
             ),
             Text(
-              S.of(context).setUpMoedeiro,
-              style: Theme.of(context).textTheme.headline5,
+              S.of(context).createAccountText,
+              style: Theme.of(context).textTheme.headline4,
             ),
             SizedBox(
-              height: 120,
+              height: 100,
             ),
             Center(
               child: TextButton.icon(
                 style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
                   primary: Colors.white,
                   backgroundColor: Theme.of(context).accentColor,
                   onSurface: Colors.grey,
                   padding: EdgeInsets.symmetric(
-                    vertical: 5,
+                    vertical: 12,
                     horizontal: 30,
                   ),
                 ),
@@ -71,20 +106,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   });
                 },
                 icon: Icon(Icons.account_balance),
-                label: Text(S.of(context).createAccountText),
+                label: Text(_successText),
               ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Text(
-              _errorText,
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              _successText,
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -93,7 +116,7 @@ class _WelcomePageState extends State<WelcomePage> {
             setState(() {
               _errorText = S.of(context).createAccountError;
             });
-            return 'Error';
+            return _errorText;
           } else {
             return null;
           }
@@ -107,20 +130,23 @@ class _WelcomePageState extends State<WelcomePage> {
           child: Column(
             children: <Widget>[
               SizedBox(
-                height: 60,
+                height: 150,
               ),
               Center(
                 child: Text(
-                  S.of(context).allSet,
-                  style: Theme.of(context).textTheme.headline5,
+                  '🤗',
+                  style: TextStyle(fontSize: 50),
                 ),
               ),
               SizedBox(
                 height: 30,
               ),
-              Image(
-                height: 250,
-                image: AssetImage('lib/assets/icons/successBlack.png'),
+              Center(
+                child: Text(
+                  S.of(context).allSet,
+                  style: Theme.of(context).textTheme.headline3,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),
@@ -132,10 +158,10 @@ class _WelcomePageState extends State<WelcomePage> {
     ];
 
     final stepper = CoolStepper(
-      showErrorSnackbar: false,
+      showErrorSnackbar: true,
       onCompleted: () {
         Provider.of<SettingsModel>(context, listen: false).firstTime = false;
-        Navigator.pushNamed(
+        Navigator.pushReplacementNamed(
           context,
           '/',
         );
@@ -151,7 +177,7 @@ class _WelcomePageState extends State<WelcomePage> {
     );
 
     return Scaffold(
-      body: Container(
+      body: SafeArea(
         child: stepper,
       ),
     );

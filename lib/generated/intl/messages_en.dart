@@ -48,10 +48,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "confirmPin": MessageLookupByLibrary.simpleMessage("Confirm PIN"),
         "createAccountError": MessageLookupByLibrary.simpleMessage(
             "It\'s mandatory to create an account"),
-        "createAccountSuccess": MessageLookupByLibrary.simpleMessage(
-            "Account created, you can create more accounts or continue"),
-        "createAccountText":
-            MessageLookupByLibrary.simpleMessage("Create the first account"),
+        "createAccountSuccess":
+            MessageLookupByLibrary.simpleMessage("Create another account"),
+        "createAccountText": MessageLookupByLibrary.simpleMessage(
+            "Let\'s create your first account"),
         "data": MessageLookupByLibrary.simpleMessage("Data"),
         "date": MessageLookupByLibrary.simpleMessage("Date"),
         "defaultAccount":
@@ -117,8 +117,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "search": MessageLookupByLibrary.simpleMessage("Search.."),
         "security": MessageLookupByLibrary.simpleMessage("Security"),
-        "setUpMoedeiro":
-            MessageLookupByLibrary.simpleMessage("Let\'s set up Moedeiro"),
+        "setUpMoedeiro": MessageLookupByLibrary.simpleMessage(
+            "Let\'s set up your first account"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "step": MessageLookupByLibrary.simpleMessage("STEP"),
         "systemDefaultTitle":

@@ -47,8 +47,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "confirmPin": MessageLookupByLibrary.simpleMessage("Confirma el PIN"),
         "createAccountError": MessageLookupByLibrary.simpleMessage(
             "Es necesario crear una cuenta"),
-        "createAccountSuccess": MessageLookupByLibrary.simpleMessage(
-            "Cuenta creada, puedes crear otra o continuar"),
+        "createAccountSuccess":
+            MessageLookupByLibrary.simpleMessage("Crear otra cuenta"),
         "createAccountText":
             MessageLookupByLibrary.simpleMessage("Crea tu primera cuenta"),
         "data": MessageLookupByLibrary.simpleMessage("Datos"),
@@ -81,7 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "expensesMonth": MessageLookupByLibrary.simpleMessage("Gastos mes"),
         "exportDb":
             MessageLookupByLibrary.simpleMessage("Exportar base de datos"),
-        "finishText": MessageLookupByLibrary.simpleMessage("TERMINADO"),
+        "finishText": MessageLookupByLibrary.simpleMessage("TERMINAR"),
         "from": MessageLookupByLibrary.simpleMessage("De"),
         "importCSV": MessageLookupByLibrary.simpleMessage("Importar desde CSV"),
         "importDb":
@@ -117,8 +117,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Guardar"),
         "search": MessageLookupByLibrary.simpleMessage("Buscar.."),
         "security": MessageLookupByLibrary.simpleMessage("Seguridad"),
-        "setUpMoedeiro":
-            MessageLookupByLibrary.simpleMessage("Configuremos Moedeiro"),
+        "setUpMoedeiro": MessageLookupByLibrary.simpleMessage(
+            "Configuremos tu primera cuenta"),
         "settings": MessageLookupByLibrary.simpleMessage("Ajustes"),
         "step": MessageLookupByLibrary.simpleMessage("PASO"),
         "systemDefaultTitle":

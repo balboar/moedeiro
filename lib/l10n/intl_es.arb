@@ -72,15 +72,16 @@
   "restartMoedeiro":"Importado, reinicia Moedeiro",
   "exported":"Exportado",
   "errorText":"Se ha producido un error",
-  "setUpMoedeiro":"Configuremos Moedeiro",
+  "setUpMoedeiro":"Configuremos tu primera cuenta",
   "createAccountText":"Crea tu primera cuenta",
-  "createAccountError":"Es necesario crear una cuenta",  "createAccountSuccess":"Cuenta creada, puedes crear otra o continuar",
+  "createAccountError":"Es necesario crear una cuenta",  
+  "createAccountSuccess":"Crear otra cuenta",
   "allSet":"Bienvenido a Moedeiro",
   "next":"SIGUIENTE",
   "prev":"ANTERIOR",
   "step":"PASO",
   "ofText":"DE",
-  "finishText":"TERMINADO"
+  "finishText":"TERMINAR"
 
 
 }

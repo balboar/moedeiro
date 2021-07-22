@@ -770,20 +770,20 @@ class S {
     );
   }
 
-  /// `Let's set up Moedeiro`
+  /// `Let's set up your first account`
   String get setUpMoedeiro {
     return Intl.message(
-      'Let\'s set up Moedeiro',
+      'Let\'s set up your first account',
       name: 'setUpMoedeiro',
       desc: '',
       args: [],
     );
   }
 
-  /// `Create the first account`
+  /// `Let's create your first account`
   String get createAccountText {
     return Intl.message(
-      'Create the first account',
+      'Let\'s create your first account',
       name: 'createAccountText',
       desc: '',
       args: [],
@@ -800,10 +800,10 @@ class S {
     );
   }
 
-  /// `Account created, you can create more accounts or continue`
+  /// `Create another account`
   String get createAccountSuccess {
     return Intl.message(
-      'Account created, you can create more accounts or continue',
+      'Create another account',
       name: 'createAccountSuccess',
       desc: '',
       args: [],
