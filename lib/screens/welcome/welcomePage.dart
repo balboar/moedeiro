@@ -26,8 +26,8 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
+    // _successText = S.of(context).createAccountText;
     super.initState();
-    _successText = S.of(context).createAccountText;
   }
 
   @override
@@ -82,7 +82,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                   primary: Colors.white,
-                  backgroundColor: Theme.of(context).accentColor,
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
                   onSurface: Colors.grey,
                   padding: EdgeInsets.symmetric(
                     vertical: 12,
@@ -106,7 +106,9 @@ class _WelcomePageState extends State<WelcomePage> {
                   });
                 },
                 icon: Icon(Icons.account_balance),
-                label: Text(_successText),
+                label: Text(_accountCreated
+                    ? S.of(context).createAccountSuccess
+                    : S.of(context).createAccountText),
               ),
             ),
           ],

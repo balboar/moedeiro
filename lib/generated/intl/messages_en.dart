@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "Exported": MessageLookupByLibrary.simpleMessage("Exported"),
+        "acceptButtonText": MessageLookupByLibrary.simpleMessage("Continue"),
         "account": MessageLookupByLibrary.simpleMessage("Account"),
         "accountName": MessageLookupByLibrary.simpleMessage("Account name"),
         "accountSelectError":
@@ -52,6 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Create another account"),
         "createAccountText": MessageLookupByLibrary.simpleMessage(
             "Let\'s create your first account"),
+        "customRange": MessageLookupByLibrary.simpleMessage("Custom range"),
         "data": MessageLookupByLibrary.simpleMessage("Data"),
         "date": MessageLookupByLibrary.simpleMessage("Date"),
         "defaultAccount":
@@ -61,6 +63,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Delete account?"),
         "deleteAccountDescription": MessageLookupByLibrary.simpleMessage(
             "An account is going to be deleted, are you sure?"),
+        "deleteAccountDescriptionError": MessageLookupByLibrary.simpleMessage(
+            "This account has transactions, remove or move those transactions first"),
+        "deleteAccountError":
+            MessageLookupByLibrary.simpleMessage("Can\'t delete account"),
         "deleteCategory":
             MessageLookupByLibrary.simpleMessage("Delete category?"),
         "deleteCategoryError":
@@ -85,6 +91,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportDb": MessageLookupByLibrary.simpleMessage("Export database"),
         "finishText": MessageLookupByLibrary.simpleMessage("FINISH"),
         "from": MessageLookupByLibrary.simpleMessage("From"),
+        "group": MessageLookupByLibrary.simpleMessage("Group"),
+        "groupby": MessageLookupByLibrary.simpleMessage("Group by"),
         "importCSV": MessageLookupByLibrary.simpleMessage("Import from CSV"),
         "importDb": MessageLookupByLibrary.simpleMessage("Import database"),
         "income": MessageLookupByLibrary.simpleMessage("Income"),
@@ -97,10 +105,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Lock app in background"),
         "lockScreenPrompt":
             MessageLookupByLibrary.simpleMessage("Log in with fingerprint"),
+        "monthly": MessageLookupByLibrary.simpleMessage("Monthly"),
         "movementsTitle": MessageLookupByLibrary.simpleMessage("Movements"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "nameError":
             MessageLookupByLibrary.simpleMessage("Name can not be empty"),
+        "netIncome": MessageLookupByLibrary.simpleMessage("Net income"),
         "next": MessageLookupByLibrary.simpleMessage("NEXT"),
         "noDataLabel": MessageLookupByLibrary.simpleMessage("No data"),
         "ofText": MessageLookupByLibrary.simpleMessage("OF"),
@@ -134,6 +144,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "transfers": MessageLookupByLibrary.simpleMessage("Transfers"),
         "useFingerprint":
             MessageLookupByLibrary.simpleMessage("Use fingerprint"),
-        "version": MessageLookupByLibrary.simpleMessage("Version")
+        "version": MessageLookupByLibrary.simpleMessage("Version"),
+        "yearly": MessageLookupByLibrary.simpleMessage("Yearly")
       };
 }

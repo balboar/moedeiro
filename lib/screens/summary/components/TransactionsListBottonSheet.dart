@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class TransactionsListBottomSheet extends StatelessWidget {
   final String categoryUuid;
-  final String month;
+  final String? month;
   final String year;
   const TransactionsListBottomSheet(this.categoryUuid, this.month, this.year,
       {Key? key})
@@ -17,7 +17,7 @@ class TransactionsListBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
         expand: false,
-        maxChildSize: 0.9,
+        maxChildSize: 1,
         initialChildSize: 0.6,
         builder: (BuildContext context, ScrollController scrollController) {
           return Padding(
@@ -26,20 +26,27 @@ class TransactionsListBottomSheet extends StatelessWidget {
               vertical: 10.0,
             ),
             child: Consumer<TransactionModel>(
-              builder:
-                  (BuildContext context, TransactionModel model, Widget? child) {
+              builder: (BuildContext context, TransactionModel model,
+                  Widget? child) {
                 var transactions =
                     model.transactions!.where((Transaction value) {
-                  return value.category == categoryUuid &&
-                      DateTime.fromMillisecondsSinceEpoch(value.timestamp!)
-                              .month
-                              .toString()
-                              .padLeft(2, '0') ==
-                          month &&
-                      DateTime.fromMillisecondsSinceEpoch(value.timestamp!)
-                              .year
-                              .toString() ==
-                          year;
+                  if (month != null)
+                    return value.category == categoryUuid &&
+                        DateTime.fromMillisecondsSinceEpoch(value.timestamp!)
+                                .month
+                                .toString()
+                                .padLeft(2, '0') ==
+                            month &&
+                        DateTime.fromMillisecondsSinceEpoch(value.timestamp!)
+                                .year
+                                .toString() ==
+                            year;
+                  else
+                    return value.category == categoryUuid &&
+                        DateTime.fromMillisecondsSinceEpoch(value.timestamp!)
+                                .year
+                                .toString() ==
+                            year;
                 }).toList();
                 return CustomScrollView(
                     controller: scrollController,

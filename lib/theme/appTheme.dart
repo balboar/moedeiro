@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 
 class AppTheme {
   AppTheme._();
@@ -6,25 +8,33 @@ class AppTheme {
   // Light Theme
   static final ThemeData lightTheme = ThemeData(
     // primarySwatch: Colors.blueGrey,
-    accentColor: Colors.black,
+    colorScheme: ColorScheme.fromSwatch(
+        cardColor: Colors.white,
+        brightness: Brightness.light,
+        accentColor: Color(0xFF2596be)),
     buttonBarTheme: ButtonBarThemeData(
         alignment: MainAxisAlignment.spaceAround, buttonHeight: 40.0),
     textSelectionTheme: TextSelectionThemeData(selectionColor: Colors.black),
-    cardColor: Colors.white,
+
     iconTheme: IconThemeData(color: Colors.black),
     textTheme: TextTheme(
-        button: TextStyle(color: Colors.white),
-        bodyText1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
+      button: TextStyle(color: Colors.white),
+      bodyText1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+      headline6: TextStyle(color: Colors.black),
+    ),
+
     canvasColor: Colors.grey[50],
     primaryTextTheme: TextTheme(
       headline6: TextStyle(color: Colors.black),
       bodyText1: TextStyle(color: Colors.black),
     ),
-    brightness: Brightness.light,
+
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
     ),
     appBarTheme: AppBarTheme(
+      titleTextStyle: TextStyle(
+          fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
       iconTheme: IconThemeData(color: Colors.black),
       color: Colors.grey[50],
       actionsIconTheme: IconThemeData(color: Colors.black),
@@ -38,11 +48,12 @@ class AppTheme {
     primaryColor: Color(0xFF232d3a),
     primaryColorDark: Color(0xFF1c242e),
     scaffoldBackgroundColor: Color(0xFF1f2732),
-
+    colorScheme: ColorScheme.fromSwatch(
+        cardColor: Color(0xFF334051),
+        brightness: Brightness.dark,
+        accentColor: Color(0xFFFAEBD7)),
     //primarySwatch: Colors.blue,
-    accentColor: Color(0xFFFAEBD7), //Colors.blue[300],
-    cardColor: Color(
-        0xFF334051), //293342), //Colors.grey[900].withOpacity(0.8), //Color(0xFF151515),
+
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: Color(0xFF1f2732), // Color(0xFF293342),
     ),
@@ -53,7 +64,7 @@ class AppTheme {
         button: TextStyle(color: Colors.black),
         bodyText1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
     // canvasColor: Color(0xFF020203),
-    brightness: Brightness.dark,
+
     dialogTheme: DialogTheme(
       backgroundColor: Color(0xFF293342),
     ),

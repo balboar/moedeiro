@@ -6,6 +6,7 @@ import 'package:moedeiro/models/categories.dart';
 import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/models/transfer.dart';
 import 'package:uuid/uuid.dart';
+import 'package:intl/intl.dart';
 
 class AccountModel extends ChangeNotifier {
   List<Account> _accounts = [];
@@ -82,6 +83,7 @@ class AccountModel extends ChangeNotifier {
   Future<bool> insertAccountIntoDb(Account accountData) async {
     if (accountData.uuid == null) {
       accountData.uuid = _uuid.v4();
+      accountData.active = true;
 
       if (_accounts.length > 0) {
         accountData.position = _accounts.length + 1;
@@ -192,12 +194,121 @@ class CategoryModel extends ChangeNotifier {
   }
 }
 
+class AnalyticsModel extends ChangeNotifier {
+  List<Map<String, dynamic>> transactionsSummary = [];
+  List<Map<String, dynamic>> transactionsGrouped = [];
+  String? currentMonth;
+  String currentYear = '';
+  double totalExpenses = 0;
+  double totalExpensesAbs = 0;
+  int _selectedIndex = 0;
+
+  String _transactionTypeFilter = 'E';
+  Map<String, dynamic> _transactionsDateFilter = {
+    'Filter': 'M',
+    'Date1': null,
+    'Date2': null
+  };
+
+  int get selectedIndex => _selectedIndex;
+  set selectedIndex(int index) {
+    _selectedIndex = index;
+    var filter = _transactionsDateFilter['Filter'];
+    if (filter == 'Y')
+      _getTrasactionsByYearAndCategory().then((value) => notifyListeners());
+    else //if (filter == 'M')
+      _getTrasactionsByMonthAndCategory().then((value) => notifyListeners());
+  }
+
+  String get transactionTypeFilter => _transactionTypeFilter;
+  set transactionTypeFilter(String type) {
+    _transactionTypeFilter = type;
+    var filter = _transactionsDateFilter['Filter'];
+    if (filter == 'Y')
+      _getTrasactionsGroupedByYear(_transactionTypeFilter);
+    else if (filter == 'M')
+      _getTrasactionsGroupedByMonth(_transactionTypeFilter);
+    else if (filter == 'C') _getTrasactionsGroupedInCustomRange();
+  }
+
+  Map<String, dynamic> get transactionsDateFilter => _transactionsDateFilter;
+  set transactionsDateFilter(Map<String, dynamic> data) {
+    _transactionsDateFilter = data;
+    var filter = _transactionsDateFilter['Filter'];
+    if (filter == 'Y')
+      _getTrasactionsGroupedByYear(_transactionTypeFilter);
+    else if (filter == 'M')
+      _getTrasactionsGroupedByMonth(_transactionTypeFilter);
+    else if (filter == 'C') _getTrasactionsGroupedInCustomRange();
+  }
+
+  Future<bool> _getTrasactionsGroupedByMonth(String filter) async {
+    var value = await DB.getTrasactionsGroupedByMonth(filter);
+    transactionsSummary = value.reversed.toList();
+    currentMonth = transactionsSummary[selectedIndex]['monthofyear'];
+    currentYear = transactionsSummary[selectedIndex]['year'];
+    await _getTrasactionsByMonthAndCategory();
+    notifyListeners();
+    return Future.value(true);
+  }
+
+  Future<bool> _getTrasactionsGroupedInCustomRange() async {
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String date1 = formatter.format(_transactionsDateFilter['Date1']);
+    String date2 = formatter.format(_transactionsDateFilter['Date2']);
+
+    var value = await DB.getTrasactionsInDateRange(
+        _transactionTypeFilter, date1, date2);
+    transactionsSummary = value.reversed.toList();
+    currentMonth = transactionsSummary[selectedIndex]['monthofyear'];
+    currentYear = transactionsSummary[selectedIndex]['year'];
+    await _getTrasactionsByMonthAndCategory();
+    notifyListeners();
+    return Future.value(true);
+  }
+
+  Future<bool> _getTrasactionsGroupedByYear(String filter) async {
+    var value = await DB.getTrasactionsGroupedByYear(filter);
+    transactionsSummary = value.reversed.toList();
+    currentMonth = null;
+    currentYear = transactionsSummary[selectedIndex]['year'];
+    await _getTrasactionsByYearAndCategory();
+    notifyListeners();
+    return Future.value(true);
+  }
+
+  Future<bool> _getTrasactionsByMonthAndCategory() async {
+    totalExpenses = transactionsSummary[selectedIndex]['amount'];
+    totalExpensesAbs = transactionsSummary[selectedIndex]['amount_abs'];
+    currentMonth = transactionsSummary[selectedIndex]['monthofyear'];
+    currentYear = transactionsSummary[selectedIndex]['year'];
+    await DB
+        .getTrasactionsByMonthAndCategory(
+            currentMonth!, currentYear, _transactionTypeFilter)
+        .then((value) {
+      transactionsGrouped = value;
+    });
+    return Future.value(true);
+  }
+
+  Future<bool> _getTrasactionsByYearAndCategory() async {
+    totalExpenses = transactionsSummary[selectedIndex]['amount'];
+    totalExpensesAbs = transactionsSummary[selectedIndex]['amount_abs'];
+    currentMonth = null;
+    currentYear = transactionsSummary[selectedIndex]['year'];
+    await DB
+        .getTrasactionsByYearAndCategory(currentYear, _transactionTypeFilter)
+        .then((value) {
+      transactionsGrouped = value;
+    });
+    return Future.value(true);
+  }
+}
+
 class TransactionModel extends ChangeNotifier {
   List<Transaction>? _transactions;
   bool isLoading = false;
   Uuid _uuid = Uuid();
-  List<Map<String, dynamic>> monthlyTransactions = [];
-  List<Map<String, dynamic>> transactionsOfTheMonth = [];
 
   List<Transaction>? get transactions => _transactions;
 
@@ -233,19 +344,6 @@ class TransactionModel extends ChangeNotifier {
 
   Future<List<Map<String, dynamic>>> getCategoryExpensesChartData() async {
     return await DB.getTrasactionsLastMonthByCategory();
-  }
-
-  Future<bool> getTrasactionsGroupedByMonthAndCategory() async {
-    var value = await DB.getTrasactionsGroupedByMonthAndCategory();
-    monthlyTransactions = value.reversed.toList();
-    return Future.value(true);
-  }
-
-  void getTrasactionsByMonthAndCategory(String month, String year) {
-    DB.getTrasactionsByMonthAndCategory(month, year).then((value) {
-      transactionsOfTheMonth = value;
-      notifyListeners();
-    });
   }
 
   Future<List<Map<String, dynamic>>> getTrasactionsByCategoryMonth(

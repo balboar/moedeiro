@@ -8,9 +8,9 @@ import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/models/transfer.dart';
 import 'package:moedeiro/provider/mainModel.dart';
+import 'package:moedeiro/screens/main/components/lastTransactionsList.dart';
 import 'package:moedeiro/screens/movements/components/transactionBottomSheet.dart';
 import 'package:moedeiro/screens/movements/components/transactionTransferBottomSheetWidget.dart';
-import 'package:moedeiro/screens/movements/components/transactionWidgets.dart';
 import 'package:moedeiro/screens/movements/components/transferBottomSheetWidget.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
@@ -216,75 +216,6 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                 hasScrollBody: false,
                 child: Column(
                   children: [
-                    // Padding(
-                    //   child: GestureDetector(
-                    //     onTap: () {
-                    //       Navigator.pushNamed(
-                    //         context,
-                    //         '/accountsPage',
-                    //       );
-                    //     },
-                    //     child: Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       children: [
-                    //         Text(
-                    //           S.of(context).balance,
-                    //           style: Theme.of(context).textTheme.bodyText2,
-                    //         ),
-                    //         Consumer<AccountModel>(builder:
-                    //             (BuildContext context, AccountModel model,
-                    //                 Widget child) {
-                    //           return Text(
-                    //             '${formatCurrency(context, model.totalAmount)}',
-                    //             style: Theme.of(context).textTheme.headline4,
-                    //           );
-                    //         }),
-                    //       ],
-                    //     ),
-                    //   ),
-                    //   padding: EdgeInsets.only(
-                    //     left: 20.0,
-                    //     right: 10.0,
-                    //     top: 15.0,
-                    //     bottom: 10.0,
-                    //   ),
-                    // ),
-                    // Consumer<AccountModel>(
-                    //   builder: (BuildContext context, AccountModel model,
-                    //       Widget child) {
-                    //     if (model.accounts == null)
-                    //       return Container(
-                    //         height: 100,
-                    //         margin: EdgeInsets.only(
-                    //             left: 10.0, top: 2.0, bottom: 10.0),
-                    //         child: Center(
-                    //           child: CircularProgressIndicator(),
-                    //         ),
-                    //       );
-                    //     else if (model.accounts.length == 0)
-                    //       return Container(
-                    //         height: 100,
-                    //         margin: EdgeInsets.only(
-                    //             left: 10.0, top: 2.0, bottom: 10.0),
-                    //         child: NoDataWidgetHorizontal(),
-                    //       );
-                    //     else
-                    //       return Container(
-                    //         height: 100,
-                    //         margin: EdgeInsets.only(
-                    //             left: 10.0, top: 2.0, bottom: 10.0),
-                    //         child: ListView.builder(
-                    //           itemCount: model.accounts.length,
-                    //           scrollDirection: Axis.horizontal,
-                    //           itemBuilder: (BuildContext context, int index) {
-                    //             return AccountMiniCard(
-                    //                 account: model.accounts[index]);
-                    //           },
-                    //         ),
-                    //       );
-                    //   },
-                    // ),
-
                     Consumer<AccountModel>(builder: (BuildContext context,
                         AccountModel model, Widget? child) {
                       //formatCurrency(context, model.expenses)
@@ -293,7 +224,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                         () {
                           Navigator.pushNamed(
                             context,
-                            '/chartsPage',
+                            '/analyticsPage',
                           );
                         },
                         subtitle: formatCurrency(context, model.expenses),
@@ -308,7 +239,6 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                         );
                       },
                     ),
-
                     MainPageSectionStateless(
                       S.of(context).transactionsTitle,
                       () {
@@ -320,49 +250,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                       padding: EdgeInsets.only(
                           left: 20.0, right: 10.0, top: 20.0, bottom: 0.0),
                     ),
-                    Consumer<TransactionModel>(
-                      builder: (BuildContext context, TransactionModel model,
-                          Widget? child) {
-                        if (model.transactions == null)
-                          return Container(
-                            height: 100,
-                            margin: EdgeInsets.only(
-                                left: 10.0, right: 10, top: 0, bottom: 10.0),
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        else if (model.transactions!.length == 0)
-                          return Container(
-                            height: 100,
-                            margin: EdgeInsets.only(
-                                left: 10.0, right: 10, top: 0.0, bottom: 10.0),
-                          );
-                        else
-                          return Container(
-                            margin: EdgeInsets.only(
-                                left: 10.0, right: 10, top: 0.0, bottom: 10.0),
-                            child: Column(
-                              children: model.transactions!.length > 5
-                                  ? model.transactions!
-                                      .sublist(0, 5)
-                                      .map((Transaction transaction) {
-                                      return Container(
-                                        height: 75,
-                                        child: TransactionTile(transaction),
-                                      );
-                                    }).toList()
-                                  : model.transactions!
-                                      .map((Transaction transaction) {
-                                      return Container(
-                                        height: 75,
-                                        child: TransactionTile(transaction),
-                                      );
-                                    }).toList(),
-                            ),
-                          );
-                      },
-                    ),
+                    LastTransactionsWidget(),
                     MainPageSectionStateless(
                       S.of(context).settings,
                       () {

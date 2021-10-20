@@ -62,11 +62,12 @@ class PieChartState extends State {
           height: (MediaQuery.of(context).size.height / 2) - 140,
           child: PieChart(
             PieChartData(
-                pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
+                pieTouchData:
+                    PieTouchData(touchCallback: (event, pieTouchResponse) {
                   setState(() {
                     final desiredTouch =
-                        pieTouchResponse.touchInput is! PointerExitEvent &&
-                            pieTouchResponse.touchInput is! PointerUpEvent;
+                        pieTouchResponse!.touchedSection is! PointerExitEvent &&
+                            pieTouchResponse.touchedSection is! PointerUpEvent;
                     if (desiredTouch &&
                         pieTouchResponse.touchedSection != null) {
                       touchedIndex =
@@ -106,8 +107,11 @@ class PieChartState extends State {
                 ),
               ),
             ),
-            _currentMonth != _actualMonth && _currentMonth != _actualYear
+            _currentMonth == _actualMonth && _currentYear == _actualYear
                 ? SizedBox(
+                    width: 50,
+                  )
+                : SizedBox(
                     width: 50,
                     child: IconButton(
                         icon: Icon(Icons.arrow_forward_ios),
@@ -117,9 +121,6 @@ class PieChartState extends State {
                           loadChartData(_currentMonth, _currentYear);
                         }),
                   )
-                : SizedBox(
-                    width: 50,
-                  ),
           ],
         )
       ],

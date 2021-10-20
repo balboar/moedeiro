@@ -152,7 +152,7 @@ class NavigationPillWidget extends StatelessWidget {
                 margin: EdgeInsets.only(top: 10, bottom: 10),
                 height: 3,
                 decoration: new BoxDecoration(
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).colorScheme.secondary,
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.all(Radius.circular(8.0)),
                 )),
@@ -210,8 +210,8 @@ class _MoedeiroTransactionTransferButtonsState
 
   @override
   Widget build(BuildContext context) {
-    selectedColor = Theme.of(context).backgroundColor;
-    normalColor = Theme.of(context).accentColor;
+    selectedColor = Theme.of(context).scaffoldBackgroundColor;
+    normalColor = Theme.of(context).colorScheme.secondary;
     transferColor = transferColor ?? normalColor;
     transactionColor = transactionColor ?? selectedColor;
 
@@ -219,7 +219,7 @@ class _MoedeiroTransactionTransferButtonsState
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Theme.of(context).backgroundColor,
+        color: Theme.of(context).hoverColor,
         borderRadius: BorderRadius.all(
           Radius.circular(borderRadius),
         ),
@@ -234,7 +234,7 @@ class _MoedeiroTransactionTransferButtonsState
               height: height,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.0),
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
           ),

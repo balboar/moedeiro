@@ -11,13 +11,13 @@ class Helper {
 
   Database? _db;
 
-  static int get _version => 15;
+  static int get _version => 16;
   final _lock = new Lock();
 
   static void _onCreate(Database db, int version) async {
     await db.transaction((txn) async {
       await txn.execute(
-        'CREATE TABLE accounts (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, initialAmount REAL, icon TEXT,position INTEGER  )',
+        'CREATE TABLE accounts (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, initialAmount REAL, icon TEXT,position INTEGER,active INTEGER   )',
       );
 
       await txn.execute(
@@ -101,7 +101,9 @@ class Helper {
 
   static void _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // Database version is updated, alter the table
-    // await db.transaction((txn) async {});
+    await db.transaction((txn) async {
+      txn.execute("ALTER TABLE accounts ADD COLUMN active INTEGER;");
+    });
   }
 
   Future<Database?> getDb() async {
@@ -277,7 +279,8 @@ class DB {
                     'left outer join category c on c.uuid=a.category where a.account='
                     '"' +
                 uuidAccount! +
-                '" and date( substr(a.timestamp,1,10), "unixepoch") > date("now","-0.3 YEAR") ' +
+                '" and strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) ' +
+                ' >= strftime("%Y", date("now","-0.3 YEAR") ) and strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch")) >= strftime("%m", date("now","-0.3 YEAR") )' +
                 ' group by 2,3,4 order by 3 ,2 ');
       },
     );
@@ -295,7 +298,8 @@ class DB {
             'FROM transactions a   WHERE a.account=   "' +
             uuidAccount +
             '" ' +
-            '  AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.4 YEAR")  ' +
+            ' AND strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) ' +
+            ' >= strftime("%Y", date("now","-0.3 YEAR") ) and strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch")) >= strftime("%m", date("now","-0.3 YEAR") )' +
             'GROUP BY 2,  3, 4  ' +
             'UNION SELECT sum(a.amount) amount, ' +
             '           strftime("%d", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS dayofyear, ' +
@@ -304,7 +308,8 @@ class DB {
             'FROM transfers a WHERE a.accountTo= "' +
             uuidAccount +
             '" ' +
-            'AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.4 YEAR") ' +
+            ' AND strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) ' +
+            ' >= strftime("%Y", date("now","-0.3 YEAR") ) and strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch")) >= strftime("%m", date("now","-0.3 YEAR") )' +
             'GROUP BY 2,   3,  4 ' +
             'UNION SELECT -sum(a.amount) amount, ' +
             '             strftime("%d", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS dayofyear, ' +
@@ -313,7 +318,8 @@ class DB {
             'FROM transfers a WHERE a.accountFrom= "' +
             uuidAccount +
             '" ' +
-            'AND date(substr(a.timestamp, 1, 10), "unixepoch") > date("now", "-0.4 YEAR") ' +
+            ' AND strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) ' +
+            ' >= strftime("%Y", date("now","-0.3 YEAR") ) and strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch")) >= strftime("%m", date("now","-0.3 YEAR") )' +
             'GROUP BY 2, 3, 4   ORDER BY 4,  3,  2) AS z ' +
             'GROUP BY 2, 3, 4 ORDER BY 4, 3,  2');
       },
@@ -326,22 +332,36 @@ class DB {
         return await txn.rawQuery(
             '   SELECT sum(abs(a.amount)) amount,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
                 ' strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year,c.type   FROM transactions a '
-                    'left outer join category c on c.uuid=a.category where date( substr(a.timestamp,1,10), "unixepoch") > date("now","-0.3 YEAR") ' +
+                    'left outer join category c on c.uuid=a.category where strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) ' +
+                ' >= strftime("%Y", date("now","-0.3 YEAR") ) and strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch")) >= strftime("%m", date("now","-0.3 YEAR") )' +
                 ' group by 2,3,4 order by 3 ,2 ');
       },
     );
   }
 
   static Future<List<Map<String, dynamic>>> getTrasactionsByMonthAndCategory(
-      String month, String year) async {
+      String month, String year, String filter) async {
     return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
-            'SELECT round(sum(abs(a.amount)),2) amount,c.name,c.uuid,count(a.uuid) total  FROM transactions a '
-                    'left outer join category c on c.uuid=a.category where c.type="E" and ' +
+            'SELECT round(sum(abs(a.amount)),2) amount,c.name,c.uuid,count(a.uuid) total,c.type  FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where c.type like ? and ' +
                 ' strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))=? and ' +
                 'strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) =?    group by 2,3 order by 1 desc ,2  desc',
-            [month, year]);
+            [filter, month, year]);
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getTrasactionsByYearAndCategory(
+      String year, String filter) async {
+    return await _db!.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            'SELECT round(sum(abs(a.amount)),2) amount,c.name,c.uuid,count(a.uuid) total,c.type  FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where c.type like ? and ' +
+                'strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) =?    group by 2,3 order by 1 desc ,2  desc',
+            [filter, year]);
       },
     );
   }
@@ -374,14 +394,41 @@ class DB {
     );
   }
 
-  static Future<List<Map<String, dynamic>>>
-      getTrasactionsGroupedByMonthAndCategory() async {
+  static Future<List<Map<String, dynamic>>> getTrasactionsGroupedByMonth(
+      String filter) async {
     return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
-            '   SELECT round(sum(abs(a.amount)),2) amount,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
-                ' strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year,c.type   FROM transactions a '
-                    'left outer join category c on c.uuid=a.category where c.type="E"  group by 2,3,4 order by 3 ,2 ');
+            '   SELECT round(sum(a.amount),2) amount,round(sum(abs(a.amount)),2) amount_abs,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
+                ' strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year   FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where c.type like ?  group by 3,4 order by 4 ,3 ',
+            [filter]);
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getTrasactionsInDateRange(
+      String filter, String from, String to) async {
+    return await _db!.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            '   SELECT round(sum(a.amount),2) amount,round(sum(abs(a.amount)),2) amount_abs,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
+                ' strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year   FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where c.type like ?  ' +
+                '	and date( substr(a.timestamp,1,10), "unixepoch")>=?	and date( substr(a.timestamp,1,10), "unixepoch")<=?  group by 3,4 order by 4 ,3 ',
+            [filter, from, to]);
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getTrasactionsGroupedByYear(
+      String filter) async {
+    return await _db!.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            '   SELECT round(sum(a.amount),2) amount,round(sum(abs(a.amount)),2) amount_abs, strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year   FROM transactions a '
+            'left outer join category c on c.uuid=a.category where c.type like ?  group by 3 order by 3 ',
+            [filter]);
       },
     );
   }
@@ -422,46 +469,6 @@ class DB {
       },
     );
   }
-
-  // static Future<List<Fichaje>> getLastFichajes() async {
-  //   List<Map<String, dynamic>> result = await _db.rawQuery(
-  //       'SELECT * FROM ' + Fichaje.table + ' ORDER BY entrada DESC LIMIT 20; ');
-  //   if (result.length > 0) {
-  //     return List.generate(result.length, (int i) {
-  //       return Fichaje.fromMap(result[i]);
-  //     });
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
-  // static Future<bool> guardaDatosEnDB(
-  //     String table, Map<String, dynamic> item) async {
-  //   List<Map<String, dynamic>> _data = await _db.rawQuery(
-  //       'SELECT UUID FROM ' + table + ' where uuid="' + item['uuid'] + '"');
-
-  //   if (_data == null) {
-  //     await _db.insert(table, item);
-  //   } else
-  //     await _db.update(table, item,
-  //         where: "uuid = ?",
-  //         whereArgs: [item['uuid']],
-  //         conflictAlgorithm: ConflictAlgorithm.replace);
-  //   return Future.value(true);
-  // }
-
-  // static Future<List<Dieta>> getLastDietas() async {
-  //   List<Map<String, dynamic>> result = await _db.rawQuery(
-  //       'SELECT * FROM ' + Dieta.table + ' ORDER BY fecha DESC LIMIT 20; ');
-
-  //   if (result.length > 0) {
-  //     return List.generate(result.length, (int i) {
-  //       return Dieta.fromMap(result[i]);
-  //     });
-  //   } else {
-  //     return null;
-  //   }
-  // }
 
   static Future<int> insert(String table, Map<String, dynamic> item) async {
     return await _db!.transaction((txn) async {

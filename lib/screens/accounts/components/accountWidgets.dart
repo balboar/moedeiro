@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/models/accounts.dart';
 import 'package:moedeiro/provider/mainModel.dart';
-import 'package:moedeiro/screens/accounts/components/accountCharts.dart';
 import 'package:moedeiro/screens/summary/components/transactionsCharts.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +19,6 @@ class AccountCard extends StatefulWidget {
 class _AccountCardState extends State<AccountCard> {
   @override
   void initState() {
-    // checkIcon();
     super.initState();
   }
 

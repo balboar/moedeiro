@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/components/moedeiroWidgets.dart';
+import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/generated/l10n.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/util/utils.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-
+import 'components/CalendarFilterBottomSheet.dart';
+import 'components/TransactionTypeFilterBottomSheet.dart';
 import 'components/TransactionsListBottonSheet.dart';
 import 'components/monthDetail.dart';
+import 'package:intl/intl.dart';
+
+Map<String, dynamic>? filterData;
+Map<String, dynamic>? dateFilter;
 
 class SummaryPage extends StatelessWidget {
-  const SummaryPage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: MonthViewer(),
       ),
+      bottomNavigationBar: MoedeiroBottomAppBar(),
     );
   }
 }
@@ -34,9 +38,6 @@ class _MonthViewerState extends State<MonthViewer> {
   PageController controller = PageController(
     viewportFraction: 0.4,
   );
-  double totalExpensesMonth = 0;
-  String month = '';
-  String year = '';
 
   final controllerCharts = PageController(viewportFraction: 1);
 
@@ -46,104 +47,172 @@ class _MonthViewerState extends State<MonthViewer> {
     super.initState();
   }
 
-  void loadData() async {
-    await Provider.of<TransactionModel>(context, listen: false)
-        .getTrasactionsGroupedByMonthAndCategory();
-    if (Provider.of<TransactionModel>(context, listen: false)
-            .monthlyTransactions
-            .length >
-        0) {
-      month = Provider.of<TransactionModel>(context, listen: false)
-          .monthlyTransactions
-          .first['monthofyear'];
-      year = Provider.of<TransactionModel>(context, listen: false)
-          .monthlyTransactions
-          .first['year'];
+  void loadData() {
+    Provider.of<AnalyticsModel>(context, listen: false).transactionsDateFilter =
+        {'Filter': 'M', 'Date1': null, 'Date2': null};
+    Provider.of<AnalyticsModel>(context, listen: false).transactionTypeFilter =
+        'E';
+  }
 
-      Provider.of<TransactionModel>(context, listen: false)
-          .getTrasactionsByMonthAndCategory(month, year);
-    }
+  Widget _mainBody(AnalyticsModel model) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: model.transactionsGrouped.length == 0
+              ? NoDataWidgetVertical()
+              : ListView.builder(
+                  reverse: true,
+                  itemExtent: 60.0,
+                  itemCount: model.transactionsGrouped.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return CustomCard(
+                        model.transactionsGrouped[index],
+                        model.totalExpensesAbs,
+                        model.currentMonth,
+                        model.currentYear);
+                  },
+                ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 15.0, bottom: 10.0),
+          height: 60,
+          child: PageView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return MonthDetail(
+                model.transactionsSummary[index]['amount'],
+                model.transactionsSummary[index]['monthofyear'],
+                model.transactionsSummary[index]['year'],
+              );
+            },
+            itemCount: model.transactionsSummary.length,
+            pageSnapping: true,
+            scrollDirection: Axis.horizontal,
+            reverse: true,
+            onPageChanged: (int index) async {
+              model.selectedIndex = index;
+            },
+            controller: controller,
+          ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).movementsTitle),
-      ),
-      body: SafeArea(
-        child: Consumer<TransactionModel>(
-          builder:
-              (BuildContext context, TransactionModel model, Widget? child) {
-            if (totalExpensesMonth == 0 &&
-                model.monthlyTransactions.length > 0) {
-              totalExpensesMonth = model.monthlyTransactions[0]['amount'];
-            }
-            return model.monthlyTransactions.length == 0
-                ? Center()
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      // Container(
-                      //   height: 200,
-                      //   child: ExpensesByCategoryChart(),
-                      // ),
-                      Expanded(
-                        child: model.transactionsOfTheMonth.length == 0
-                            ? NoDataWidgetVertical()
-                            : ListView.builder(
-                                reverse: true,
-                                itemExtent: 50.0,
-                                itemCount: model.transactionsOfTheMonth.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return CustomCard(
-                                      model.transactionsOfTheMonth[index],
-                                      totalExpensesMonth,
-                                      month == ''
-                                          ? model.monthlyTransactions[0]
-                                              ['monthofyear']
-                                          : month,
-                                      year == ''
-                                          ? model.monthlyTransactions[0]['year']
-                                          : year);
-                                },
-                              ),
+    return Consumer<AnalyticsModel>(
+      builder: (BuildContext context, AnalyticsModel model, Widget? child) {
+        return model.transactionsSummary.length == 0
+            ? Center()
+            : _mainBody(model);
+      },
+    );
+  }
+}
+
+class MoedeiroBottomAppBar extends StatefulWidget {
+  @override
+  State<MoedeiroBottomAppBar> createState() => _MoedeiroBottomAppBarState();
+}
+
+class _MoedeiroBottomAppBarState extends State<MoedeiroBottomAppBar> {
+  Widget _buildChip(String label) {
+    return Chip(
+      labelPadding: EdgeInsets.all(2.0),
+      label: Text(label, style: Theme.of(context).textTheme.subtitle2),
+      padding: EdgeInsets.all(8.0),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      child: IconTheme(
+        data: IconThemeData(color: Theme.of(context).colorScheme.primary),
+        child: Consumer<AnalyticsModel>(builder:
+            (BuildContext context, AnalyticsModel model, Widget? child) {
+          var dateFilter = model.transactionsDateFilter;
+          var dateText = '';
+          var filterText = '';
+          if (dateFilter['Filter'] == 'Y') dateText = S.of(context).yearly;
+          if (dateFilter['Filter'] == 'M') dateText = S.of(context).monthly;
+          if (dateFilter['Filter'] == 'C')
+            dateText =
+                '${DateFormat.yMd().format(dateFilter['Date1'])} - ${DateFormat.yMd().format(dateFilter['Date2'])}';
+          if (model.transactionTypeFilter == 'I')
+            filterText = S.of(context).incomes;
+          if (model.transactionTypeFilter == 'E')
+            filterText = S.of(context).expense;
+          if (model.transactionTypeFilter == '%')
+            filterText = S.of(context).netIncome;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                height: 50,
+                width: MediaQuery.of(context).size.width - 100,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  primary: true,
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    Wrap(spacing: 4.0, runSpacing: 0.0, children: [
+                      _buildChip(filterText),
+                      _buildChip(
+                        dateText,
                       ),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 10.0),
-                        height: 60,
-                        child: PageView.builder(
-                          itemBuilder: (BuildContext context, int index) {
-                            return MonthDetail(
-                              model.monthlyTransactions[index]['amount'],
-                              model.monthlyTransactions[index]['monthofyear'],
-                              model.monthlyTransactions[index]['year'],
-                            );
-                          },
-                          itemCount: model.monthlyTransactions.length,
-                          pageSnapping: true,
-                          reverse: true,
-                          onPageChanged: (int index) async {
-                            Provider.of<TransactionModel>(context,
-                                    listen: false)
-                                .getTrasactionsByMonthAndCategory(
-                                    model.monthlyTransactions[index]
-                                        ['monthofyear'],
-                                    model.monthlyTransactions[index]['year']);
-                            month =
-                                model.monthlyTransactions[index]['monthofyear'];
-                            year = model.monthlyTransactions[index]['year'];
-                            totalExpensesMonth =
-                                model.monthlyTransactions[index]['amount'];
-                          },
-                          controller: controller,
-                        ),
-                      ),
-                    ],
+                    ]),
+                  ],
+                ),
+              ),
+              IconButton(
+                  tooltip: 'Type',
+                  icon: const Icon(Icons.filter_list_outlined),
+                  onPressed: () {
+                    showCustomModalBottomSheet(
+                      context,
+                      TransactionTypeFilterBottomSheet(),
+                      isScrollControlled: false,
+                      enableDrag: false,
+                    ).then(
+                      (value) {
+                        if (value is Map<String, dynamic>) {
+                          Provider.of<AnalyticsModel>(context, listen: false)
+                              .selectedIndex = 0;
+
+                          Provider.of<AnalyticsModel>(context, listen: false)
+                              .transactionTypeFilter = value['Filter'];
+                        }
+                      },
+                    );
+                  }),
+              IconButton(
+                tooltip: 'Calendar',
+                icon: const Icon(Icons.calendar_today_outlined),
+                onPressed: () {
+                  showCustomModalBottomSheet(
+                    context,
+                    CalendarFilterBottomSheet(),
+                    isScrollControlled: false,
+                    enableDrag: false,
+                  ).then(
+                    (value) {
+                      if (value is Map<String, dynamic>) {
+                        Provider.of<AnalyticsModel>(context, listen: false)
+                            .selectedIndex = 0;
+
+                        Provider.of<AnalyticsModel>(context, listen: false)
+                            .transactionsDateFilter = value;
+                      }
+                    },
                   );
-          },
-        ),
+                },
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -152,103 +221,68 @@ class _MonthViewerState extends State<MonthViewer> {
 class CustomCard extends StatelessWidget {
   final Map<String, dynamic> data;
   final double total;
-  final String month;
+  final String? month;
   final String year;
   CustomCard(this.data, this.total, this.month, this.year, {Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return LinearPercentIndicator(
-      linearStrokeCap: LinearStrokeCap.round,
-      padding: EdgeInsets.zero,
-      progressColor: Colors.red.withOpacity(0.2),
-      backgroundColor: Colors.transparent,
-      lineHeight: 50,
-      percent: data['amount'] / total,
-      center: Container(
-        height: 50.0,
-        child: ListTile(
-          onTap: () {
-            showModalBottomSheet(
-                enableDrag: true,
-                context: context,
-                isScrollControlled: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                builder: (BuildContext context) {
-                  return TransactionsListBottomSheet(data['uuid'], month, year);
-                });
-          },
-          title: Text(
-            data['name'] ?? '',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: Theme.of(context).textTheme.subtitle1!.fontSize,
-                color: Theme.of(context).textTheme.subtitle1!.color),
-          ),
-          trailing: Text(
-            formatCurrency(context, data['amount']),
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DropdownButtonFilter extends StatefulWidget {
-  @override
-  _DropdownButtonFilterState createState() {
-    return _DropdownButtonFilterState();
-  }
-}
-
-class _DropdownButtonFilterState extends State<DropdownButtonFilter> {
-  String _value = 'm';
-  @override
-  void initState() {
-    loadSettings();
-    super.initState();
-  }
-
-  loadSettings() async {
-    var prefs = await SharedPreferences.getInstance();
-    _value = prefs.getString('movementsFilter') ?? 'w';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: DropdownButton<String>(
-        underline: Container(color: Colors.transparent),
-        style: Theme.of(context).textTheme.headline6,
-        items: [
-          // DropdownMenuItem<String>(
-          //   child: Text('Weekly'),
-          //   value: 'w',
-          // ),
-          DropdownMenuItem<String>(
-            child: Text('Monthly'),
-            value: 'm',
-          ),
-          DropdownMenuItem<String>(
-            child: Text('Yearly'),
-            value: 'y',
-          ),
-        ],
-        onChanged: (String? value) async {
-          var prefs = await SharedPreferences.getInstance();
-          prefs.setString('movementsFilter', value!);
-          setState(() {
-            _value = value;
-          });
+    double percent = data['amount'].abs() / total.abs();
+    if (percent > 1 || percent < 0) percent = 0;
+    return GestureDetector(
+        onTap: () {
+          showModalBottomSheet(
+              enableDrag: true,
+              context: context,
+              isScrollControlled: true,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              builder: (BuildContext context) {
+                // ARREGLAR ESTO
+                return TransactionsListBottomSheet(data['uuid'], month, year);
+              });
         },
-        value: _value,
-      ),
-    );
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+          height: 50.0,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      data['name'] ?? '',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6!
+                          .copyWith(fontWeight: FontWeight.normal),
+                    ),
+                    Text(
+                      formatCurrency(context, data['amount']),
+                      style: TextStyle(
+                        fontSize: 18.0,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: LinearPercentIndicator(
+                  lineHeight: 5.0,
+                  percent: percent,
+                  backgroundColor: Colors.grey.shade200,
+                  progressColor:
+                      data["type"] == 'E' ? Colors.red : Colors.green,
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }

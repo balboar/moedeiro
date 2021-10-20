@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
@@ -13,13 +11,15 @@ class Account {
   double? expensesMonth = 0;
   int? position;
   String? icon;
+  bool active = false;
   Account(
       {this.uuid,
       this.name,
       this.initialAmount,
       this.amount,
       this.position,
-      this.icon});
+      this.icon,
+      this.active = false});
 
   Account copyWith({
     String? uuid,
@@ -43,18 +43,19 @@ class Account {
       ).format(initialAmount),
       'position': position,
       'icon': icon,
+      'active': active ? 1 : 0
     };
   }
 
   factory Account.fromMap(Map<String, dynamic> map) {
     return Account(
-      uuid: map['uuid'],
-      name: map['name'],
-      initialAmount: map['initialAmount'],
-      amount: map['amount'],
-      position: map['position'],
-      icon: map['icon'],
-    );
+        uuid: map['uuid'],
+        name: map['name'],
+        initialAmount: map['initialAmount'],
+        amount: map['amount'],
+        position: map['position'],
+        icon: map['icon'],
+        active: map['active'] == 0 ? false : true);
   }
 
   String toJson() => json.encode(toMap());

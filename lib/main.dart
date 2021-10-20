@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/provider/mainModel.dart';
+import 'package:moedeiro/theme/appTheme.dart';
 import 'package:provider/provider.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/generated/l10n.dart';
@@ -65,10 +66,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<TransfersModel>(
           create: (BuildContext context) => TransfersModel(),
         ),
+        ChangeNotifierProvider<AnalyticsModel>(
+          create: (BuildContext context) => AnalyticsModel(),
+        ),
       ],
       child: MaterialApp(
-        theme: Provider.of<SettingsModel>(context, listen: true).lightTheme,
-        darkTheme: Provider.of<SettingsModel>(context, listen: true).darkTheme,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
         themeMode: Provider.of<SettingsModel>(context, listen: true).themeMode,
         onGenerateRoute: RouteGenerator.generateRoute,
         initialRoute: lockScreen

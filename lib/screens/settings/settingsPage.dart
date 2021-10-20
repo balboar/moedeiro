@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/components/dialogs/InfoDialog.dart';
@@ -95,25 +96,39 @@ class _SettingsPageState extends State<SettingsPage> {
     PermissionStatus status;
     DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     final androidInfo = await deviceInfoPlugin.androidInfo;
-    if (androidInfo.version.sdkInt > 29) {
+    if (androidInfo.version.sdkInt > 25) {
       status = await Permission.manageExternalStorage.status;
       if (!status.isGranted) {
         await Permission.manageExternalStorage.request();
       }
-    } else
-      {status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
-    }}
+    } else {
+      status = await Permission.storage.status;
+      if (!status.isGranted) {
+        await Permission.storage.request();
+      }
+    }
 
     String? _destination = await FilePicker.platform.getDirectoryPath();
-    if (_destination != null && _destination != '/') {
+    if (_destination == '/')
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid path')),
+      );
+    else if (_destination != null) {
       String _databasePath =
           p.join(await (db.getDatabasesPath()), 'moedeiro.db');
       var _database = File(_databasePath);
 
       try {
         _database.copySync(_destination + '/moedeiro.db');
+        var encoder = ZipFileEncoder();
+        encoder.create('$_destination/moedeiro.zip');
+        encoder.addFile(_database);
+        var account =
+            Provider.of<AccountModel>(context, listen: false).accounts;
+        account.forEach((Account element) {
+          if (element.icon != null) encoder.addFile(File(element.icon!));
+        });
+        encoder.close();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(S.of(context).Exported),

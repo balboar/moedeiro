@@ -104,7 +104,7 @@ class TransferTile extends StatelessWidget {
                             DateTime.fromMillisecondsSinceEpoch(
                                 transfer.timestamp!),
                           ),
-                          style: Theme.of(context).textTheme.subtitle2),
+                          style: Theme.of(context).textTheme.bodyText2),
                     ],
                   ),
                   SizedBox(

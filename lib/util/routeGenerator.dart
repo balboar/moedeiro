@@ -37,7 +37,7 @@ class RouteGenerator {
       case '/':
         return moedeiroPageRoute(MainPage());
       case '/welcomePage':
-        return moedeiroPageRoute(WelcomePage());
+        return MaterialPageRoute(builder: (_) => WelcomePage());
       case '/lockScreen':
         if (args is Map<String, dynamic>) {
           route = MaterialPageRoute(
@@ -87,8 +87,9 @@ class RouteGenerator {
         return moedeiroPageRoute(AccountsPage());
       case '/settingsPage':
         return moedeiroPageRoute(SettingsPage());
-      case '/chartsPage':
+      case '/analyticsPage':
         return moedeiroPageRoute(SummaryPage());
+
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute() as Route<Map<String, dynamic>>;

@@ -180,31 +180,6 @@ class AccountTransactionsPageState extends State<AccountTransactionsPage> {
             margin:
                 EdgeInsets.only(left: 0.0, right: 0, top: 10.0, bottom: 0.0),
           ),
-          // Container(
-          //   height: 180,
-          //   margin: EdgeInsets.only(left: 0.0, right: 0, top: 2.0, bottom: 2.0),
-          //   child: PageView(
-          //     physics: BouncingScrollPhysics(),
-          //     controller: controller,
-          //     children: [
-          //       ExpensesByMonthChart(),
-          //       TransactionChart(),
-          //     ],
-          //     scrollDirection: Axis.horizontal,
-          //   ),
-          // ),
-          // Container(
-          //   margin: EdgeInsets.only(bottom: 40.0),
-          //   child: SmoothPageIndicator(
-          //     controller: controller,
-          //     count: 2,
-          //     effect: WormEffect(
-          //         dotHeight: 7,
-          //         activeDotColor: Colors.blue,
-          //         dotWidth: 7,
-          //         dotColor: Colors.grey),
-          //   ),
-          // ),
         ],
       ),
     );

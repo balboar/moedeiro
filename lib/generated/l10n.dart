@@ -869,6 +869,96 @@ class S {
       args: [],
     );
   }
+
+  /// `Continue`
+  String get acceptButtonText {
+    return Intl.message(
+      'Continue',
+      name: 'acceptButtonText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Group by`
+  String get groupby {
+    return Intl.message(
+      'Group by',
+      name: 'groupby',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Group`
+  String get group {
+    return Intl.message(
+      'Group',
+      name: 'group',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly`
+  String get monthly {
+    return Intl.message(
+      'Monthly',
+      name: 'monthly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yearly`
+  String get yearly {
+    return Intl.message(
+      'Yearly',
+      name: 'yearly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custom range`
+  String get customRange {
+    return Intl.message(
+      'Custom range',
+      name: 'customRange',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Net income`
+  String get netIncome {
+    return Intl.message(
+      'Net income',
+      name: 'netIncome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can't delete account`
+  String get deleteAccountError {
+    return Intl.message(
+      'Can\'t delete account',
+      name: 'deleteAccountError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This account has transactions, remove or move those transactions first`
+  String get deleteAccountDescriptionError {
+    return Intl.message(
+      'This account has transactions, remove or move those transactions first',
+      name: 'deleteAccountDescriptionError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

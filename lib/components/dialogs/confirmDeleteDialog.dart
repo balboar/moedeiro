@@ -67,9 +67,10 @@ class ComfirmDeleteDialog extends StatelessWidget {
             ElevatedButton.icon(
               icon: Icon(Icons.delete_outline_outlined),
               style: ElevatedButton.styleFrom(
-                  onPrimary: Theme.of(context).textTheme.button!.color,
-                  elevation: 2,
-                  primary: Theme.of(context).accentColor),
+                onPrimary: Theme.of(context).textTheme.button!.color,
+                elevation: 2,
+                primary: Theme.of(context).colorScheme.secondary,
+              ),
               label: Text(S.of(context).delete),
               onPressed: () {
                 Navigator.of(context).pop(true);

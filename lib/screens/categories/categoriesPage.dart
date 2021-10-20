@@ -14,10 +14,10 @@ class CategoriesPage extends StatelessWidget {
     return TabBar(
       tabs: [
         Tab(
-          text: S.of(context).incomes,
+          text: S.of(context).expenses,
         ),
         Tab(
-          text: S.of(context).expenses,
+          text: S.of(context).incomes,
         ),
       ],
     );
@@ -105,8 +105,8 @@ class CategoriesPage extends StatelessWidget {
         body: TabBarView(
             // These are the contents of the tab views, below the tabs.
             children: <Widget>[
-              buildIncomeList(),
               buildExpensesList(),
+              buildIncomeList(),
             ]),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add_outlined),

@@ -1,5 +1,4 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/util/utils.dart';
@@ -94,131 +93,79 @@ class TransactionChartState extends State<TransactionChart> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: BarChart(
                   BarChartData(
-                    maxY: maxY,
-                    minY: 0,
-                    barTouchData: BarTouchData(
-                        touchTooltipData: BarTouchTooltipData(
-                          tooltipBgColor: Colors.grey,
-                          getTooltipItem: (_a, _b, _c, _d) => null,
+                      maxY: maxY,
+                      minY: 0,
+                      barTouchData: BarTouchData(
+                          touchTooltipData: BarTouchTooltipData(
+                            tooltipBgColor: Colors.grey,
+                            getTooltipItem: (_a, _b, _c, _d) => null,
+                          ),
+                          touchCallback: (event, response) {}),
+                      titlesData: FlTitlesData(
+                        show: true,
+                        bottomTitles: SideTitles(
+                          showTitles: true,
+                          getTextStyles: (context, value) => const TextStyle(
+                              color: Color(0xff7589a2),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                          margin: 10,
+                          getTitles: (double value) {
+                            switch (value.toInt()) {
+                              case 1:
+                                return 'Jan';
+                              case 2:
+                                return 'Feb';
+                              case 3:
+                                return 'Mar';
+                              case 4:
+                                return 'Apr';
+                              case 5:
+                                return 'May';
+                              case 6:
+                                return 'Jun';
+                              case 7:
+                                return 'Jul';
+                              case 8:
+                                return 'Aug';
+                              case 9:
+                                return 'Sep';
+                              case 10:
+                                return 'Oct';
+                              case 11:
+                                return 'Nov';
+                              case 12:
+                                return 'Dec';
+                              default:
+                                return '';
+                            }
+                          },
                         ),
-                        touchCallback: (response) {
-                          // if (response.spot == null) {
-                          //   setState(() {
-                          //     touchedGroupIndex = -1;
-                          //     showingBarGroups = List.of(rawBarGroups);
-                          //   });
-                          //   return;
-                          // }
-
-                          // touchedGroupIndex =
-                          //     response.spot.touchedBarGroupIndex;
-
-                          // setState(() {
-                          //   if (response.touchInput is FlLongPressEnd ||
-                          //       response.touchInput is FlPanEnd) {
-                          //     touchedGroupIndex = -1;
-                          //     showingBarGroups = List.of(rawBarGroups);
-                          //   } else {
-                          //     showingBarGroups = List.of(rawBarGroups);
-                          //     if (touchedGroupIndex != -1) {
-                          //       double sum = 0;
-                          //       for (BarChartRodData rod
-                          //           in showingBarGroups[touchedGroupIndex]
-                          //               .barRods) {
-                          //         sum += rod.y;
-                          //       }
-                          //       final avg = sum /
-                          //           showingBarGroups[touchedGroupIndex]
-                          //               .barRods
-                          //               .length;
-
-                          //       showingBarGroups[touchedGroupIndex] =
-                          //           showingBarGroups[touchedGroupIndex]
-                          //               .copyWith(
-                          //         barRods: showingBarGroups[touchedGroupIndex]
-                          //             .barRods
-                          //             .map((rod) {
-                          //           return rod.copyWith(y: avg);
-                          //         }).toList(),
-                          //       );
-                          //     }
-                          //   }
-                          // });
-                        }),
-                    titlesData: FlTitlesData(
-                      show: true,
-                      bottomTitles: SideTitles(
-                        showTitles: true,
-                        getTextStyles: (value) => const TextStyle(
-                            color: Color(0xff7589a2),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14),
-                        margin: 10,
-                        getTitles: (double value) {
-                          switch (value.toInt()) {
-                            case 1:
-                              return 'Jan';
-                            case 2:
-                              return 'Feb';
-                            case 3:
-                              return 'Mar';
-                            case 4:
-                              return 'Apr';
-                            case 5:
-                              return 'May';
-                            case 6:
-                              return 'Jun';
-                            case 7:
-                              return 'Jul';
-                            case 8:
-                              return 'Aug';
-                            case 9:
-                              return 'Sep';
-                            case 10:
-                              return 'Oct';
-                            case 11:
-                              return 'Nov';
-                            case 12:
-                              return 'Dec';
-                            default:
+                        leftTitles: SideTitles(
+                          showTitles: true,
+                          getTextStyles: (context, value) => const TextStyle(
+                              color: Color(0xff7589a2),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                          margin: 20,
+                          reservedSize: 20,
+                          getTitles: (value) {
+                            var result = (value ~/ 1000);
+                            var remainder = value % 1000;
+                            if (remainder == 0 && result > 0)
+                              return '${result.toStringAsFixed(0)}K';
+                            else
                               return '';
-                          }
-                        },
+                          },
+                        ),
+                        topTitles: SideTitles(showTitles: false),
+                        rightTitles: SideTitles(showTitles: false),
                       ),
-                      leftTitles: SideTitles(
-                        showTitles: true,
-                        getTextStyles: (value) => const TextStyle(
-                            color: Color(0xff7589a2),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14),
-                        margin: 32,
-                        reservedSize: 14,
-                        getTitles: (value) {
-                          if (value == 1000) {
-                            return '1K';
-                          } else if (value == 2000) {
-                            return '2K';
-                          } else if (value == 3000) {
-                            return '3K';
-                          } else if (value == 4000) {
-                            return '4K';
-                          } else if (value == 5000) {
-                            return '5K';
-                          } else if (value == 6000) {
-                            return '6K';
-                          } else if (value == 7000) {
-                            return '7K';
-                          } else {
-                            return '';
-                          }
-                        },
+                      borderData: FlBorderData(
+                        show: false,
                       ),
-                    ),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    barGroups: showingBarGroups,
-                  ),
+                      barGroups: showingBarGroups,
+                      gridData: FlGridData(show: false)),
                 ),
               ),
             ),
@@ -365,7 +312,7 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
                     show: true,
                     bottomTitles: SideTitles(
                       showTitles: true,
-                      getTextStyles: (value) => const TextStyle(
+                      getTextStyles: (context, value) => const TextStyle(
                           color: Colors.grey,
                           fontWeight: FontWeight.bold,
                           fontSize: 14),
@@ -402,11 +349,14 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
                       },
                     ),
                     leftTitles: SideTitles(showTitles: false),
+                    topTitles: SideTitles(showTitles: false),
+                    rightTitles: SideTitles(showTitles: false),
                   ),
                   borderData: FlBorderData(
                     show: false,
                   ),
                   barGroups: showingBarGroups,
+                  gridData: FlGridData(show: false),
                 ),
               ),
             ),
@@ -417,139 +367,139 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
   }
 }
 
-class ExpensesByCategoryChart extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => ExpensesByCategoryChartState();
-}
+// class ExpensesByCategoryChart extends StatefulWidget {
+//   @override
+//   State<StatefulWidget> createState() => ExpensesByCategoryChartState();
+// }
 
-class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
-  double maxY = 0;
-  int index = 1;
-  int? touchedIndex;
+// class ExpensesByCategoryChartState extends State<ExpensesByCategoryChart> {
+//   double maxY = 0;
+//   int index = 1;
+//   int? touchedIndex;
 
-  List<BarChartGroupData> rawBarGroups = [];
-  List<BarChartGroupData> showingBarGroups = [];
-  @override
-  void initState() {
-    super.initState();
-  }
+//   List<BarChartGroupData> rawBarGroups = [];
+//   List<BarChartGroupData> showingBarGroups = [];
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
 
-  BarChartGroupData makeGroupData(int x, double y1, bool isTouched) {
-    return BarChartGroupData(
-      barsSpace: 4,
-      x: x,
-      barRods: [
-        BarChartRodData(
-          y: isTouched ? y1 + 1 : y1,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(7.0),
-            topRight: Radius.circular(7.0),
-          ),
-          colors: [Colors.red, Colors.redAccent],
-          width: 7,
-        ),
-      ],
-      showingTooltipIndicators: [],
-    );
-  }
+//   BarChartGroupData makeGroupData(int x, double y1, bool isTouched) {
+//     return BarChartGroupData(
+//       barsSpace: 4,
+//       x: x,
+//       barRods: [
+//         BarChartRodData(
+//           y: isTouched ? y1 + 1 : y1,
+//           borderRadius: BorderRadius.only(
+//             topLeft: Radius.circular(7.0),
+//             topRight: Radius.circular(7.0),
+//           ),
+//           colors: [Colors.red, Colors.redAccent],
+//           width: 7,
+//         ),
+//       ],
+//       showingTooltipIndicators: [],
+//     );
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<TransactionModel>(
-        builder: (BuildContext context, TransactionModel model, Widget? child) {
-      showingBarGroups.clear();
-      index = 1;
-      rawBarGroups.clear();
-      model.transactionsOfTheMonth.forEach((Map<String, dynamic> value) {
-        if (index < 7)
-          rawBarGroups.add(
-              makeGroupData(index, value['amount'], index == touchedIndex));
-        index = index + 1;
-      });
-      showingBarGroups = rawBarGroups;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Consumer<TransactionModel>(
+//         builder: (BuildContext context, TransactionModel model, Widget? child) {
+//       showingBarGroups.clear();
+//       index = 1;
+//       rawBarGroups.clear();
+//       model.transactionsOfTheMonth.forEach((Map<String, dynamic> value) {
+//         if (index < 7)
+//           rawBarGroups.add(
+//               makeGroupData(index, value['amount'], index == touchedIndex));
+//         index = index + 1;
+//       });
+//       showingBarGroups = rawBarGroups;
 
-      if (model.transactionsOfTheMonth.length > 0)
-        maxY = model.transactionsOfTheMonth.reduce((currentMap, nextMap) =>
-            currentMap['amount'] > nextMap['amount']
-                ? currentMap
-                : nextMap)['amount'];
+//       if (model.transactionsOfTheMonth.length > 0)
+//         maxY = model.transactionsOfTheMonth.reduce((currentMap, nextMap) =>
+//             currentMap['amount'] > nextMap['amount']
+//                 ? currentMap
+//                 : nextMap)['amount'];
 
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 40, left: 10, right: 10, bottom: 20),
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  maxY: maxY,
-                  barTouchData: BarTouchData(
-                    touchCallback: (barTouchResponse) {
-                      setState(() {
-                        if (barTouchResponse.spot != null &&
-                            barTouchResponse.touchInput is! PointerUpEvent &&
-                            barTouchResponse.touchInput is! PointerExitEvent) {
-                          touchedIndex =
-                              barTouchResponse.spot!.touchedBarGroupIndex;
-                        } else {
-                          touchedIndex = -1;
-                        }
-                      });
-                    },
-                    touchTooltipData: BarTouchTooltipData(
-                      tooltipBgColor: Colors.transparent,
-                      tooltipPadding: const EdgeInsets.all(0),
-                      tooltipMargin: 8,
-                      getTooltipItem: (
-                        BarChartGroupData group,
-                        int groupIndex,
-                        BarChartRodData rod,
-                        int rodIndex,
-                      ) {
-                        return BarTooltipItem(
-                          formatCurrency(context, rod.y),
-                          TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    bottomTitles: SideTitles(
-                      rotateAngle: 270,
-                      showTitles: false,
-                      getTextStyles: (value) => const TextStyle(
-                          color: Color(0xff7589a2),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                      margin: 5,
-                      getTitles: (double value) {
-                        return model.transactionsOfTheMonth
-                            .elementAt(value.toInt() - 1)['name'];
-                      },
-                    ),
-                    leftTitles: SideTitles(showTitles: false),
-                  ),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  barGroups: showingBarGroups,
-                ),
-              ),
-            ),
-          ),
-        ],
-      );
-    });
-  }
-}
+//       return Column(
+//         crossAxisAlignment: CrossAxisAlignment.stretch,
+//         mainAxisAlignment: MainAxisAlignment.start,
+//         mainAxisSize: MainAxisSize.max,
+//         children: <Widget>[
+//           Expanded(
+//             child: Padding(
+//               padding: const EdgeInsets.only(
+//                   top: 40, left: 10, right: 10, bottom: 20),
+//               child: BarChart(
+//                 BarChartData(
+//                   alignment: BarChartAlignment.spaceAround,
+//                   maxY: maxY,
+//                   barTouchData: BarTouchData(
+//                     touchCallback: (barTouchResponse) {
+//                       setState(() {
+//                         if (barTouchResponse.spot != null &&
+//                             barTouchResponse.touchInput is! PointerUpEvent &&
+//                             barTouchResponse.touchInput is! PointerExitEvent) {
+//                           touchedIndex =
+//                               barTouchResponse.spot!.touchedBarGroupIndex;
+//                         } else {
+//                           touchedIndex = -1;
+//                         }
+//                       });
+//                     },
+//                     touchTooltipData: BarTouchTooltipData(
+//                       tooltipBgColor: Colors.transparent,
+//                       tooltipPadding: const EdgeInsets.all(0),
+//                       tooltipMargin: 8,
+//                       getTooltipItem: (
+//                         BarChartGroupData group,
+//                         int groupIndex,
+//                         BarChartRodData rod,
+//                         int rodIndex,
+//                       ) {
+//                         return BarTooltipItem(
+//                           formatCurrency(context, rod.y),
+//                           TextStyle(
+//                             color: Colors.white,
+//                             fontWeight: FontWeight.bold,
+//                           ),
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                   titlesData: FlTitlesData(
+//                     show: true,
+//                     bottomTitles: SideTitles(
+//                       rotateAngle: 270,
+//                       showTitles: false,
+//                       getTextStyles: (value) => const TextStyle(
+//                           color: Color(0xff7589a2),
+//                           fontWeight: FontWeight.bold,
+//                           fontSize: 14),
+//                       margin: 5,
+//                       getTitles: (double value) {
+//                         return model.transactionsOfTheMonth
+//                             .elementAt(value.toInt() - 1)['name'];
+//                       },
+//                     ),
+//                     leftTitles: SideTitles(showTitles: false),
+//                   ),
+//                   borderData: FlBorderData(
+//                     show: false,
+//                   ),
+//                   barGroups: showingBarGroups,
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ],
+//       );
+//     });
+//   }
+// }
 
 class Indicator extends StatelessWidget {
   final Color color;

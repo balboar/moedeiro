@@ -81,7 +81,16 @@
   "prev":"PREV",
   "step":"STEP",
   "ofText":"OF",
-  "finishText":"FINISH"
+  "finishText":"FINISH",
+  "acceptButtonText":"Continue",
+  "groupby":"Group by",
+  "group":"Group",
+  "monthly":"Monthly",
+  "yearly":"Yearly",
+  "customRange":"Custom range",
+  "netIncome":"Net income",
+  "deleteAccountError":"Can't delete account",
+  "deleteAccountDescriptionError":"This account has transactions, remove or move those transactions first"
 
 
 }

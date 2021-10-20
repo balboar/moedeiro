@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class InputButtonConfig {
@@ -34,26 +32,26 @@ class InputButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = config.textStyle ??
         TextStyle(
+          color: Theme.of(context).colorScheme.secondary,
           fontSize: MediaQuery.of(context).size.width * 0.095,
         );
 
-    return TextButton(
-      child: Text(
-        text,
-        style: textStyle,
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: TextButton(
+        child: Text(
+          text,
+          style: textStyle,
+        ),
+        style: TextButton.styleFrom(
+            backgroundColor: Theme.of(context).cardColor,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                    MediaQuery.of(context).size.width * 0.100))),
+        onPressed: () {
+          enteredSink.add(text);
+        },
       ),
-      onPressed: () {
-        enteredSink.add(text);
-      },
-      // shape: config.shape ??
-      //     CircleBorder(
-      //       side: BorderSide(
-      //         color: Colors.transparent,
-      //         width: 0,
-      //         style: BorderStyle.solid,
-      //       ),
-      //     ),
-      // color: config.backgroundColor.withOpacity(config.backgroundOpacity),
     );
   }
 }

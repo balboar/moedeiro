@@ -112,7 +112,7 @@ class TransactionTile extends StatelessWidget {
                             DateTime.fromMillisecondsSinceEpoch(
                                 transaction.timestamp!),
                           ),
-                          style: Theme.of(context).textTheme.subtitle2),
+                          style: Theme.of(context).textTheme.bodyText2),
                       // Text(
                       //   accountBalance != null
                       //       ? formatCurrency(context, accountBalance)

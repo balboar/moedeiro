@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/components/buttons.dart';
+import 'package:moedeiro/components/dialogs/InfoDialog.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/models/accounts.dart';
+import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -80,8 +82,27 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
     );
   }
 
+  Future<bool?> _showAccountNotEmptyDialog() async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return InfoDialog(
+          icon: Icons.error_outline,
+          title: S.of(context).deleteAccountError,
+          subtitle: S.of(context).deleteAccountDescriptionError,
+        );
+      },
+    );
+  }
+
   void deleteAccount(AccountModel model) {
-    if (activeAccount.uuid != null) {
+    List<Transaction> accountTransactions =
+        Provider.of<TransactionModel>(context, listen: false)
+            .getAccountTransactions(activeAccount.uuid);
+    if (accountTransactions.length > 0)
+      _showAccountNotEmptyDialog().then((value) => Navigator.pop(context));
+    else if (activeAccount.uuid != null) {
       _showMyDialog().then((value) {
         if (value!) {
           model.deleteAccount(activeAccount.uuid!);

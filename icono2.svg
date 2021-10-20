@@ -15,7 +15,7 @@
    id="svg8"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="icono2.svg"
-   inkscape:export-filename="D:\Programacion\Android\rodrigo\moedeiro\iconM4.png"
+   inkscape:export-filename="iconV2.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -151,7 +151,7 @@
        x2="78.017288"
        y2="112.95726"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.2401576,0,0,1.0334785,-18.977807,3.3701039)" />
+       gradientTransform="matrix(1.2401576,0,0,1.0334785,-11.551468,-2.4677047)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient5897"
@@ -171,13 +171,13 @@
        x2="99.708191"
        y2="39.351025"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.2492659,-0.21489161,-0.26759056,0.87554081,-24.916966,20.050748)" />
+       gradientTransform="matrix(1.2676127,-0.00131492,-0.41129489,0.81793211,-15.841205,5.3641455)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient5897"
        id="linearGradient985"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.2401575,0,0,1.0334786,-18.742389,3.2978808)"
+       gradientTransform="matrix(1.2422736,0,0,1.0335312,-15.980773,-2.3709244)"
        x1="99.71312"
        y1="112.95726"
        x2="121.40895"
@@ -191,8 +191,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.70710678"
-     inkscape:cx="-204.43179"
-     inkscape:cy="149.12038"
+     inkscape:cx="105.07009"
+     inkscape:cy="229.18581"
      inkscape:document-units="mm"
      inkscape:current-layer="svg8"
      inkscape:document-rotation="0"
@@ -220,24 +220,24 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
+  <path
+     id="rect4627-6"
+     style="mix-blend-mode:normal;fill:url(#linearGradient7577);fill-opacity:1;stroke-width:0.0775161"
+     d="M 66.863141,37.448051 37.94983,94.947995 65.451333,94.919459 94.36517,37.419524 Z" />
+  <rect
+     style="fill:url(#linearGradient985);fill-opacity:1;stroke-width:0.310114"
+     id="rect4627-0-7"
+     width="26.952162"
+     height="84.559547"
+     x="107.89019"
+     y="29.814384"
+     transform="matrix(0.99999998,-2.0190074e-4,-0.42738921,0.90406773,0,0)" />
   <rect
      style="fill:url(#linearGradient5143);fill-opacity:1;stroke-width:0.309842"
      id="rect4627"
      width="26.90625"
      height="84.55526"
-     x="50.869675"
-     y="35.553764"
-     transform="matrix(0.98951398,-0.14443715,-0.29177303,0.95648758,0,0)" />
-  <path
-     id="rect4627-6"
-     style="mix-blend-mode:normal;fill:url(#linearGradient7577);fill-opacity:1;stroke-width:0.0775161"
-     d="M 62.011022,37.740033 43.2,99.289757 70.303458,94.627566 89.115,33.077762 Z" />
-  <rect
-     style="fill:url(#linearGradient985);fill-opacity:1;stroke-width:0.309842"
-     id="rect4627-0-7"
-     width="26.906252"
-     height="84.555252"
-     x="104.91754"
-     y="35.481556"
-     transform="matrix(0.98986509,-0.14201093,-0.29411698,0.95576943,0,0)" />
+     x="58.296013"
+     y="29.715956"
+     transform="matrix(0.99999928,0.00120266,-0.42795311,0.90380094,0,0)" />
 </svg>

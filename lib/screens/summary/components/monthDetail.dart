@@ -4,15 +4,18 @@ import 'package:intl/intl.dart';
 
 class MonthDetail extends StatelessWidget {
   final double amount;
-  final String month;
+  final String? month;
   final String year;
   Color activeColor = Colors.white;
   Color disabledColor = Colors.grey;
   MonthDetail(this.amount, this.month, this.year);
 
-  String returnMonth(month, year) {
-    DateTime _date = DateTime(year, month, 1);
-    return new DateFormat.MMMM().format(_date);
+  String returnDate() {
+    if (month != null) {
+      DateTime _date = DateTime(int.parse(year), int.parse(month!), 1);
+      return toBeginningOfSentenceCase(DateFormat.MMMM().format(_date))!;
+    } else
+      return toBeginningOfSentenceCase(year)!;
   }
 
   @override
@@ -24,8 +27,8 @@ class MonthDetail extends StatelessWidget {
           style: Theme.of(context).textTheme.headline5,
         ),
         Text(
-          returnMonth(int.parse(month), int.parse(year)),
-          style: Theme.of(context).textTheme.subtitle2,
+          returnDate(),
+          style: Theme.of(context).textTheme.bodyText2,
         )
       ],
     );
