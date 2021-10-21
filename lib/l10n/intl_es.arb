@@ -90,7 +90,8 @@
   "customRange":"Rango de fechas",
   "netIncome":"Ingresos netos",
   "deleteAccountError":"No se puede borrar la cuenta",
-  "deleteAccountDescriptionError":"Esta cuenta tiene transacciones, borrar o moverlas primero"
+  "deleteAccountDescriptionError":"Esta cuenta tiene transacciones, borrar o moverlas primero",
+  "analytics":"Resumen"
 
 
 }

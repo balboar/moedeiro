@@ -71,15 +71,15 @@ class TransactionTile extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Icon(
-                          Icons.account_balance_wallet_outlined,
-                          size: 16,
-                        ),
-                        Container(
-                          width: 10,
-                        ),
+                        // Icon(
+                        //   Icons.account_balance_wallet_outlined,
+                        //   size: 16,
+                        // ),
+                        // Container(
+                        //   width: 10,
+                        // ),
                         Text(transaction.accountName ?? '',
-                            style: Theme.of(context).textTheme.subtitle1),
+                            style: Theme.of(context).textTheme.bodyText2),
                         //     Text(
                       ],
                     ),

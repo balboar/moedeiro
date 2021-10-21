@@ -109,9 +109,8 @@ class _AccountMiniCardState extends State<AccountMiniCard> {
                         padding: EdgeInsets.only(right: 5.0),
                         child: CircleAvatar(
                           backgroundImage: widget.account!.icon != null
-                              ? FileImage(
-                                  File(widget.account!.icon!),
-                                )
+                              ? FileImage(File(widget.account!.icon!),
+                                  scale: 0.9)
                               : null,
                           backgroundColor: Colors.transparent,
                           radius: 11,

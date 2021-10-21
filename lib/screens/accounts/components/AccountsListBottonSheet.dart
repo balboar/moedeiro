@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -39,9 +37,8 @@ class AccountListBottomSheet extends StatelessWidget {
                         return ListTile(
                           leading: CircleAvatar(
                             backgroundImage: model.accounts[index].icon != null
-                                ? FileImage(
-                                    File(model.accounts[index].icon!),
-                                  )
+                                ? FileImage(File(model.accounts[index].icon!),
+                                    scale: 0.9)
                                 : null,
                             backgroundColor: Colors.transparent,
                             radius: 15,

@@ -17,6 +17,7 @@ import 'package:moedeiro/screens/settings/components/languageSelectionDialog.dar
 import 'package:moedeiro/screens/settings/components/settingsWidgets.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart' as db;
@@ -79,16 +80,50 @@ class _SettingsPageState extends State<SettingsPage> {
       allowMultiple: false,
     );
     if (result != null) {
-      File file = File(result.files.single.path!);
+      try {
+        File file = File(result.files.single.path!);
+        List<int> bytes = file.readAsBytesSync();
+        Directory _destination = await getApplicationDocumentsDirectory();
+        Archive archive = ZipDecoder().decodeBytes(bytes);
 
-      String _databasePath =
-          p.join(await (db.getDatabasesPath()), 'moedeiro.db');
-      file.copySync(_databasePath);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(S.of(context).restartMoedeiro),
-        ),
-      );
+        for (ArchiveFile file in archive) {
+          String filename = file.name;
+          String decodePath = '';
+          if (file.isFile) {
+            if (p.extension(file.name) == '.db')
+              decodePath = p.join(await (db.getDatabasesPath()), 'moedeiro.db');
+            else
+              decodePath = p.join(_destination.path, filename);
+            List<int> data = file.content;
+            File(decodePath)
+              ..createSync(recursive: true)
+              ..writeAsBytesSync(data);
+          } else {
+            Directory(decodePath)..create(recursive: true);
+          }
+          // String _databasePath =
+          //     p.join(await (db.getDatabasesPath()), 'moedeiro.db');
+          // file.copySync(_databasePath);
+
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(S.of(context).restartMoedeiro),
+          ),
+        );
+      } on FileSystemException catch (e) {
+        showDialog<bool>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return InfoDialog(
+              icon: Icons.error_outline,
+              title: S.of(context).errorText,
+              subtitle: e.message,
+            );
+          },
+        );
+      }
     }
   }
 
@@ -119,14 +154,15 @@ class _SettingsPageState extends State<SettingsPage> {
       var _database = File(_databasePath);
 
       try {
-        _database.copySync(_destination + '/moedeiro.db');
         var encoder = ZipFileEncoder();
         encoder.create('$_destination/moedeiro.zip');
         encoder.addFile(_database);
         var account =
             Provider.of<AccountModel>(context, listen: false).accounts;
         account.forEach((Account element) {
-          if (element.icon != null) encoder.addFile(File(element.icon!));
+          try {
+            if (element.icon != null) encoder.addFile(File(element.icon!));
+          } catch (e) {}
         });
         encoder.close();
         ScaffoldMessenger.of(context).showSnackBar(

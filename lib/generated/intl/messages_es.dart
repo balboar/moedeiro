@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "amount": MessageLookupByLibrary.simpleMessage("Importe"),
         "amountError": MessageLookupByLibrary.simpleMessage(
             "La cantidad tiene que ser mayor a 0"),
+        "analytics": MessageLookupByLibrary.simpleMessage("Resumen"),
         "appTitle": MessageLookupByLibrary.simpleMessage("Moedeiro"),
         "authenticateLabel": MessageLookupByLibrary.simpleMessage(
             "Inicia sesión para ver los datos"),

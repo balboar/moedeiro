@@ -90,7 +90,8 @@
   "customRange":"Custom range",
   "netIncome":"Net income",
   "deleteAccountError":"Can't delete account",
-  "deleteAccountDescriptionError":"This account has transactions, remove or move those transactions first"
+  "deleteAccountDescriptionError":"This account has transactions, remove or move those transactions first",
+  "analytics":"Analytics"
 
 
 }

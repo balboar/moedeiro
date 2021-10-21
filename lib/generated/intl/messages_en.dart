@@ -33,6 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "amount": MessageLookupByLibrary.simpleMessage("Amount"),
         "amountError": MessageLookupByLibrary.simpleMessage(
             "Amount should be greater than 0"),
+        "analytics": MessageLookupByLibrary.simpleMessage("Analytics"),
         "appTitle": MessageLookupByLibrary.simpleMessage("Moedeiro"),
         "authenticateLabel": MessageLookupByLibrary.simpleMessage(
             "Please authenticate to show data"),

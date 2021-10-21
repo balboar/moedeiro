@@ -19,6 +19,12 @@ class SummaryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).analytics),
+        centerTitle: true,
+        shadowColor: Colors.transparent,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      ),
       body: SafeArea(
         child: MonthViewer(),
       ),
