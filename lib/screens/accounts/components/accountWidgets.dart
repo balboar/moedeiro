@@ -35,9 +35,7 @@ class _AccountCardState extends State<AccountCard> {
         },
         leading: CircleAvatar(
           backgroundImage: widget.account!.icon != null
-              ? FileImage(
-                  File(widget.account!.icon!),
-                )
+              ? FileImage(File(widget.account!.icon!), scale: 0.9)
               : null,
           backgroundColor: Colors.transparent,
           radius: 20,

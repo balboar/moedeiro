@@ -138,11 +138,17 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                 child: CircleAvatar(
                   backgroundImage: activeAccount.icon != null
                       ? FileImage(
-                          File(activeAccount.icon!),
-                        )
+                          File(
+                            activeAccount.icon!,
+                          ),
+                          scale: 0.9)
                       : null,
                   backgroundColor: Theme.of(context).dialogBackgroundColor,
-                  child: activeAccount.icon != null ? null : Icon(Icons.add),
+                  child: activeAccount.icon != null
+                      ? null
+                      : Icon(Icons.add,
+                          size: 45,
+                          color: Theme.of(context).colorScheme.secondary),
                   radius: 40,
                 ),
                 onTap: getImageFromFile,
