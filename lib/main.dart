@@ -69,6 +69,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AnalyticsModel>(
           create: (BuildContext context) => AnalyticsModel(),
         ),
+        ChangeNotifierProvider<RecurrenceModel>(
+          create: (BuildContext context) => RecurrenceModel(),
+        ),
       ],
       child: MaterialApp(
         theme: AppTheme.lightTheme,

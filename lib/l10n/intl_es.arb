@@ -85,13 +85,20 @@
   "acceptButtonText":"Aceptar",
   "groupby":"Agrupar por",
   "group":"Agrupar",
+  "daily":"Diariamente",
+  "weekly":"Semanalmente",
   "monthly":"Mensualmente",
   "yearly":"Anualmente",
   "customRange":"Rango de fechas",
   "netIncome":"Ingresos netos",
   "deleteAccountError":"No se puede borrar la cuenta",
   "deleteAccountDescriptionError":"Esta cuenta tiene transacciones, borrar o moverlas primero",
-  "analytics":"Resumen"
+  "analytics":"Resumen",
+  "recurrences": "Transacciones recurrentes",
+  "every":"cada",
+  "repeat":"Repetir...",
+  "frequency":"Frecuencia",
+  "nextEvent":"Proximo evento el"
 
 
 }

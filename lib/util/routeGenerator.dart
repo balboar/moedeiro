@@ -5,6 +5,7 @@ import 'package:moedeiro/screens/categoryDetail/categoryPage.dart';
 import 'package:moedeiro/screens/lockScreen/lockScreen.dart';
 import 'package:moedeiro/screens/main/mainPage.dart';
 import 'package:moedeiro/screens/movements/movementsPage.dart';
+import 'package:moedeiro/screens/recurrences/recurrencesPage.dart';
 import 'package:moedeiro/screens/settings/settingsPage.dart';
 import 'package:moedeiro/screens/summary/summaryPage.dart';
 import 'package:moedeiro/screens/welcome/welcomePage.dart';
@@ -85,6 +86,8 @@ class RouteGenerator {
 
       case '/accountsPage':
         return moedeiroPageRoute(AccountsPage());
+      case '/recurrencesPage':
+        return moedeiroPageRoute(RecurrencesPage());
       case '/settingsPage':
         return moedeiroPageRoute(SettingsPage());
       case '/analyticsPage':

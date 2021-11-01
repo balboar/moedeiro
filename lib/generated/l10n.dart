@@ -900,6 +900,26 @@ class S {
     );
   }
 
+  /// `Daily`
+  String get daily {
+    return Intl.message(
+      'Daily',
+      name: 'daily',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly`
+  String get weekly {
+    return Intl.message(
+      'Weekly',
+      name: 'weekly',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Monthly`
   String get monthly {
     return Intl.message(
@@ -965,6 +985,56 @@ class S {
     return Intl.message(
       'Analytics',
       name: 'analytics',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recurrent transactions`
+  String get recurrences {
+    return Intl.message(
+      'Recurrent transactions',
+      name: 'recurrences',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `every`
+  String get every {
+    return Intl.message(
+      'every',
+      name: 'every',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Repeat...`
+  String get repeat {
+    return Intl.message(
+      'Repeat...',
+      name: 'repeat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Frequency`
+  String get frequency {
+    return Intl.message(
+      'Frequency',
+      name: 'frequency',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next event on`
+  String get nextEvent {
+    return Intl.message(
+      'Next event on',
+      name: 'nextEvent',
       desc: '',
       args: [],
     );

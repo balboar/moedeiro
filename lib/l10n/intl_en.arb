@@ -85,13 +85,20 @@
   "acceptButtonText":"Continue",
   "groupby":"Group by",
   "group":"Group",
+  "daily":"Daily",
+  "weekly":"Weekly",
   "monthly":"Monthly",
   "yearly":"Yearly",
   "customRange":"Custom range",
   "netIncome":"Net income",
   "deleteAccountError":"Can't delete account",
   "deleteAccountDescriptionError":"This account has transactions, remove or move those transactions first",
-  "analytics":"Analytics"
+  "analytics":"Analytics",
+  "recurrences": "Recurrent transactions",
+  "every":"every",
+  "repeat":"Repeat...",
+  "frequency":"Frequency",
+  "nextEvent":"Next event on"
 
 
 }

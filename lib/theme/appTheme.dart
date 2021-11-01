@@ -17,6 +17,7 @@ class AppTheme {
     textSelectionTheme: TextSelectionThemeData(selectionColor: Colors.black),
 
     iconTheme: IconThemeData(color: Colors.black),
+
     textTheme: TextTheme(
       button: TextStyle(color: Colors.white),
       bodyText1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),

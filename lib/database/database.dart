@@ -11,7 +11,7 @@ class Helper {
 
   Database? _db;
 
-  static int get _version => 16;
+  static int get _version => 17;
   final _lock = new Lock();
 
   static void _onCreate(Database db, int version) async {
@@ -34,6 +34,12 @@ class Helper {
         'CREATE TABLE transfers (uuid TEXT PRIMARY KEY NOT NULL,amount REAL, ' +
             ' accountFrom TEXT,accountTo TEXT, timestamp INTEGER,FOREIGN KEY(accountFrom) REFERENCES accounts(uuid), ' +
             'FOREIGN KEY(accountTo) REFERENCES accounts(uuid) )',
+      );
+
+      await txn.execute(
+        'CREATE TABLE recurrences (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, amount REAL, ' +
+            ' category TEXT,account TEXT, timestamp INTEGER, periodicity TEXT, periodicityInterval INTEGER, nextEvent INTEGER,FOREIGN KEY(account) REFERENCES accounts(uuid), ' +
+            'FOREIGN KEY(category) REFERENCES category(uuid) )',
       );
 
       await txn.insert('category', {
@@ -102,7 +108,11 @@ class Helper {
   static void _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // Database version is updated, alter the table
     await db.transaction((txn) async {
-      txn.execute("ALTER TABLE accounts ADD COLUMN active INTEGER;");
+      await txn.execute(
+        'CREATE TABLE recurrences (uuid TEXT PRIMARY KEY NOT NULL, name TEXT, amount REAL, ' +
+            ' category TEXT,account TEXT, timestamp INTEGER, periodicity TEXT, periodicityInterval INTEGER, nextEvent INTEGER,FOREIGN KEY(account) REFERENCES accounts(uuid), ' +
+            'FOREIGN KEY(category) REFERENCES category(uuid) )',
+      );
     });
   }
 
@@ -170,6 +180,18 @@ class DB {
       (txn) async {
         return await txn.rawQuery(
           'SELECT a.*,b.name accountName,c.name categoryName,coalesce(b.initialAmount,0.0) initialAmount FROM transactions a ' +
+              'left outer join accounts b on b.uuid=a.account ' +
+              'left outer join category c on c.uuid=a.category order by a.timestamp desc',
+        );
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getRecurrences() async {
+    return await _db!.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+          'SELECT a.*,b.name accountName,c.name categoryName FROM recurrences a ' +
               'left outer join accounts b on b.uuid=a.account ' +
               'left outer join category c on c.uuid=a.category order by a.timestamp desc',
         );

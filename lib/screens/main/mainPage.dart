@@ -36,6 +36,34 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
     Provider.of<CategoryModel>(context, listen: false).getCategories();
     Provider.of<TransactionModel>(context, listen: false).getTransactions();
     Provider.of<TransfersModel>(context, listen: false).getTransfers();
+    Provider.of<RecurrenceModel>(context, listen: false)
+        .getRecurrences()
+        .then((value) {
+      var _recurrences =
+          Provider.of<RecurrenceModel>(context, listen: false).recurrences;
+      var _pendingRecurrences = _recurrences!.where((element) {
+        return element.nextEvent! < DateTime.now().millisecondsSinceEpoch;
+      }).toList();
+
+      if (_pendingRecurrences.length > 0) {
+        _pendingRecurrences.forEach((element) {
+          Provider.of<TransactionModel>(context, listen: false)
+              .insertTransactiontIntoDb(Transaction(
+                  account: element.account,
+                  accountName: element.accountName,
+                  amount: element.amount,
+                  category: element.category,
+                  categoryName: element.category,
+                  name: element.name,
+                  timestamp: DateTime.now().millisecondsSinceEpoch));
+          element.nextEvent =
+              Provider.of<RecurrenceModel>(context, listen: false)
+                  .computeNextEvent(element);
+          Provider.of<RecurrenceModel>(context, listen: false)
+              .insertRecurrenceIntoDb(element);
+        });
+      }
+    });
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
 
@@ -236,6 +264,15 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                         Navigator.pushNamed(
                           context,
                           '/categoriesPage',
+                        );
+                      },
+                    ),
+                    MainPageSectionStateless(
+                      S.of(context).recurrences,
+                      () {
+                        Navigator.pushNamed(
+                          context,
+                          '/recurrencesPage',
                         );
                       },
                     ),

@@ -54,6 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "createAccountText":
             MessageLookupByLibrary.simpleMessage("Crea tu primera cuenta"),
         "customRange": MessageLookupByLibrary.simpleMessage("Rango de fechas"),
+        "daily": MessageLookupByLibrary.simpleMessage("Diariamente"),
         "data": MessageLookupByLibrary.simpleMessage("Datos"),
         "date": MessageLookupByLibrary.simpleMessage("Fecha"),
         "defaultAccount":
@@ -83,12 +84,14 @@ class MessageLookup extends MessageLookupByLibrary {
             "El modo discreto oculta los importes"),
         "errorText":
             MessageLookupByLibrary.simpleMessage("Se ha producido un error"),
+        "every": MessageLookupByLibrary.simpleMessage("cada"),
         "expense": MessageLookupByLibrary.simpleMessage("Gasto"),
         "expenses": MessageLookupByLibrary.simpleMessage("Gastos"),
         "expensesMonth": MessageLookupByLibrary.simpleMessage("Gastos mes"),
         "exportDb":
             MessageLookupByLibrary.simpleMessage("Exportar base de datos"),
         "finishText": MessageLookupByLibrary.simpleMessage("TERMINAR"),
+        "frequency": MessageLookupByLibrary.simpleMessage("Frecuencia"),
         "from": MessageLookupByLibrary.simpleMessage("De"),
         "group": MessageLookupByLibrary.simpleMessage("Agrupar"),
         "groupby": MessageLookupByLibrary.simpleMessage("Agrupar por"),
@@ -113,6 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "El nombre no puede estar vacio"),
         "netIncome": MessageLookupByLibrary.simpleMessage("Ingresos netos"),
         "next": MessageLookupByLibrary.simpleMessage("SIGUIENTE"),
+        "nextEvent": MessageLookupByLibrary.simpleMessage("Proximo evento el"),
         "noDataLabel": MessageLookupByLibrary.simpleMessage("Sin datos"),
         "ofText": MessageLookupByLibrary.simpleMessage("DE"),
         "pin": MessageLookupByLibrary.simpleMessage("PIN"),
@@ -123,6 +127,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "pinErrorLenght": MessageLookupByLibrary.simpleMessage(
             "El PIN tiene que tener 4 numeros"),
         "prev": MessageLookupByLibrary.simpleMessage("ANTERIOR"),
+        "recurrences":
+            MessageLookupByLibrary.simpleMessage("Transacciones recurrentes"),
+        "repeat": MessageLookupByLibrary.simpleMessage("Repetir..."),
         "restartMoedeiro": MessageLookupByLibrary.simpleMessage(
             "Importado, reinicia Moedeiro"),
         "save": MessageLookupByLibrary.simpleMessage("Guardar"),
@@ -145,6 +152,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "transfers": MessageLookupByLibrary.simpleMessage("Transferencias"),
         "useFingerprint": MessageLookupByLibrary.simpleMessage("Usar huella"),
         "version": MessageLookupByLibrary.simpleMessage("Versión"),
+        "weekly": MessageLookupByLibrary.simpleMessage("Semanalmente"),
         "yearly": MessageLookupByLibrary.simpleMessage("Anualmente")
       };
 }

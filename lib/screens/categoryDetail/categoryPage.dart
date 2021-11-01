@@ -77,10 +77,8 @@ class _CategoryPageState extends State<CategoryPage> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            leading: null,
-            automaticallyImplyLeading: false,
             flexibleSpace: FlexibleSpaceBar(
-              titlePadding: EdgeInsets.only(bottom: 10, left: 20),
+              centerTitle: true,
               title: Text(category!.name!),
             ),
             actions: buildActions(),

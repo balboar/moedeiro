@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/models/accounts.dart';
 import 'package:moedeiro/models/categories.dart';
+import 'package:moedeiro/models/recurrences.dart';
 import 'package:moedeiro/models/transaction.dart';
 import 'package:moedeiro/models/transfer.dart';
 import 'package:uuid/uuid.dart';
@@ -430,6 +431,64 @@ class TransfersModel extends ChangeNotifier {
     } else
       await DB.update(Transfer.table, data.toDbMap());
     await getTransfers();
+    return Future.value(true);
+  }
+}
+
+class RecurrenceModel extends ChangeNotifier {
+  List<Recurrence>? _recurrences;
+  bool isLoading = false;
+  Uuid _uuid = Uuid();
+
+  List<Recurrence>? get recurrences => _recurrences;
+
+  Future<bool> getRecurrences() async {
+    final List<Map<String, dynamic>> maps = await DB.getRecurrences();
+    _recurrences = List.generate(maps.length, (i) {
+      return Recurrence.fromMap(maps[i]);
+    });
+    notifyListeners();
+
+    return Future.value(true);
+  }
+
+  int computeNextEvent(Recurrence data) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(data.timestamp!);
+    if (data.nextEvent != null)
+      date = DateTime.fromMillisecondsSinceEpoch(data.nextEvent!);
+
+    var newDate = date;
+    if (data.periodicity == 'D')
+      newDate =
+          DateTime(date.year, date.month, date.day + data.periodicityInterval!);
+    else if (data.periodicity == 'W')
+      newDate = DateTime(
+          date.year, date.month, date.day + (data.periodicityInterval! * 7));
+    else if (data.periodicity == 'M')
+      newDate =
+          DateTime(date.year, date.month + data.periodicityInterval!, date.day);
+    else if (data.periodicity == 'Y')
+      newDate =
+          DateTime(date.year + data.periodicityInterval!, date.month, date.day);
+    return newDate.millisecondsSinceEpoch;
+  }
+
+  Future<bool> insertRecurrenceIntoDb(Recurrence data) async {
+    if (data.uuid == null) {
+      data.uuid = _uuid.v4();
+      if (data.nextEvent == null) {
+        data.nextEvent = computeNextEvent(data);
+      }
+      await DB.insert(Recurrence.table, data.toDbMap());
+    } else
+      await DB.update(Recurrence.table, data.toDbMap());
+    await getRecurrences();
+    return Future.value(true);
+  }
+
+  Future<bool> delete(String uuid) async {
+    await DB.deleteItem(Recurrence.table, uuid);
+    await getRecurrences();
     return Future.value(true);
   }
 }
