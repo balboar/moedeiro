@@ -98,7 +98,8 @@
   "every":"every",
   "repeat":"Repeat...",
   "frequency":"Frequency",
-  "nextEvent":"Next event on"
+  "nextEvent":"Next event on",
+  "on":"on"
 
 
 }

@@ -40,7 +40,7 @@ class _RecurrencesPageState extends State<RecurrencesPage> {
   Widget _buildRecurrencesList() {
     return Consumer<RecurrenceModel>(
       builder: (BuildContext context, RecurrenceModel model, Widget? child) {
-        if (model.recurrences!.length == 0) {
+        if (model.recurrences.length == 0) {
           return SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -71,11 +71,11 @@ class _RecurrencesPageState extends State<RecurrencesPage> {
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
                   return RecurrenceCard(
-                    model.recurrences![index],
-                    key: Key(model.recurrences![index].uuid!),
+                    model.recurrences[index],
+                    key: Key(model.recurrences[index].uuid!),
                   );
                 },
-                childCount: model.recurrences!.length,
+                childCount: model.recurrences.length,
               ),
             ),
           );

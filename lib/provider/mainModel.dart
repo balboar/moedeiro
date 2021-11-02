@@ -436,11 +436,11 @@ class TransfersModel extends ChangeNotifier {
 }
 
 class RecurrenceModel extends ChangeNotifier {
-  List<Recurrence>? _recurrences;
+  List<Recurrence> _recurrences = [];
   bool isLoading = false;
   Uuid _uuid = Uuid();
 
-  List<Recurrence>? get recurrences => _recurrences;
+  List<Recurrence> get recurrences => _recurrences;
 
   Future<bool> getRecurrences() async {
     final List<Map<String, dynamic>> maps = await DB.getRecurrences();

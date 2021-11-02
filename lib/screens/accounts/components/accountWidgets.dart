@@ -33,11 +33,31 @@ class _AccountCardState extends State<AccountCard> {
           Navigator.pushNamed(context, '/accountTransactionsPage',
               arguments: false);
         },
+        // leading: CircleAvatar(
+        //   // backgroundImage: widget.account!.icon != null
+        //   //     ? FileImage(File(widget.account!.icon!), scale: 0.9)
+        //   //     : null,
+        //   backgroundColor:
+        //       widget.account!.icon != null ? Colors.transparent : Colors.grey,
+        //   radius: 20,
+        // ),
+
         leading: CircleAvatar(
           backgroundImage: widget.account!.icon != null
-              ? FileImage(File(widget.account!.icon!), scale: 0.9)
+              ? FileImage(
+                  File(
+                    widget.account!.icon!,
+                  ),
+                  scale: 0.9)
               : null,
-          backgroundColor: Colors.transparent,
+          backgroundColor: Theme.of(context).dialogBackgroundColor,
+          child: widget.account!.icon != null
+              ? null
+              : ClipOval(
+                  child: Container(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                ),
           radius: 20,
         ),
         title: Text(

@@ -193,7 +193,7 @@ class DB {
         return await txn.rawQuery(
           'SELECT a.*,b.name accountName,c.name categoryName FROM recurrences a ' +
               'left outer join accounts b on b.uuid=a.account ' +
-              'left outer join category c on c.uuid=a.category order by a.timestamp desc',
+              'left outer join category c on c.uuid=a.category order by a.nextEvent desc',
         );
       },
     );

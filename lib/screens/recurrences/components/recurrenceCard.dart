@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
+import 'package:moedeiro/generated/l10n.dart';
 import 'package:moedeiro/models/recurrences.dart';
 import 'package:moedeiro/screens/recurrences/components/recurrenceBottomSheet.dart';
 import 'package:moedeiro/util/utils.dart';
@@ -99,7 +100,7 @@ class RecurrenceCard extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: Text('Next event on',
+                        child: Text(S.of(context).nextEvent,
                             style: Theme.of(context).textTheme.bodyText2),
                       ),
                       Text(

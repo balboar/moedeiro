@@ -1039,6 +1039,16 @@ class S {
       args: [],
     );
   }
+
+  /// `on`
+  String get on {
+    return Intl.message(
+      'on',
+      name: 'on',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

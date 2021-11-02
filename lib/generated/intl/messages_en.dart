@@ -119,6 +119,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "nextEvent": MessageLookupByLibrary.simpleMessage("Next event on"),
         "noDataLabel": MessageLookupByLibrary.simpleMessage("No data"),
         "ofText": MessageLookupByLibrary.simpleMessage("OF"),
+        "on": MessageLookupByLibrary.simpleMessage("on"),
         "pin": MessageLookupByLibrary.simpleMessage("PIN"),
         "pinEmpty":
             MessageLookupByLibrary.simpleMessage("PIN can not be empty"),

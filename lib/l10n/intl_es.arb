@@ -98,7 +98,8 @@
   "every":"cada",
   "repeat":"Repetir...",
   "frequency":"Frecuencia",
-  "nextEvent":"Proximo evento el"
+  "nextEvent":"Proximo evento el",
+  "on":"el"
 
 
 }

@@ -313,118 +313,51 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
               SizedBox(
                 height: space,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      readOnly: true,
-                      controller: _dateController,
-                      decoration: InputDecoration(
-                        enabledBorder: InputBorder.none,
-                        prefixIcon: Icon(Icons.calendar_today),
-                        labelText: S.of(context).date,
-                      ),
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        _selectDate(context).then((int? value) {
-                          if (value != null)
-                            setState(() {
-                              _dateController.text = DateFormat.yMMMd().format(
-                                DateTime.fromMillisecondsSinceEpoch(value),
-                              );
-                              _data['timestamp'] = value;
-                            });
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: space,
-                  ),
-                  Container(
-                    child: TextFormField(
-                      readOnly: true,
-                      controller: _timeController,
-                      decoration: InputDecoration(
-                        enabledBorder: InputBorder.none,
-                        prefixIcon: Icon(Icons.access_time),
-                        labelText: S.of(context).time,
-                      ),
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        _selectTime(context).then((int? value) {
-                          if (value != null)
-                            setState(() {
-                              _timeController.text = DateFormat.Hm().format(
-                                DateTime.fromMillisecondsSinceEpoch(value),
-                              );
-                              _data['timestamp'] = value;
-                            });
-                        });
-                      },
-                    ),
-                    width: 130,
-                  ),
-                ],
+              TextFormField(
+                readOnly: true,
+                controller: _dateController,
+                decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
+                  prefixIcon: Icon(Icons.calendar_today),
+                  labelText: S.of(context).date,
+                ),
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  _selectDate(context).then((int? value) {
+                    if (value != null)
+                      setState(() {
+                        _dateController.text = DateFormat.yMMMd().format(
+                          DateTime.fromMillisecondsSinceEpoch(value),
+                        );
+                        _data['timestamp'] = value;
+                      });
+                  });
+                },
               ),
               SizedBox(
                 height: space,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      readOnly: true,
-                      controller: _dateNextEventController,
-                      decoration: InputDecoration(
-                        enabledBorder: InputBorder.none,
-                        prefixIcon: Icon(Icons.next_plan),
-                        labelText: S.of(context).nextEvent,
-                      ),
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        _selectDate(context).then((int? value) {
-                          if (value != null)
-                            setState(() {
-                              _dateNextEventController.text =
-                                  DateFormat.yMMMd().format(
-                                DateTime.fromMillisecondsSinceEpoch(value),
-                              );
-                              _data['timestamp'] = value;
-                            });
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: space,
-                  ),
-                  Container(
-                    child: TextFormField(
-                      readOnly: true,
-                      controller: _timeNextEventController,
-                      decoration: InputDecoration(
-                        enabledBorder: InputBorder.none,
-                        prefixIcon: Icon(Icons.access_time),
-                        labelText: S.of(context).time,
-                      ),
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        _selectTime(context).then((int? value) {
-                          if (value != null)
-                            setState(() {
-                              _timeNextEventController.text =
-                                  DateFormat.Hm().format(
-                                DateTime.fromMillisecondsSinceEpoch(value),
-                              );
-                              _data['timestamp'] = value;
-                            });
-                        });
-                      },
-                    ),
-                    width: 130,
-                  ),
-                ],
+              TextFormField(
+                readOnly: true,
+                controller: _dateNextEventController,
+                decoration: InputDecoration(
+                  enabledBorder: InputBorder.none,
+                  prefixIcon: Icon(Icons.next_plan),
+                  labelText: S.of(context).nextEvent,
+                ),
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  _selectDate(context).then((int? value) {
+                    if (value != null)
+                      setState(() {
+                        _dateNextEventController.text =
+                            DateFormat.yMMMd().format(
+                          DateTime.fromMillisecondsSinceEpoch(value),
+                        );
+                        _data['timestamp'] = value;
+                      });
+                  });
+                },
               ),
               SizedBox(
                 height: space,

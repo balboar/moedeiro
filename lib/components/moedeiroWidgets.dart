@@ -92,7 +92,7 @@ class MainPageSectionStateless extends StatelessWidget {
                       subtitle ?? '',
                       style: Theme.of(context)
                           .textTheme
-                          .headline6, //TextStyle(fontSize: 20.0),
+                          .bodyText2, //TextStyle(fontSize: 20.0),
                     ),
                   ],
                 ),

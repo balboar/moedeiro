@@ -16,6 +16,7 @@ import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:moedeiro/generated/l10n.dart';
+import 'package:intl/intl.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -41,7 +42,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
         .then((value) {
       var _recurrences =
           Provider.of<RecurrenceModel>(context, listen: false).recurrences;
-      var _pendingRecurrences = _recurrences!.where((element) {
+      var _pendingRecurrences = _recurrences.where((element) {
         return element.nextEvent! < DateTime.now().millisecondsSinceEpoch;
       }).toList();
 
@@ -190,16 +191,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
             controller: _scrollController,
             slivers: [
               SliverAppBar(
-                actions: [
-                  //   IconButton(
-                  //     icon: const Icon(Icons.settings_outlined),
-                  //     tooltip: S.of(context).settings,
-                  //     padding: EdgeInsets.symmetric(vertical: 22, horizontal: 10),
-                  //     iconSize: 30,
-                  //     onPressed: () =>
-                  //         Navigator.pushNamed(context, '/settingsPage'),
-                  //   ),
-                ],
+                actions: [],
                 pinned: false,
                 expandedHeight: 200,
                 collapsedHeight: 80,
@@ -267,15 +259,26 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                         );
                       },
                     ),
-                    MainPageSectionStateless(
-                      S.of(context).recurrences,
-                      () {
-                        Navigator.pushNamed(
-                          context,
-                          '/recurrencesPage',
-                        );
-                      },
-                    ),
+                    Consumer<RecurrenceModel>(builder: (BuildContext context,
+                        RecurrenceModel model, Widget? child) {
+                      //formatCurrency(context, model.expenses)
+
+                      return MainPageSectionStateless(
+                        S.of(context).recurrences,
+                        () {
+                          Navigator.pushNamed(
+                            context,
+                            '/recurrencesPage',
+                          );
+                        },
+                        subtitle: model.recurrences.length > 0
+                            ? '${model.recurrences.first.categoryName} ${S.of(context).on} ${DateFormat.yMMMEd().format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    model.recurrences.first.nextEvent!),
+                              )} '
+                            : '',
+                      );
+                    }),
                     MainPageSectionStateless(
                       S.of(context).transactionsTitle,
                       () {
