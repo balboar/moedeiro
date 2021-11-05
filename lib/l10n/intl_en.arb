@@ -99,7 +99,13 @@
   "repeat":"Repeat...",
   "frequency":"Frequency",
   "nextEvent":"Next event on",
-  "on":"on"
+  "on":"on",
+  "expensesAndAnalytics":"Expenses & Analytics",
+  "executeNow":"Execute now",
+  "execute":"Execute",
+  "executeTransaction":"Execute transaction?",
+  "executeTransactionDescription":"A new transaction is going to be created with today's date",
+  "transferCreated":"Transfer created"
 
 
 }

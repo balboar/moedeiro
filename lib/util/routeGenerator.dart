@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/screens/accounts/accountsPage.dart';
 import 'package:moedeiro/screens/categories/categoriesPage.dart';
 import 'package:moedeiro/screens/categoryDetail/categoryPage.dart';
+import 'package:moedeiro/screens/chartsPage/chartsPage.dart';
 import 'package:moedeiro/screens/lockScreen/lockScreen.dart';
 import 'package:moedeiro/screens/main/mainPage.dart';
 import 'package:moedeiro/screens/movements/movementsPage.dart';
@@ -86,6 +87,8 @@ class RouteGenerator {
 
       case '/accountsPage':
         return moedeiroPageRoute(AccountsPage());
+      case '/chartsPage':
+        return moedeiroPageRoute(ChartsPage());
       case '/recurrencesPage':
         return moedeiroPageRoute(RecurrencesPage());
       case '/settingsPage':

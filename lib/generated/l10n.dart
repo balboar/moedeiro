@@ -1049,6 +1049,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Expenses & Analytics`
+  String get expensesAndAnalytics {
+    return Intl.message(
+      'Expenses & Analytics',
+      name: 'expensesAndAnalytics',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Execute now`
+  String get executeNow {
+    return Intl.message(
+      'Execute now',
+      name: 'executeNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Execute`
+  String get execute {
+    return Intl.message(
+      'Execute',
+      name: 'execute',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Execute transaction?`
+  String get executeTransaction {
+    return Intl.message(
+      'Execute transaction?',
+      name: 'executeTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A new transaction is going to be created with today's date`
+  String get executeTransactionDescription {
+    return Intl.message(
+      'A new transaction is going to be created with today\'s date',
+      name: 'executeTransactionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transfer created`
+  String get transferCreated {
+    return Intl.message(
+      'Transfer created',
+      name: 'transferCreated',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

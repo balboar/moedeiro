@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/accounts/components/AccountsBottomSheetWidget.dart';
+import 'package:moedeiro/screens/accounts/components/accountCharts.dart';
 import 'package:moedeiro/screens/accounts/components/accountWidgets.dart';
 import 'package:moedeiro/screens/summary/components/transactionsCharts.dart';
 import 'package:provider/provider.dart';
@@ -18,46 +19,6 @@ class AccountsPage extends StatefulWidget {
 class _AccountsPageState extends State<AccountsPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final controller = PageController(viewportFraction: 1);
-
-  Widget flexibleSpace() {
-    return FlexibleSpaceBar(
-      stretchModes: [StretchMode.blurBackground],
-      collapseMode: CollapseMode.pin,
-      background: Column(
-        children: [
-          Container(
-            height: kToolbarHeight + 20,
-          ),
-          Container(
-            height:
-                (MediaQuery.of(context).size.height / 2) - kToolbarHeight - 50,
-            margin: EdgeInsets.only(left: 0.0, right: 0, top: 2.0, bottom: 2.0),
-            child: PageView(
-              physics: BouncingScrollPhysics(),
-              controller: controller,
-              children: [
-                ExpensesByMonthChart(),
-                TransactionChart(),
-              ],
-              scrollDirection: Axis.horizontal,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 40.0),
-            child: SmoothPageIndicator(
-              controller: controller,
-              count: 2,
-              effect: WormEffect(
-                  dotHeight: 7,
-                  activeDotColor: Colors.blue,
-                  dotWidth: 7,
-                  dotColor: Colors.grey),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildAccountsList() {
     return Consumer<AccountModel>(
@@ -105,9 +66,14 @@ class _AccountsPageState extends State<AccountsPage> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            flexibleSpace: flexibleSpace(),
-            title: Text(S.of(context).accountsTitle),
-            expandedHeight: MediaQuery.of(context).size.height / 2,
+            flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              title: Text(S.of(context).accountsTitle),
+            ),
+            floating: false,
+            snap: false,
+            pinned: true,
+            expandedHeight: MediaQuery.of(context).size.height * 0.30,
           ),
           _buildAccountsList(),
         ],

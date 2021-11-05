@@ -158,7 +158,7 @@ class _MoedeiroBottomAppBarState extends State<MoedeiroBottomAppBar> {
             children: <Widget>[
               Container(
                 height: 50,
-                width: MediaQuery.of(context).size.width - 100,
+                width: MediaQuery.of(context).size.width - 150,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   primary: true,
@@ -173,6 +173,15 @@ class _MoedeiroBottomAppBarState extends State<MoedeiroBottomAppBar> {
                   ],
                 ),
               ),
+              IconButton(
+                  tooltip: 'Analytics',
+                  icon: const Icon(Icons.analytics_outlined),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/chartsPage',
+                    );
+                  }),
               IconButton(
                   tooltip: 'Type',
                   icon: const Icon(Icons.filter_list_outlined),

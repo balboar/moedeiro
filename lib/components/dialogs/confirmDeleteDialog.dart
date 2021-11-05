@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class ComfirmDeleteDialog extends StatelessWidget {
-  final IconData? icon;
+  final String icon;
   final String? title;
   final String? subtitle;
-  const ComfirmDeleteDialog({Key? key, this.icon, this.title, this.subtitle})
+  final String? confirmationLabel;
+  const ComfirmDeleteDialog(this.icon,
+      {Key? key, this.title, this.subtitle, this.confirmationLabel})
       : super(key: key);
 
   @override
@@ -21,10 +23,11 @@ class ComfirmDeleteDialog extends StatelessWidget {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(7.0), topRight: Radius.circular(7.0)),
         ),
-        child: Icon(
-          icon ?? Icons.euro,
-          size: 70,
-        ),
+        child: Center(
+            child: Text(
+          icon,
+          style: TextStyle(fontSize: 70),
+        )),
         height: 110,
       ),
       content: SingleChildScrollView(
@@ -71,7 +74,7 @@ class ComfirmDeleteDialog extends StatelessWidget {
                 elevation: 2,
                 primary: Theme.of(context).colorScheme.secondary,
               ),
-              label: Text(S.of(context).delete),
+              label: Text(confirmationLabel ?? S.of(context).delete),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },

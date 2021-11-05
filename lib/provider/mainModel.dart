@@ -66,6 +66,10 @@ class AccountModel extends ChangeNotifier {
     return await DB.getTrasactionsLast6MonthByAccountAndDay(uuid);
   }
 
+  Future<List<Map<String, dynamic>>> getChartDataByDay() async {
+    return await DB.getTrasactionsLast6MonthByDay();
+  }
+
   set setActiveAccount(String uuid) {
     _activeAccount =
         _accounts.firstWhere((Account element) => element.uuid == uuid);

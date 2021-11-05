@@ -124,7 +124,7 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return ComfirmDeleteDialog();
+        return ComfirmDeleteDialog('😮');
       },
     );
   }

@@ -9,15 +9,17 @@ class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     // primarySwatch: Colors.blueGrey,
     colorScheme: ColorScheme.fromSwatch(
+        primarySwatch: Colors.teal,
         cardColor: Colors.white,
         brightness: Brightness.light,
         accentColor: Color(0xFF2596be)),
     buttonBarTheme: ButtonBarThemeData(
         alignment: MainAxisAlignment.spaceAround, buttonHeight: 40.0),
     textSelectionTheme: TextSelectionThemeData(selectionColor: Colors.black),
-
     iconTheme: IconThemeData(color: Colors.black),
-
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+    ),
     textTheme: TextTheme(
       button: TextStyle(color: Colors.white),
       bodyText1: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
@@ -54,7 +56,9 @@ class AppTheme {
         brightness: Brightness.dark,
         accentColor: Color(0xFFFAEBD7)),
     //primarySwatch: Colors.blue,
-
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+    ),
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: Color(0xFF1f2732), // Color(0xFF293342),
     ),

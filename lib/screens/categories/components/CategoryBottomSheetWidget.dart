@@ -53,7 +53,7 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return ComfirmDeleteDialog(
-          icon: Icons.dashboard_outlined,
+          '😮',
           title: S.of(context).deleteCategory,
           subtitle: S.of(context).deleteCategorytDescription,
         );

@@ -148,7 +148,7 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return ComfirmDeleteDialog();
+        return ComfirmDeleteDialog('😮');
       },
     );
   }

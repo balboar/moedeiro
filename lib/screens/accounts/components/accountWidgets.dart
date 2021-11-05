@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/models/accounts.dart';
 import 'package:moedeiro/provider/mainModel.dart';
+import 'package:moedeiro/screens/accounts/components/accountCharts.dart';
 import 'package:moedeiro/screens/summary/components/transactionsCharts.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
@@ -212,58 +213,31 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
     return SliverOverlapAbsorber(
       handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
       sliver: SliverAppBar(
-        centerTitle: true,
-        title: Text(widget.activeAccount!.name! +
-            ' ' +
-            formatCurrency(context, widget.activeAccount!.amount!)),
         bottom: widget.tabs as PreferredSizeWidget?,
         floating: false,
         snap: false,
         pinned: true,
         actions: widget.actions,
         flexibleSpace: FlexibleSpaceBar(
-          stretchModes: [StretchMode.blurBackground],
-          collapseMode: CollapseMode.pin,
-          background: Column(
-            children: [
-              Container(
-                height: kToolbarHeight + 20,
-              ),
-              Container(
-                height: (MediaQuery.of(context).size.height / 2) -
-                    kToolbarHeight -
-                    50,
-                margin:
-                    EdgeInsets.only(left: 0.0, right: 0, top: 2.0, bottom: 2.0),
-                child: PageView(
-                  physics: BouncingScrollPhysics(),
-                  controller: controller,
-                  children: [
-                    ExpensesByMonthChart(
-                        accountUuid: widget.activeAccount!.uuid),
-                    // AccountBalanceChart(account: widget.activeAccount!),
-                    TransactionChart(accountUuid: widget.activeAccount!.uuid),
-                  ],
-                  scrollDirection: Axis.horizontal,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(bottom: 40.0),
-                child: SmoothPageIndicator(
-                  controller: controller,
-                  count: 2,
-                  effect: WormEffect(
-                      dotHeight: 7,
-                      activeDotColor: Colors.blue,
-                      dotWidth: 7,
-                      dotColor: Colors.grey),
-                ),
-              ),
-            ],
-          ),
+          centerTitle: true,
+          titlePadding: EdgeInsets.only(bottom: 65),
+          title: Text(widget.activeAccount!.name! +
+              ' ' +
+              formatCurrency(context, widget.activeAccount!.amount!)),
         ),
-        expandedHeight: MediaQuery.of(context).size.height / 2,
+        expandedHeight: MediaQuery.of(context).size.height * 0.30,
       ),
     );
   }
 }
+
+ // SliverAppBar(
+  //           flexibleSpace: FlexibleSpaceBar(
+  //             centerTitle: true,
+  //             title: Text(S.of(context).accountsTitle),
+  //           ),
+  //           floating: false,
+  //           snap: false,
+  //           pinned: true,
+  //           expandedHeight: MediaQuery.of(context).size.height * 0.30,
+  //         ),

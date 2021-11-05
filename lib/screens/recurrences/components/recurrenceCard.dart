@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/generated/l10n.dart';
 import 'package:moedeiro/models/recurrences.dart';
+import 'package:moedeiro/models/transaction.dart';
+import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/recurrences/components/recurrenceBottomSheet.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class RecurrenceCard extends StatelessWidget {
   final Recurrence recurrence;
@@ -12,6 +16,19 @@ class RecurrenceCard extends StatelessWidget {
     this.recurrence, {
     Key? key,
   }) : super(key: key);
+
+  Future<bool?> _showMyDialog(BuildContext context) async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return ComfirmDeleteDialog('🧐',
+            title: S.of(context).executeTransaction,
+            subtitle: S.of(context).executeTransactionDescription,
+            confirmationLabel: S.of(context).execute);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +91,44 @@ class RecurrenceCard extends StatelessWidget {
                         ],
                       ),
                     ),
-
                     Text(recurrence.accountName ?? '',
                         style: Theme.of(context).textTheme.bodyText2),
-                    //     Text(
+                    TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                        ),
+                        onPressed: () {
+                          _showMyDialog(context).then((value) {
+                            if (value! && value) {
+                              Provider.of<TransactionModel>(context,
+                                      listen: false)
+                                  .insertTransactiontIntoDb(Transaction(
+                                      account: recurrence.account,
+                                      accountName: recurrence.accountName,
+                                      amount: recurrence.amount,
+                                      category: recurrence.category,
+                                      categoryName: recurrence.category,
+                                      name: recurrence.name,
+                                      timestamp: DateTime.now()
+                                          .millisecondsSinceEpoch));
+                              recurrence.nextEvent =
+                                  DateTime.now().millisecondsSinceEpoch;
+                              recurrence.nextEvent =
+                                  Provider.of<RecurrenceModel>(context,
+                                          listen: false)
+                                      .computeNextEvent(recurrence);
+                              Provider.of<RecurrenceModel>(context,
+                                      listen: false)
+                                  .insertRecurrenceIntoDb(recurrence);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(S.of(context).transferCreated),
+                                ),
+                              );
+                            }
+                          });
+                        },
+                        child: Text(S.of(context).executeNow)),
                   ],
                 ),
               ),

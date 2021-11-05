@@ -193,7 +193,7 @@ class DB {
         return await txn.rawQuery(
           'SELECT a.*,b.name accountName,c.name categoryName FROM recurrences a ' +
               'left outer join accounts b on b.uuid=a.account ' +
-              'left outer join category c on c.uuid=a.category order by a.nextEvent desc',
+              'left outer join category c on c.uuid=a.category order by a.nextEvent asc',
         );
       },
     );
@@ -348,14 +348,47 @@ class DB {
     );
   }
 
+  static Future<List<Map<String, dynamic>>>
+      getTrasactionsLast6MonthByDay() async {
+    return await _db!.transaction(
+      (txn) async {
+        return await txn.rawQuery('SELECT round(sum(z.amount),2) amount, z.dayofYear, z.monthofyear, z.year FROM ' +
+            '(SELECT sum(a.amount) amount, ' +
+            'strftime("%d", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS dayofyear, ' +
+            'strftime("%m", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS monthofyear,' +
+            'strftime("%Y", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS YEAR ' +
+            'FROM transactions a  ' +
+            //  '-- WHERE strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) ' +
+            //  '-- >= strftime("%Y", date("now","-0.3 YEAR") ) and strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch")) >= strftime("%m", date("now","-0.3 YEAR") )' +
+            'GROUP BY 2,  3, 4  ' +
+            // 'UNION SELECT sum(a.amount) amount, ' +
+            // '           strftime("%d", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS dayofyear, ' +
+            // '            strftime("%m", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS monthofyear, ' +
+            // '            strftime("%Y", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS YEAR ' +
+            // 'FROM transfers a WHERE strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) ' +
+            // ' >= strftime("%Y", date("now","-0.3 YEAR") ) and strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch")) >= strftime("%m", date("now","-0.3 YEAR") )' +
+            // 'GROUP BY 2,   3,  4 ' +
+            // 'UNION SELECT -sum(a.amount) amount, ' +
+            // '             strftime("%d", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS dayofyear, ' +
+            // '             strftime("%m", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS monthofyear, ' +
+            // '             strftime("%Y", datetime(substr(a.timestamp, 1, 10), "unixepoch")) AS YEAR ' +
+            // 'FROM transfers a WHERE  strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) ' +
+            // ' >= strftime("%Y", date("now","-0.3 YEAR") ) and strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch")) >= strftime("%m", date("now","-0.3 YEAR") )' +
+            // 'GROUP BY 2, 3, 4 '+
+            '  ORDER BY 4,  3,  2) AS z ' +
+            'GROUP BY 2, 3, 4 ORDER BY 4, 3,  2');
+      },
+    );
+  }
+
   static Future<List<Map<String, dynamic>>> getTrasactionsLast6Month() async {
     return await _db!.transaction(
       (txn) async {
         return await txn.rawQuery(
             '   SELECT sum(abs(a.amount)) amount,strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS monthofyear, ' +
                 ' strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch"))   AS year,c.type   FROM transactions a '
-                    'left outer join category c on c.uuid=a.category where strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) ' +
-                ' >= strftime("%Y", date("now","-0.3 YEAR") ) and strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch")) >= strftime("%m", date("now","-0.3 YEAR") )' +
+                    'left outer join category c on c.uuid=a.category ' + //where strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) ' +
+                //  ' >= strftime("%Y", date("now","-0.3 YEAR") ) and strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch")) >= strftime("%m", date("now","-0.3 YEAR") )' +
                 ' group by 2,3,4 order by 3 ,2 ');
       },
     );

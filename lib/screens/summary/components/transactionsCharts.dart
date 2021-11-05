@@ -77,100 +77,97 @@ class TransactionChartState extends State<TransactionChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      color: Colors.transparent, //const Color(0xff2c4260),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: BarChart(
-                  BarChartData(
-                      maxY: maxY,
-                      minY: 0,
-                      barTouchData: BarTouchData(
-                          touchTooltipData: BarTouchTooltipData(
-                            tooltipBgColor: Colors.grey,
-                            getTooltipItem: (_a, _b, _c, _d) => null,
-                          ),
-                          touchCallback: (event, response) {}),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        bottomTitles: SideTitles(
-                          showTitles: true,
-                          getTextStyles: (context, value) => const TextStyle(
-                              color: Color(0xff7589a2),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14),
-                          margin: 10,
-                          getTitles: (double value) {
-                            switch (value.toInt()) {
-                              case 1:
-                                return 'Jan';
-                              case 2:
-                                return 'Feb';
-                              case 3:
-                                return 'Mar';
-                              case 4:
-                                return 'Apr';
-                              case 5:
-                                return 'May';
-                              case 6:
-                                return 'Jun';
-                              case 7:
-                                return 'Jul';
-                              case 8:
-                                return 'Aug';
-                              case 9:
-                                return 'Sep';
-                              case 10:
-                                return 'Oct';
-                              case 11:
-                                return 'Nov';
-                              case 12:
-                                return 'Dec';
-                              default:
-                                return '';
-                            }
-                          },
+    return Container(
+      //  padding: EdgeInsets.symmetric(vertical: 30),
+      width: showingBarGroups.length * 60,
+      height: 250,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: BarChart(
+                BarChartData(
+                    maxY: maxY,
+                    minY: 0,
+                    barTouchData: BarTouchData(
+                        touchTooltipData: BarTouchTooltipData(
+                          tooltipBgColor: Colors.grey,
+                          getTooltipItem: (_a, _b, _c, _d) => null,
                         ),
-                        leftTitles: SideTitles(
-                          showTitles: true,
-                          getTextStyles: (context, value) => const TextStyle(
-                              color: Color(0xff7589a2),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14),
-                          margin: 20,
-                          reservedSize: 20,
-                          getTitles: (value) {
-                            var result = (value ~/ 1000);
-                            var remainder = value % 1000;
-                            if (remainder == 0 && result > 0)
-                              return '${result.toStringAsFixed(0)}K';
-                            else
+                        touchCallback: (event, response) {}),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: SideTitles(
+                        showTitles: true,
+                        getTextStyles: (context, value) => const TextStyle(
+                            color: Color(0xff7589a2),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14),
+                        margin: 10,
+                        getTitles: (double value) {
+                          switch (value.toInt()) {
+                            case 1:
+                              return 'Jan';
+                            case 2:
+                              return 'Feb';
+                            case 3:
+                              return 'Mar';
+                            case 4:
+                              return 'Apr';
+                            case 5:
+                              return 'May';
+                            case 6:
+                              return 'Jun';
+                            case 7:
+                              return 'Jul';
+                            case 8:
+                              return 'Aug';
+                            case 9:
+                              return 'Sep';
+                            case 10:
+                              return 'Oct';
+                            case 11:
+                              return 'Nov';
+                            case 12:
+                              return 'Dec';
+                            default:
                               return '';
-                          },
-                        ),
-                        topTitles: SideTitles(showTitles: false),
-                        rightTitles: SideTitles(showTitles: false),
+                          }
+                        },
                       ),
-                      borderData: FlBorderData(
-                        show: false,
+                      leftTitles: SideTitles(
+                        showTitles: true,
+                        getTextStyles: (context, value) => const TextStyle(
+                            color: Color(0xff7589a2),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14),
+                        margin: 20,
+                        reservedSize: 20,
+                        getTitles: (value) {
+                          var result = (value ~/ 1000);
+                          var remainder = value % 1000;
+                          if (remainder == 0 && result > 0)
+                            return '${result.toStringAsFixed(0)}K';
+                          else
+                            return '';
+                        },
                       ),
-                      barGroups: showingBarGroups,
-                      gridData: FlGridData(show: false)),
-                ),
+                      topTitles: SideTitles(showTitles: false),
+                      rightTitles: SideTitles(showTitles: false),
+                    ),
+                    borderData: FlBorderData(
+                      show: false,
+                    ),
+                    barGroups: showingBarGroups,
+                    gridData: FlGridData(show: false)),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -267,13 +264,9 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      color: //widget.accountUuid != null
-          //?
-          Colors.transparent,
-      // : const Color(0xff2c4260),
+    return Container(
+      width: showingBarGroups.length * 70,
+      height: 250,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,

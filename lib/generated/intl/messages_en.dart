@@ -88,8 +88,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorText":
             MessageLookupByLibrary.simpleMessage("There\'s been an error"),
         "every": MessageLookupByLibrary.simpleMessage("every"),
+        "execute": MessageLookupByLibrary.simpleMessage("Execute"),
+        "executeNow": MessageLookupByLibrary.simpleMessage("Execute now"),
+        "executeTransaction":
+            MessageLookupByLibrary.simpleMessage("Execute transaction?"),
+        "executeTransactionDescription": MessageLookupByLibrary.simpleMessage(
+            "A new transaction is going to be created with today\'s date"),
         "expense": MessageLookupByLibrary.simpleMessage("Expense"),
         "expenses": MessageLookupByLibrary.simpleMessage("Expenses"),
+        "expensesAndAnalytics":
+            MessageLookupByLibrary.simpleMessage("Expenses & Analytics"),
         "expensesMonth": MessageLookupByLibrary.simpleMessage("Expenses month"),
         "exportDb": MessageLookupByLibrary.simpleMessage("Export database"),
         "finishText": MessageLookupByLibrary.simpleMessage("FINISH"),
@@ -150,6 +158,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "transactionsTitle":
             MessageLookupByLibrary.simpleMessage("Recent transactions"),
         "transfer": MessageLookupByLibrary.simpleMessage("Transfer"),
+        "transferCreated":
+            MessageLookupByLibrary.simpleMessage("Transfer created"),
         "transfers": MessageLookupByLibrary.simpleMessage("Transfers"),
         "useFingerprint":
             MessageLookupByLibrary.simpleMessage("Use fingerprint"),

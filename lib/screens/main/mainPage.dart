@@ -43,7 +43,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
       var _recurrences =
           Provider.of<RecurrenceModel>(context, listen: false).recurrences;
       var _pendingRecurrences = _recurrences.where((element) {
-        return element.nextEvent! < DateTime.now().millisecondsSinceEpoch;
+        return element.nextEvent! <= DateTime.now().millisecondsSinceEpoch;
       }).toList();
 
       if (_pendingRecurrences.length > 0) {
@@ -240,14 +240,15 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
                         AccountModel model, Widget? child) {
                       //formatCurrency(context, model.expenses)
                       return MainPageSectionStateless(
-                        S.of(context).expensesMonth,
+                        S.of(context).expensesAndAnalytics,
                         () {
                           Navigator.pushNamed(
                             context,
                             '/analyticsPage',
                           );
                         },
-                        subtitle: formatCurrency(context, model.expenses),
+                        subtitle:
+                            '${S.of(context).expenses} ${DateFormat.MMMM().format(DateTime.now())} ${formatCurrency(context, model.expenses)}',
                       );
                     }),
                     MainPageSectionStateless(

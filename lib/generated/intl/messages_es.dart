@@ -85,8 +85,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorText":
             MessageLookupByLibrary.simpleMessage("Se ha producido un error"),
         "every": MessageLookupByLibrary.simpleMessage("cada"),
+        "execute": MessageLookupByLibrary.simpleMessage("Ejecutar"),
+        "executeNow": MessageLookupByLibrary.simpleMessage("Ejecutar ahora"),
+        "executeTransaction":
+            MessageLookupByLibrary.simpleMessage("¿Ejecutar transacción?"),
+        "executeTransactionDescription": MessageLookupByLibrary.simpleMessage(
+            "Esto creará una nueva transacción con fecha de hoy"),
         "expense": MessageLookupByLibrary.simpleMessage("Gasto"),
         "expenses": MessageLookupByLibrary.simpleMessage("Gastos"),
+        "expensesAndAnalytics":
+            MessageLookupByLibrary.simpleMessage("Gastos y analisis"),
         "expensesMonth": MessageLookupByLibrary.simpleMessage("Gastos mes"),
         "exportDb":
             MessageLookupByLibrary.simpleMessage("Exportar base de datos"),
@@ -150,6 +158,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "transactionsTitle":
             MessageLookupByLibrary.simpleMessage("Ultimas transacciones"),
         "transfer": MessageLookupByLibrary.simpleMessage("Transferencia"),
+        "transferCreated":
+            MessageLookupByLibrary.simpleMessage("Transferencia creada"),
         "transfers": MessageLookupByLibrary.simpleMessage("Transferencias"),
         "useFingerprint": MessageLookupByLibrary.simpleMessage("Usar huella"),
         "version": MessageLookupByLibrary.simpleMessage("Versión"),

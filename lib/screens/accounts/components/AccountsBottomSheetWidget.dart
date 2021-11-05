@@ -74,7 +74,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return ComfirmDeleteDialog(
-          icon: Icons.account_balance_wallet_outlined,
+          '😮',
           title: S.of(context).deleteAccount,
           subtitle: S.of(context).deleteAccountDescription,
         );
