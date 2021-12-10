@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/accounts/components/AccountsBottomSheetWidget.dart';
-import 'package:moedeiro/screens/accounts/components/accountCharts.dart';
 import 'package:moedeiro/screens/accounts/components/accountWidgets.dart';
-import 'package:moedeiro/screens/summary/components/transactionsCharts.dart';
 import 'package:provider/provider.dart';
 import 'package:moedeiro/generated/l10n.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class AccountsPage extends StatefulWidget {
   AccountsPage({Key? key}) : super(key: key);

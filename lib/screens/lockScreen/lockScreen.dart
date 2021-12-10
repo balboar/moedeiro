@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/auth_strings.dart';
@@ -373,10 +372,14 @@ class _LockScreenState extends State<LockScreen> {
   Widget _buildTitle() {
     return Container(
       //    margin: EdgeInsets.symmetric(vertical: 20),
-      child: Text(
-        'Moedeiro.',
-        style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+      child: Image.asset(
+        'lib/assets/mlogo.png',
+        width: MediaQuery.of(context).size.width / 3,
       ),
+      // child: Text(
+      //   'Moedeiro.',
+      //   style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+      // ),
     );
   }
 
@@ -384,8 +387,8 @@ class _LockScreenState extends State<LockScreen> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
       child: Text(
-        _isConfirmation ? widget.confirmTitle : widget.title,
-        style: TextStyle(fontSize: 20.0),
+        _isConfirmation ? widget.confirmTitle : S.of(context).welcomeBack,
+        style: Theme.of(context).textTheme.headline4,
       ),
     );
   }

@@ -73,6 +73,7 @@ flutter:
     - lib/assets/icons/not-found.png
     - lib/assets/icons/successBlack.png
     - lib/assets/icon.png
+    - lib/assets/mlogo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -94,7 +94,6 @@ class AccountModel extends ChangeNotifier {
         accountData.position = _accounts.length + 1;
       } else
         _accounts.length = 0;
-
       await DB.insert(Account.table, accountData.toMap());
     } else
       await DB.update(Account.table, accountData.toMap());

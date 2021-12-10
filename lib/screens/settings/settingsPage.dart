@@ -329,16 +329,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  String _getLocaleLabel(String locale) {
-    if (locale == 'system') {
-      return S.of(context).systemDefaultTitle;
-    } else {
-      var activeLocale =
-          languageOptions.firstWhere((element) => element.key == locale);
-      return activeLocale.value;
-    }
-  }
-
   String _getActiveThemeLabel(String theme) {
     if (theme == 'system') {
       return S.of(context).systemDefaultTitle;
@@ -350,7 +340,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildBody() {
-    _localeLabel = _getLocaleLabel(_localeString);
+    _localeLabel = getLocaleLabel(context, _localeString);
     _activeThemeLabel = _getActiveThemeLabel(_activeTheme);
     return Scaffold(
       appBar: AppBar(
@@ -375,7 +365,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Provider.of<SettingsModel>(context, listen: false)
                           .localeString;
                   setState(() {
-                    _localeLabel = _getLocaleLabel(_localeString);
+                    _localeLabel = getLocaleLabel(context, _localeString);
                   });
                 },
               ),

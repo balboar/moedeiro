@@ -8,6 +8,7 @@
 // ignore_for_file:prefer_single_quotes,comment_references, directives_ordering
 // ignore_for_file:annotate_overrides,prefer_generic_function_type_aliases
 // ignore_for_file:unused_import, file_names, avoid_escaping_inner_quotes
+// ignore_for_file:unnecessary_string_interpolations, unnecessary_string_escapes
 
 import 'package:intl/intl.dart';
 import 'package:intl/message_lookup_by_library.dart';
@@ -144,6 +145,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Guardar"),
         "search": MessageLookupByLibrary.simpleMessage("Buscar.."),
         "security": MessageLookupByLibrary.simpleMessage("Seguridad"),
+        "selectCountry":
+            MessageLookupByLibrary.simpleMessage("Selecciona tu país"),
+        "selectCountryDisclaimer": MessageLookupByLibrary.simpleMessage(
+            "Necesitamos el pais para que Moedeiro pueda ofrecer los datos con el formato regional correcto"),
+        "selectLanguage": MessageLookupByLibrary.simpleMessage(
+            "Selecciona el idioma de Moedeiro"),
         "setUpMoedeiro": MessageLookupByLibrary.simpleMessage(
             "Configuremos tu primera cuenta"),
         "settings": MessageLookupByLibrary.simpleMessage("Ajustes"),
@@ -164,6 +171,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "useFingerprint": MessageLookupByLibrary.simpleMessage("Usar huella"),
         "version": MessageLookupByLibrary.simpleMessage("Versión"),
         "weekly": MessageLookupByLibrary.simpleMessage("Semanalmente"),
+        "welcomeBack":
+            MessageLookupByLibrary.simpleMessage("Bienvenido de vuelta"),
         "yearly": MessageLookupByLibrary.simpleMessage("Anualmente")
       };
 }

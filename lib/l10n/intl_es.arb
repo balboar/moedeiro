@@ -105,7 +105,10 @@
   "execute":"Ejecutar",
   "executeTransaction":"¿Ejecutar transacción?",
   "executeTransactionDescription":"Esto creará una nueva transacción con fecha de hoy",
-  "transferCreated":"Transferencia creada"
-
+  "transferCreated":"Transferencia creada",
+  "welcomeBack":"Bienvenido de vuelta",
+  "selectLanguage":"Selecciona el idioma de Moedeiro",
+  "selectCountry":"Selecciona tu país",
+  "selectCountryDisclaimer":"Necesitamos el pais para que Moedeiro pueda ofrecer los datos con el formato regional correcto"
 
 }

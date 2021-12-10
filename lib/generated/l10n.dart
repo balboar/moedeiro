@@ -810,10 +810,10 @@ class S {
     );
   }
 
-  /// `All set, welcome to Moedeiro`
+  /// `Welcome to Moedeiro`
   String get allSet {
     return Intl.message(
-      'All set, welcome to Moedeiro',
+      'Welcome to Moedeiro',
       name: 'allSet',
       desc: '',
       args: [],
@@ -1105,6 +1105,46 @@ class S {
     return Intl.message(
       'Transfer created',
       name: 'transferCreated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome back`
+  String get welcomeBack {
+    return Intl.message(
+      'Welcome back',
+      name: 'welcomeBack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select language for Moedeiro`
+  String get selectLanguage {
+    return Intl.message(
+      'Select language for Moedeiro',
+      name: 'selectLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select your country`
+  String get selectCountry {
+    return Intl.message(
+      'Select your country',
+      name: 'selectCountry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is just for formatting purposes, so Moedeiro can show you your regional formats`
+  String get selectCountryDisclaimer {
+    return Intl.message(
+      'This is just for formatting purposes, so Moedeiro can show you your regional formats',
+      name: 'selectCountryDisclaimer',
       desc: '',
       args: [],
     );

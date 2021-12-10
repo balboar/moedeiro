@@ -3,7 +3,7 @@ import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/models/recurrences.dart';
 import 'package:moedeiro/provider/mainModel.dart';
 import 'package:moedeiro/screens/recurrences/components/recurrenceBottomSheet.dart';
-import 'package:moedeiro/screens/recurrences/components/recurrenceCard.dart';
+import 'package:moedeiro/screens/recurrences/components/recurrenceWidgets.dart';
 import 'package:provider/provider.dart';
 import 'package:moedeiro/generated/l10n.dart';
 

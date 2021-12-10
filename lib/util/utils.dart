@@ -1,7 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:moedeiro/generated/l10n.dart';
 import 'package:moedeiro/models/settings.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +23,16 @@ String _formatHiddenCurrency(BuildContext context) {
   Locale locale = Localizations.localeOf(context);
   var format = NumberFormat.simpleCurrency(locale: locale.toString());
   return '${format.positivePrefix}*****${format.positiveSuffix}';
+}
+
+String getLocaleLabel(BuildContext context, String locale) {
+  if (locale == 'system') {
+    return S.of(context).systemDefaultTitle;
+  } else {
+    var activeLocale =
+        languageOptions.firstWhere((element) => element.key == locale);
+    return activeLocale.value;
+  }
 }
 
 class LanguageValue {

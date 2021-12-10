@@ -76,7 +76,7 @@
   "createAccountText":"Let's create your first account",
   "createAccountError":"It's mandatory to create an account",
   "createAccountSuccess":"Create another account",
-  "allSet":"All set, welcome to Moedeiro",
+  "allSet":"Welcome to Moedeiro",
   "next":"NEXT",
   "prev":"PREV",
   "step":"STEP",
@@ -105,7 +105,11 @@
   "execute":"Execute",
   "executeTransaction":"Execute transaction?",
   "executeTransactionDescription":"A new transaction is going to be created with today's date",
-  "transferCreated":"Transfer created"
+  "transferCreated":"Transfer created",
+  "welcomeBack":"Welcome back",
+  "selectLanguage":"Select language for Moedeiro",
+  "selectCountry":"Select your country",
+  "selectCountryDisclaimer":"This is just for formatting purposes, so Moedeiro can show you your regional formats"
 
 
 }

@@ -67,14 +67,14 @@ class _DotSecretUIState extends State<DotSecretUI>
     _animation = _animationController
         .drive(CurveTween(curve: Curves.elasticIn))
         .drive(Tween<Offset>(begin: Offset.zero, end: const Offset(0.025, 0)))
-          ..addListener(() {
-            setState(() {});
-          })
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              _animationController.reverse();
-            }
-          });
+      ..addListener(() {
+        setState(() {});
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _animationController.reverse();
+        }
+      });
   }
 
   @override
@@ -117,7 +117,9 @@ class _DotSecretUIState extends State<DotSecretUI>
       height: widget.config.dotSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: enabled ? enabledColor : widget.config.disabledColor,
+        color: enabled
+            ? Theme.of(context).colorScheme.secondary
+            : widget.config.disabledColor,
       ),
     );
   }

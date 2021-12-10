@@ -8,6 +8,7 @@
 // ignore_for_file:prefer_single_quotes,comment_references, directives_ordering
 // ignore_for_file:annotate_overrides,prefer_generic_function_type_aliases
 // ignore_for_file:unused_import, file_names, avoid_escaping_inner_quotes
+// ignore_for_file:unnecessary_string_interpolations, unnecessary_string_escapes
 
 import 'package:intl/intl.dart';
 import 'package:intl/message_lookup_by_library.dart';
@@ -28,8 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "accountSelectError":
             MessageLookupByLibrary.simpleMessage("Select an account"),
         "accountsTitle": MessageLookupByLibrary.simpleMessage("Accounts"),
-        "allSet": MessageLookupByLibrary.simpleMessage(
-            "All set, welcome to Moedeiro"),
+        "allSet": MessageLookupByLibrary.simpleMessage("Welcome to Moedeiro"),
         "amount": MessageLookupByLibrary.simpleMessage("Amount"),
         "amountError": MessageLookupByLibrary.simpleMessage(
             "Amount should be greater than 0"),
@@ -144,6 +144,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "search": MessageLookupByLibrary.simpleMessage("Search.."),
         "security": MessageLookupByLibrary.simpleMessage("Security"),
+        "selectCountry":
+            MessageLookupByLibrary.simpleMessage("Select your country"),
+        "selectCountryDisclaimer": MessageLookupByLibrary.simpleMessage(
+            "This is just for formatting purposes, so Moedeiro can show you your regional formats"),
+        "selectLanguage": MessageLookupByLibrary.simpleMessage(
+            "Select language for Moedeiro"),
         "setUpMoedeiro": MessageLookupByLibrary.simpleMessage(
             "Let\'s set up your first account"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
@@ -165,6 +171,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Use fingerprint"),
         "version": MessageLookupByLibrary.simpleMessage("Version"),
         "weekly": MessageLookupByLibrary.simpleMessage("Weekly"),
+        "welcomeBack": MessageLookupByLibrary.simpleMessage("Welcome back"),
         "yearly": MessageLookupByLibrary.simpleMessage("Yearly")
       };
 }

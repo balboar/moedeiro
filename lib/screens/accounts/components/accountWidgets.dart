@@ -2,11 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/models/accounts.dart';
 import 'package:moedeiro/provider/mainModel.dart';
-import 'package:moedeiro/screens/accounts/components/accountCharts.dart';
-import 'package:moedeiro/screens/summary/components/transactionsCharts.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class AccountCard extends StatefulWidget {
@@ -26,7 +23,9 @@ class _AccountCardState extends State<AccountCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+      color: Theme.of(context).scaffoldBackgroundColor,
+      elevation: 0,
       child: ListTile(
         onTap: () {
           Provider.of<AccountModel>(context, listen: false).setActiveAccount =
@@ -34,15 +33,6 @@ class _AccountCardState extends State<AccountCard> {
           Navigator.pushNamed(context, '/accountTransactionsPage',
               arguments: false);
         },
-        // leading: CircleAvatar(
-        //   // backgroundImage: widget.account!.icon != null
-        //   //     ? FileImage(File(widget.account!.icon!), scale: 0.9)
-        //   //     : null,
-        //   backgroundColor:
-        //       widget.account!.icon != null ? Colors.transparent : Colors.grey,
-        //   radius: 20,
-        // ),
-
         leading: CircleAvatar(
           backgroundImage: widget.account!.icon != null
               ? FileImage(
@@ -230,14 +220,3 @@ class _AccountPageAppBarState extends State<AccountPageAppBar> {
     );
   }
 }
-
- // SliverAppBar(
-  //           flexibleSpace: FlexibleSpaceBar(
-  //             centerTitle: true,
-  //             title: Text(S.of(context).accountsTitle),
-  //           ),
-  //           floating: false,
-  //           snap: false,
-  //           pinned: true,
-  //           expandedHeight: MediaQuery.of(context).size.height * 0.30,
-  //         ),
