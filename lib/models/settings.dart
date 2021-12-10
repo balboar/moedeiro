@@ -60,6 +60,7 @@ class SettingsModel extends ChangeNotifier {
   String get localeString => _localeString;
   set localeString(String value) {
     _localeString = value;
+
     notifyListeners();
     prefs.setString('locale', _localeString);
   }

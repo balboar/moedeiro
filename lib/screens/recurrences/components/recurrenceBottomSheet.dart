@@ -22,9 +22,7 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
   late Map<String, dynamic> _data;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _dateController = TextEditingController();
-  TextEditingController _timeController = TextEditingController();
   TextEditingController _dateNextEventController = TextEditingController();
-  TextEditingController _timeNextEventController = TextEditingController();
   TextEditingController _categoryController = TextEditingController();
   TextEditingController _accountController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
@@ -44,20 +42,8 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
           )
         : '';
 
-    _timeController.text = _data['timestamp'] != null
-        ? DateFormat.Hm().format(
-            DateTime.fromMillisecondsSinceEpoch(_data['timestamp']),
-          )
-        : '';
-
     _dateNextEventController.text = _data['nextEvent'] != null
         ? DateFormat.yMMMd().format(
-            DateTime.fromMillisecondsSinceEpoch(_data['nextEvent']),
-          )
-        : '';
-
-    _timeNextEventController.text = _data['nextEvent'] != null
-        ? DateFormat.Hm().format(
             DateTime.fromMillisecondsSinceEpoch(_data['nextEvent']),
           )
         : '';
@@ -98,18 +84,20 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
     _dateController.dispose();
-    _timeController.dispose();
     _categoryController.dispose();
     _accountController.dispose();
+    _dateNextEventController.dispose();
+    _amountController.dispose();
+    _periodicityController.dispose();
+    _periodicityIntervalController.dispose();
     super.dispose();
   }
 
   // ignore: missing_return
-  Future<int?> _selectDate(BuildContext context) async {
-    DateTime _date = DateTime.fromMillisecondsSinceEpoch(_data['timestamp']);
+  Future<int?> _selectDate(
+      BuildContext context, int _dateInMilliseconds) async {
+    DateTime _date = DateTime.fromMillisecondsSinceEpoch(_dateInMilliseconds);
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _date,
@@ -323,7 +311,7 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
                 ),
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  _selectDate(context).then((int? value) {
+                  _selectDate(context, _data['timestamp']).then((int? value) {
                     if (value != null)
                       setState(() {
                         _dateController.text = DateFormat.yMMMd().format(
@@ -347,14 +335,14 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
                 ),
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  _selectDate(context).then((int? value) {
+                  _selectDate(context, _data['nextEvent']).then((int? value) {
                     if (value != null)
                       setState(() {
                         _dateNextEventController.text =
                             DateFormat.yMMMd().format(
                           DateTime.fromMillisecondsSinceEpoch(value),
                         );
-                        _data['timestamp'] = value;
+                        _data['nextEvent'] = value;
                       });
                   });
                 },

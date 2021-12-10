@@ -93,7 +93,8 @@ class _RecurrencesPageState extends State<RecurrencesPage> {
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               titlePadding: EdgeInsets.symmetric(horizontal: 10),
-              title: Text(S.of(context).recurrences),
+              title:
+                  Text(S.of(context).recurrences, textAlign: TextAlign.center),
             ),
             floating: false,
             snap: false,

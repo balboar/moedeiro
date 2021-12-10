@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/generated/l10n.dart';
+import 'package:moedeiro/main.dart';
 import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/screens/accounts/components/AccountsBottomSheetWidget.dart';
 import 'package:moedeiro/screens/settings/components/languageSelectionDialog.dart';
@@ -169,6 +170,11 @@ class _WelcomePageState extends State<WelcomePage> {
                   _localeString =
                       Provider.of<SettingsModel>(context, listen: false)
                           .localeString;
+                  if (_localeString == 'system')
+                    MyApp.setLocale(context, Localizations.localeOf(context));
+                  else
+                    MyApp.setLocale(context,
+                        Locale.fromSubtags(languageCode: _localeString));
                   setState(() {
                     _localeLabel = getLocaleLabel(context, _localeString);
                   });

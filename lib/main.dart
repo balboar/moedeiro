@@ -33,13 +33,12 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final Locale? locale;
   final bool lockScreen;
   final bool useBiometrics;
   final String? pin;
   final bool firstTime;
-  final String theme = 'dark';
 
   MyApp({
     Key? key,
@@ -49,6 +48,31 @@ class MyApp extends StatelessWidget {
     required this.firstTime,
     this.pin,
   }) : super(key: key);
+
+  static void setLocale(BuildContext context, Locale newLocale) async {
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state!.changeLanguage(newLocale);
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final String theme = 'dark';
+  Locale? _locale;
+
+  changeLanguage(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
+
+  @override
+  void initState() {
+    _locale = widget.locale;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,17 +102,17 @@ class MyApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: Provider.of<SettingsModel>(context, listen: true).themeMode,
         onGenerateRoute: RouteGenerator.generateRoute,
-        initialRoute: lockScreen
+        initialRoute: widget.lockScreen
             ? '/lockScreen'
-            : firstTime
+            : widget.firstTime
                 ? '/welcomePage'
                 : '/',
         onGenerateInitialRoutes: (String initialRouteName) {
           return [
             RouteGenerator.generateRoute(
                 RouteSettings(name: initialRouteName, arguments: {
-              "pin": pin,
-              "useBiometrics": useBiometrics,
+              "pin": widget.pin,
+              "useBiometrics": widget.useBiometrics,
             })),
           ];
         },
@@ -98,7 +122,7 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
         ],
         supportedLocales: S.delegate.supportedLocales,
-        locale: locale,
+        locale: _locale,
       ),
     );
   }
