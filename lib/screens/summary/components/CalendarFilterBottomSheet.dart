@@ -56,161 +56,156 @@ class _CalendarFilterBottomSheetState extends State<CalendarFilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-        expand: false,
-        maxChildSize: 0.95,
-        minChildSize: 0.95,
-        initialChildSize: 0.95,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return Padding(
-              padding: EdgeInsets.only(
-                  right: 20.0,
-                  left: 20,
-                  top: 30,
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0, bottom: 20),
-                    child: Text('${S.of(context).group}...',
-                        style: Theme.of(context).textTheme.headline6),
-                  ),
-                  ListTile(
-                      onTap: () {
-                        setState(() {
-                          _data['Filter'] = 'M';
-                          _selectedMonthly = !_selectedMonthly;
-                          if (_selectedMonthly) _selectedYearly = false;
-                          if (_selectedMonthly) {
-                            _dateToController.text = '';
-                            _dateFromController.text = '';
-                          }
-                        });
-                      },
-                      leading: _selectedMonthly
-                          ? _monthlyIconSelected
-                          : _monthlyIconNotSelected,
-                      title: Text(S.of(context).monthly)),
-                  ListTile(
-                      onTap: () {
-                        setState(() {
-                          _data['Filter'] = 'Y';
-                          _selectedYearly = !_selectedYearly;
+    return SingleChildScrollView(
+      child:
+          // maxChildSize: 0.95,
+          // minChildSize: 0.25,
+          // expand: false,
+          // builder: (BuildContext context, ScrollController scrollController) {
+          Padding(
+        padding: EdgeInsets.only(
+            right: 20.0,
+            left: 20,
+            top: 30,
+            bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, bottom: 20),
+              child: Text('${S.of(context).group}...',
+                  style: Theme.of(context).textTheme.headline6),
+            ),
+            ListTile(
+                onTap: () {
+                  setState(() {
+                    _data['Filter'] = 'M';
+                    _selectedMonthly = !_selectedMonthly;
+                    if (_selectedMonthly) _selectedYearly = false;
+                    if (_selectedMonthly) {
+                      _dateToController.text = '';
+                      _dateFromController.text = '';
+                    }
+                  });
+                },
+                leading: _selectedMonthly
+                    ? _monthlyIconSelected
+                    : _monthlyIconNotSelected,
+                title: Text(S.of(context).monthly)),
+            ListTile(
+                onTap: () {
+                  setState(() {
+                    _data['Filter'] = 'Y';
+                    _selectedYearly = !_selectedYearly;
 
-                          if (_selectedYearly) _selectedMonthly = false;
+                    if (_selectedYearly) _selectedMonthly = false;
 
-                          if (_selectedYearly) {
-                            _dateToController.text = '';
-                            _dateFromController.text = '';
-                          }
-                        });
-                      },
-                      leading: _selectedYearly
-                          ? _yearlyIconSelected
-                          : _yearlyIconNotSelected,
-                      title: Text(S.of(context).yearly)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 20),
-                    child: Text(
-                      S.of(context).customRange,
-                      style: Theme.of(context).textTheme.bodyText1,
+                    if (_selectedYearly) {
+                      _dateToController.text = '';
+                      _dateFromController.text = '';
+                    }
+                  });
+                },
+                leading: _selectedYearly
+                    ? _yearlyIconSelected
+                    : _yearlyIconNotSelected,
+                title: Text(S.of(context).yearly)),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+              child: Text(
+                S.of(context).customRange,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: 130,
+                  child: TextFormField(
+                    readOnly: true,
+                    controller: _dateFromController,
+                    decoration: InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      prefixIcon: Icon(Icons.calendar_today),
+                      labelText: S.of(context).from,
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        width: 130,
-                        child: TextFormField(
-                          readOnly: true,
-                          controller: _dateFromController,
-                          decoration: InputDecoration(
-                            enabledBorder: InputBorder.none,
-                            prefixIcon: Icon(Icons.calendar_today),
-                            labelText: S.of(context).from,
-                          ),
-                          onTap: () {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            _selectDate(context, DateTime.now())
-                                .then((int? value) {
-                              if (value != null) {
-                                setState(() {
-                                  _selectedCustomRange = !_selectedCustomRange;
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      _selectDate(context, DateTime.now()).then((int? value) {
+                        if (value != null) {
+                          setState(() {
+                            _selectedCustomRange = !_selectedCustomRange;
 
-                                  if (_selectedCustomRange) {
-                                    _selectedMonthly = false;
-                                    _selectedYearly = false;
-                                  }
+                            if (_selectedCustomRange) {
+                              _selectedMonthly = false;
+                              _selectedYearly = false;
+                            }
 
-                                  _data['Filter'] = 'C';
-                                  _data['Date1'] =
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          value);
-                                  _dateFromController.text =
-                                      DateFormat.yMd().format(
-                                    DateTime.fromMillisecondsSinceEpoch(value),
-                                  );
-                                });
-                              }
-                            });
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: 130,
-                        child: TextFormField(
-                          readOnly: true,
-                          controller: _dateToController,
-                          decoration: InputDecoration(
-                            enabledBorder: InputBorder.none,
-                            prefixIcon: Icon(Icons.calendar_today),
-                            labelText: S.of(context).to,
-                          ),
-                          onTap: () {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            _selectDate(context, DateTime.now())
-                                .then((int? value) {
-                              if (value != null) {
-                                setState(() {
-                                  _selectedCustomRange = !_selectedCustomRange;
-                                  if (_selectedCustomRange) {
-                                    _selectedMonthly = false;
-                                    _selectedYearly = false;
-                                  }
+                            _data['Filter'] = 'C';
+                            _data['Date1'] =
+                                DateTime.fromMillisecondsSinceEpoch(value);
+                            _dateFromController.text = DateFormat.yMd().format(
+                              DateTime.fromMillisecondsSinceEpoch(value),
+                            );
+                          });
+                        }
+                      });
+                    },
+                  ),
+                ),
+                Container(
+                  width: 130,
+                  child: TextFormField(
+                    readOnly: true,
+                    controller: _dateToController,
+                    decoration: InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      prefixIcon: Icon(Icons.calendar_today),
+                      labelText: S.of(context).to,
+                    ),
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      _selectDate(context, DateTime.now()).then((int? value) {
+                        if (value != null) {
+                          setState(() {
+                            _selectedCustomRange = !_selectedCustomRange;
+                            if (_selectedCustomRange) {
+                              _selectedMonthly = false;
+                              _selectedYearly = false;
+                            }
 
-                                  _data['Filter'] = 'C';
-                                  _data['Date2'] =
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          value);
-                                  _dateToController.text =
-                                      DateFormat.yMd().format(
-                                    DateTime.fromMillisecondsSinceEpoch(value),
-                                  );
-                                });
-                              }
-                            });
-                          },
-                        ),
-                      ),
-                    ],
+                            _data['Filter'] = 'C';
+                            _data['Date2'] =
+                                DateTime.fromMillisecondsSinceEpoch(value);
+                            _dateToController.text = DateFormat.yMd().format(
+                              DateTime.fromMillisecondsSinceEpoch(value),
+                            );
+                          });
+                        }
+                      });
+                    },
                   ),
-                  ButtonBar(
-                    buttonHeight: 40.0,
-                    buttonMinWidth: 140.0,
-                    alignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SaveButton(
-                        () {
-                          Navigator.pop(context, _data);
-                        },
-                        label: S.of(context).acceptButtonText,
-                      ),
-                    ],
-                  ),
-                ],
-              ));
-        });
+                ),
+              ],
+            ),
+            Center(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 20),
+                height: 40.0,
+                width: MediaQuery.of(context).size.width - 50,
+                child: MainButtonMoedeiro(
+                  onPressed: () {
+                    Navigator.pop(context, _data);
+                  },
+                  label: S.of(context).acceptButtonText,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

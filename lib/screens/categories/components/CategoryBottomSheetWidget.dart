@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/components/buttonBarForBottomSheet.dart';
 import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/dialogs/InfoDialog.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
@@ -75,13 +76,14 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
     );
   }
 
-  void deleteCategory(CategoryModel model) {
+  void deleteCategory() {
     if (!widget.emptyCategory)
       _showCategoryNotEmptyDialog().then((value) => Navigator.pop(context));
     else if (category.uuid != null) {
       _showMyDialog().then((value) {
         if (value!) {
-          model.delete(category.uuid!);
+          Provider.of<CategoryModel>(context, listen: false)
+              .delete(category.uuid!);
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -89,16 +91,17 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
     }
   }
 
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      Provider.of<CategoryModel>(context, listen: false)
+          .insertCategoryIntoDb(category);
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    void _submitForm(Function save) {
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState!.save();
-        save(category);
-        Navigator.pop(context);
-      }
-    }
-
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
@@ -187,25 +190,15 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                     });
                   },
                 ),
-                Consumer<CategoryModel>(builder: (BuildContext context,
-                    CategoryModel model, Widget? widget) {
-                  return ButtonBar(
-                    buttonHeight: 40.0,
-                    buttonMinWidth: 140.0,
-                    alignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Visibility(
-                        child: DeleteButton(() {
-                          deleteCategory(model);
-                        }),
-                        visible: category.uuid != null,
-                      ),
-                      SaveButton(() {
-                        _submitForm(model.insertCategoryIntoDb);
-                      }),
-                    ],
-                  );
-                }),
+                ButtonBarMoedeiro(
+                  category.uuid != null,
+                  onPressedButton1: () {
+                    _submitForm();
+                  },
+                  onPressedButton2: () {
+                    deleteCategory();
+                  },
+                ),
               ],
             )),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +25,8 @@ class LanguageSelectionDialog extends StatelessWidget {
       actionsPadding: EdgeInsets.symmetric(horizontal: 5.0),
       buttonPadding: EdgeInsets.symmetric(horizontal: 5.0),
       actions: <Widget>[
-        TextButton(
-          child: Text(S.of(context).cancel),
+        TextButtonMoedeiro(
+          S.of(context).cancel,
           onPressed: () {
             Navigator.of(context).pop(true);
           },
@@ -64,7 +65,9 @@ class _RadioButtonsState extends State<RadioButtons> {
       children: languageOptions
           .map(
             (LanguageValue e) => RadioListTile(
-              title: Text(e.value),
+              title: Text(e.key == 'system'
+                  ? S.of(context).systemDefaultTitle
+                  : e.value),
               value: e.key,
               groupValue: _selectedValue,
               onChanged: (dynamic val) async {

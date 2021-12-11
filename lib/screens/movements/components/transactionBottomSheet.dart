@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:moedeiro/components/buttonBarForBottomSheet.dart';
 import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
@@ -129,12 +130,14 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     );
   }
 
-  void deleteTransaction(TransactionModel model) {
+  void deleteTransaction() {
     if (_data['uuid'] != null) {
       _showMyDialog().then(
         (value) {
           if (value!) {
-            model.delete(_data['uuid']).then(
+            Provider.of<TransactionModel>(context, listen: false)
+                .delete(_data['uuid'])
+                .then(
               (value) {
                 Provider.of<AccountModel>(context, listen: false).getAccounts();
                 Navigator.pop(context);
@@ -146,11 +149,13 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
     }
   }
 
-  void _submitForm(Function save) {
+  void _submitForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (isExpense!) _data['amount'] = -1 * _data['amount'].abs();
-      save(Transaction.fromMap(_data)).then(
+      Provider.of<TransactionModel>(context, listen: false)
+          .insertTransactiontIntoDb(Transaction.fromMap(_data))
+          .then(
         (value) {
           Provider.of<AccountModel>(context, listen: false).getAccounts();
           Navigator.pop(context);
@@ -345,25 +350,13 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet> {
                   ),
                 ],
               ),
-              Consumer<TransactionModel>(
-                builder: (BuildContext context, TransactionModel model,
-                    Widget? widget) {
-                  return ButtonBar(
-                    buttonHeight: 40.0,
-                    buttonMinWidth: 140.0,
-                    alignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Visibility(
-                        visible: _data['uuid'] != null,
-                        child: DeleteButton(() {
-                          deleteTransaction(model);
-                        }),
-                      ),
-                      SaveButton(() {
-                        _submitForm(model.insertTransactiontIntoDb);
-                      }),
-                    ],
-                  );
+              ButtonBarMoedeiro(
+                _data['uuid'] == null,
+                onPressedButton1: () {
+                  _submitForm();
+                },
+                onPressedButton2: () {
+                  deleteTransaction();
                 },
               ),
             ],

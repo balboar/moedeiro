@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:moedeiro/components/buttonBarForBottomSheet.dart';
 import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
@@ -107,11 +108,13 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
     );
   }
 
-  void deleteTransfer(TransfersModel model) {
+  void deleteTransfer() {
     if (_data['uuid'] != null) {
       _showMyDialog().then((value) {
         if (value!) {
-          model.delete(_data['uuid']).then((value) {
+          Provider.of<TransfersModel>(context, listen: false)
+              .delete(_data['uuid'])
+              .then((value) {
             Provider.of<AccountModel>(context, listen: false).getAccounts();
             Navigator.pop(context);
           });
@@ -120,20 +123,22 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
     }
   }
 
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      Provider.of<TransfersModel>(context, listen: false)
+          .insertTransferIntoDb(Transfer.fromMap(_data))
+          .then(
+        (value) {
+          Provider.of<AccountModel>(context, listen: false).getAccounts();
+          Navigator.pop(context);
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    void _submitForm(Function save) {
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState!.save();
-        save(Transfer.fromMap(_data)).then(
-          (value) {
-            Provider.of<AccountModel>(context, listen: false).getAccounts();
-            Navigator.pop(context);
-          },
-        );
-      }
-    }
-
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
@@ -313,25 +318,15 @@ class _TransferBottomSheetState extends State<TransferBottomSheet> {
                   ),
                 ],
               ),
-              Consumer<TransfersModel>(builder:
-                  (BuildContext context, TransfersModel model, Widget? widget) {
-                return ButtonBar(
-                  buttonHeight: 40.0,
-                  buttonMinWidth: 140.0,
-                  alignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Visibility(
-                      visible: _data['uuid'] != null,
-                      child: DeleteButton(() {
-                        deleteTransfer(model);
-                      }),
-                    ),
-                    SaveButton(() {
-                      _submitForm(model.insertTransferIntoDb);
-                    }),
-                  ],
-                );
-              }),
+              ButtonBarMoedeiro(
+                _data['uuid'] == null,
+                onPressedButton1: () {
+                  _submitForm();
+                },
+                onPressedButton2: () {
+                  deleteTransfer();
+                },
+              ),
             ],
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:moedeiro/components/buttonBarForBottomSheet.dart';
 import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
@@ -141,12 +142,14 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
     );
   }
 
-  void deleteRecurrence(RecurrenceModel model) {
+  void deleteRecurrence() {
     if (_data['uuid'] != null) {
       _showMyDialog().then(
         (value) {
           if (value!) {
-            model.delete(_data['uuid']).then(
+            Provider.of<RecurrenceModel>(context, listen: false)
+                .delete(_data['uuid'])
+                .then(
               (value) {
                 Navigator.pop(context);
               },
@@ -157,11 +160,13 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
     }
   }
 
-  void _submitForm(Function save) {
+  void _submitForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (isExpense!) _data['amount'] = -1 * _data['amount'].abs();
-      save(Recurrence.fromMap(_data)).then(
+      Provider.of<RecurrenceModel>(context, listen: false)
+          .insertRecurrenceIntoDb(Recurrence.fromMap(_data))
+          .then(
         (value) {
           Navigator.pop(context);
         },
@@ -431,25 +436,13 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
                   ),
                 ],
               ),
-              Consumer<RecurrenceModel>(
-                builder: (BuildContext context, RecurrenceModel model,
-                    Widget? widget) {
-                  return ButtonBar(
-                    buttonHeight: 40.0,
-                    buttonMinWidth: 140.0,
-                    alignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Visibility(
-                        visible: _data['uuid'] != null,
-                        child: DeleteButton(() {
-                          deleteRecurrence(model);
-                        }),
-                      ),
-                      SaveButton(() {
-                        _submitForm(model.insertRecurrenceIntoDb);
-                      }),
-                    ],
-                  );
+              ButtonBarMoedeiro(
+                _data['uuid'] == null,
+                onPressedButton1: () {
+                  _submitForm();
+                },
+                onPressedButton2: () {
+                  deleteRecurrence();
                 },
               ),
             ],

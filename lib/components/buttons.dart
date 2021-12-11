@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
-class SaveButton extends StatelessWidget {
-  final Function onPressed;
+class MainButtonMoedeiro extends StatelessWidget {
+  final Function? onPressed;
   final String? label;
-  const SaveButton(this.onPressed, {Key? key, this.label}) : super(key: key);
+  const MainButtonMoedeiro({Key? key, this.label, this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,24 +13,61 @@ class SaveButton extends StatelessWidget {
       child: Text(
         label ?? S.of(context).save,
       ),
+      style: TextButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        primary: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        onSurface: Colors.grey,
+        padding: EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: 30,
+        ),
+      ),
       onPressed: onPressed as void Function()?,
     );
   }
 }
 
-class DeleteButton extends StatelessWidget {
-  final Function onPressed;
-  const DeleteButton(this.onPressed, {Key? key}) : super(key: key);
+class SecondaryButtonMoedeiro extends StatelessWidget {
+  final Function? onPressed;
+  final String? label;
+  const SecondaryButtonMoedeiro({Key? key, this.label, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      child: Text(
+        label ?? S.of(context).delete,
+      ),
+      style: TextButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        // primary: Colors.white,
+        //   backgroundColor: Theme.of(context).colorScheme.secondary,
+        onSurface: Colors.grey,
+        padding: EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: 30,
+        ),
+      ),
+      onPressed: onPressed as void Function()?,
+    );
+  }
+}
+
+class TextButtonMoedeiro extends StatelessWidget {
+  final Function? onPressed;
+  final String label;
+  const TextButtonMoedeiro(this.label, {Key? key, this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: Text(
-        S.of(context).delete,
-        style: TextStyle(
-          color: Colors.red,
-        ),
-      ),
+      child: Text(label),
       onPressed: onPressed as void Function()?,
     );
   }

@@ -366,7 +366,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Provider.of<SettingsModel>(context, listen: false)
                           .localeString;
                   if (_localeString == 'system')
-                    MyApp.setLocale(context, Localizations.localeOf(context));
+                    MyApp.setLocale(context, null);
                   else
                     MyApp.setLocale(context,
                         Locale.fromSubtags(languageCode: _localeString));

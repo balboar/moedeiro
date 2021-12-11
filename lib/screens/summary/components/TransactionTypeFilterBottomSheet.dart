@@ -55,86 +55,82 @@ class _TransactionTypeFilterBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-        expand: false,
-        maxChildSize: 0.9,
-        minChildSize: 0.9,
-        initialChildSize: 0.9,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return Padding(
-              padding: EdgeInsets.only(
-                  right: 20.0,
-                  left: 20,
-                  top: 30,
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0, bottom: 20),
-                    child: Text('${S.of(context).groupby}...',
-                        style: Theme.of(context).textTheme.headline6),
-                  ),
-                  ListTile(
-                      onTap: () {
-                        setState(() {
-                          _data['Filter'] = '%';
-                          _selectedNetIncome = !_selectedNetIncome;
-                          if (_selectedNetIncome) {
-                            _selectedExpense = false;
-                            _selectedIncome = false;
-                          }
-                        });
-                      },
-                      leading: _selectedNetIncome
-                          ? _netIncomeIconSelected
-                          : _netIncomeIconNotSelected,
-                      title: Text(S.of(context).netIncome)),
-                  ListTile(
-                      onTap: () {
-                        setState(() {
-                          _data['Filter'] = 'I';
-                          _selectedIncome = !_selectedIncome;
-                          if (_selectedIncome) {
-                            _selectedExpense = false;
-                            _selectedNetIncome = false;
-                          }
-                        });
-                      },
-                      leading: _selectedIncome
-                          ? _incomeIconSelected
-                          : _incomeIconNotSelected,
-                      title: Text(S.of(context).income)),
-                  ListTile(
-                      onTap: () {
-                        setState(() {
-                          _data['Filter'] = 'E';
-                          _selectedExpense = !_selectedExpense;
-                          if (_selectedExpense) {
-                            _selectedNetIncome = false;
-                            _selectedIncome = false;
-                          }
-                        });
-                      },
-                      leading: _selectedExpense
-                          ? _expenseIconSelected
-                          : _expenseIconNotSelected,
-                      title: Text(S.of(context).expense)),
-                  ButtonBar(
-                    buttonHeight: 40.0,
-                    buttonMinWidth: 140.0,
-                    alignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SaveButton(
-                        () {
-                          Navigator.pop(context, _data);
-                        },
-                        label: S.of(context).acceptButtonText,
-                      ),
-                    ],
-                  ),
-                ],
-              ));
-        });
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(
+            right: 20.0,
+            left: 20,
+            top: 30,
+            bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, bottom: 20),
+              child: Text('${S.of(context).groupby}...',
+                  style: Theme.of(context).textTheme.headline6),
+            ),
+            ListTile(
+                onTap: () {
+                  setState(() {
+                    _data['Filter'] = '%';
+                    _selectedNetIncome = !_selectedNetIncome;
+                    if (_selectedNetIncome) {
+                      _selectedExpense = false;
+                      _selectedIncome = false;
+                    }
+                  });
+                },
+                leading: _selectedNetIncome
+                    ? _netIncomeIconSelected
+                    : _netIncomeIconNotSelected,
+                title: Text(S.of(context).netIncome)),
+            ListTile(
+                onTap: () {
+                  setState(() {
+                    _data['Filter'] = 'I';
+                    _selectedIncome = !_selectedIncome;
+                    if (_selectedIncome) {
+                      _selectedExpense = false;
+                      _selectedNetIncome = false;
+                    }
+                  });
+                },
+                leading: _selectedIncome
+                    ? _incomeIconSelected
+                    : _incomeIconNotSelected,
+                title: Text(S.of(context).income)),
+            ListTile(
+                onTap: () {
+                  setState(() {
+                    _data['Filter'] = 'E';
+                    _selectedExpense = !_selectedExpense;
+                    if (_selectedExpense) {
+                      _selectedNetIncome = false;
+                      _selectedIncome = false;
+                    }
+                  });
+                },
+                leading: _selectedExpense
+                    ? _expenseIconSelected
+                    : _expenseIconNotSelected,
+                title: Text(S.of(context).expense)),
+            Center(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 20),
+                height: 40.0,
+                width: MediaQuery.of(context).size.width - 50,
+                child: MainButtonMoedeiro(
+                  onPressed: () {
+                    Navigator.pop(context, _data);
+                  },
+                  label: S.of(context).acceptButtonText,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

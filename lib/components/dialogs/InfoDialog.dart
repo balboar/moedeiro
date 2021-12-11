@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class InfoDialog extends StatelessWidget {
@@ -51,23 +52,12 @@ class InfoDialog extends StatelessWidget {
       actionsPadding: EdgeInsets.symmetric(horizontal: 5.0),
       buttonPadding: EdgeInsets.symmetric(horizontal: 5.0),
       actions: <Widget>[
-        ButtonBar(
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          alignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  primary: Colors.transparent,
-                  onPrimary: Theme.of(context).textTheme.bodyText1!.color),
-              icon: Icon(Icons.cancel_outlined),
-              label: Text(S.of(context).cancel),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-          ],
-        )
+        TextButtonMoedeiro(
+          S.of(context).cancel,
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
       ],
     );
   }

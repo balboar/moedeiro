@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:moedeiro/components/buttonBarForBottomSheet.dart';
 import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/dialogs/InfoDialog.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
@@ -96,7 +97,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
     );
   }
 
-  void deleteAccount(AccountModel model) {
+  void deleteAccount() {
     List<Transaction> accountTransactions =
         Provider.of<TransactionModel>(context, listen: false)
             .getAccountTransactions(activeAccount.uuid);
@@ -105,7 +106,8 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
     else if (activeAccount.uuid != null) {
       _showMyDialog().then((value) {
         if (value!) {
-          model.deleteAccount(activeAccount.uuid!);
+          Provider.of<AccountModel>(context, listen: false)
+              .deleteAccount(activeAccount.uuid!);
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -113,16 +115,17 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
     }
   }
 
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      Provider.of<AccountModel>(context, listen: false)
+          .insertAccountIntoDb(activeAccount);
+      Navigator.pop(context, true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    void _submitForm(Function insertAccount) {
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState!.save();
-        insertAccount(activeAccount);
-        Navigator.pop(context, true);
-      }
-    }
-
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
@@ -197,25 +200,13 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                   activeAccount.initialAmount = double.parse(value!);
                 },
               ),
-              Consumer<AccountModel>(
-                builder:
-                    (BuildContext context, AccountModel model, Widget? widget) {
-                  return ButtonBar(
-                    buttonHeight: 40.0,
-                    buttonMinWidth: 140.0,
-                    alignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Visibility(
-                        child: DeleteButton(() {
-                          deleteAccount(model);
-                        }),
-                        visible: activeAccount.uuid != null,
-                      ),
-                      SaveButton(() {
-                        _submitForm(model.insertAccountIntoDb);
-                      }),
-                    ],
-                  );
+              ButtonBarMoedeiro(
+                activeAccount.uuid != null,
+                onPressedButton1: () {
+                  _submitForm();
+                },
+                onPressedButton2: () {
+                  deleteAccount();
                 },
               ),
             ],

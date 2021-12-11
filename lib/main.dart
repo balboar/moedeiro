@@ -49,7 +49,7 @@ class MyApp extends StatefulWidget {
     this.pin,
   }) : super(key: key);
 
-  static void setLocale(BuildContext context, Locale newLocale) async {
+  static void setLocale(BuildContext context, Locale? newLocale) async {
     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
     state!.changeLanguage(newLocale);
   }
@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
   final String theme = 'dark';
   Locale? _locale;
 
-  changeLanguage(Locale locale) {
+  changeLanguage(Locale? locale) {
     setState(() {
       _locale = locale;
     });

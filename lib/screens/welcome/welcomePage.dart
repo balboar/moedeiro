@@ -1,5 +1,6 @@
 import 'package:cool_stepper/cool_stepper.dart';
 import 'package:flutter/material.dart';
+import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/database/database.dart';
 import 'package:moedeiro/generated/l10n.dart';
@@ -80,19 +81,10 @@ class _WelcomePageState extends State<WelcomePage> {
               height: 100,
             ),
             Center(
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  primary: Colors.white,
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                  onSurface: Colors.grey,
-                  padding: EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 30,
-                  ),
-                ),
+              child: MainButtonMoedeiro(
+                label: _accountCreated
+                    ? S.of(context).createAccountSuccess
+                    : S.of(context).createAccountText,
                 onPressed: () {
                   showCustomModalBottomSheet(context, AccountBottomSheet(null),
                           enableDrag: false)
@@ -109,9 +101,6 @@ class _WelcomePageState extends State<WelcomePage> {
                       });
                   });
                 },
-                child: Text(_accountCreated
-                    ? S.of(context).createAccountSuccess
-                    : S.of(context).createAccountText),
               ),
             ),
           ],
@@ -152,19 +141,8 @@ class _WelcomePageState extends State<WelcomePage> {
               height: 100,
             ),
             Center(
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  primary: Colors.white,
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                  onSurface: Colors.grey,
-                  padding: EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 30,
-                  ),
-                ),
+              child: MainButtonMoedeiro(
+                label: S.of(context).language,
                 onPressed: () async {
                   await _showLanguageDialog();
                   _localeString =
@@ -179,7 +157,6 @@ class _WelcomePageState extends State<WelcomePage> {
                     _localeLabel = getLocaleLabel(context, _localeString);
                   });
                 },
-                child: Text(S.of(context).language),
               ),
             ),
             SizedBox(

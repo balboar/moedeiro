@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/generated/l10n.dart';
 
 class ComfirmDeleteDialog extends StatelessWidget {
@@ -52,35 +53,18 @@ class ComfirmDeleteDialog extends StatelessWidget {
       actionsPadding: EdgeInsets.symmetric(horizontal: 5.0),
       buttonPadding: EdgeInsets.symmetric(horizontal: 5.0),
       actions: <Widget>[
-        ButtonBar(
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          alignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  primary: Colors.transparent,
-                  onPrimary: Theme.of(context).textTheme.bodyText1!.color),
-              icon: Icon(Icons.cancel_outlined),
-              label: Text(S.of(context).cancel),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            ElevatedButton.icon(
-              icon: Icon(Icons.delete_outline_outlined),
-              style: ElevatedButton.styleFrom(
-                onPrimary: Theme.of(context).textTheme.button!.color,
-                elevation: 2,
-                primary: Theme.of(context).colorScheme.secondary,
-              ),
-              label: Text(confirmationLabel ?? S.of(context).delete),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
-        )
+        TextButtonMoedeiro(
+          S.of(context).cancel,
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
+        TextButtonMoedeiro(
+          confirmationLabel ?? S.of(context).delete,
+          onPressed: () {
+            Navigator.of(context).pop(true);
+          },
+        ),
       ],
     );
   }
