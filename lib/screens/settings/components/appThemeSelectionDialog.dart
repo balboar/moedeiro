@@ -10,7 +10,6 @@ class AppThemeSelectionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(context);
     return AlertDialog(
       insetPadding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 5.0),
       shape: RoundedRectangleBorder(

@@ -80,9 +80,7 @@ class DB {
     try {
       String _path = p.join(await (getDatabasesPath()), dbName);
       _db = await Helper(_path).getDb();
-    } catch (ex) {
-      print(ex);
-    }
+    } catch (ex) {}
   }
 
   static Future<List<Map<String, dynamic>>> query(String table,
@@ -476,6 +474,22 @@ class DB {
                 ' strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))=? and ' +
                 'strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) =?    group by 2,3 order by 1 desc ,2  desc',
             [filter, month, year]);
+      },
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>>
+      getTrasactionsByMonthAndCategoryInDateRange(String month, String year,
+          String filter, String from, String to) async {
+    return await _db!.transaction(
+      (txn) async {
+        return await txn.rawQuery(
+            'SELECT round(sum(abs(a.amount)),2) amount,c.name,c.uuid,count(a.uuid) total,c.type  FROM transactions a '
+                    'left outer join category c on c.uuid=a.category where c.type like ? and ' +
+                ' strftime("%m",datetime( substr(a.timestamp,1,10), "unixepoch"))=? and ' +
+                'strftime("%Y",datetime( substr(a.timestamp,1,10), "unixepoch")) =? and  ' +
+                ' date( substr(a.timestamp,1,10), "unixepoch")>=?	and date( substr(a.timestamp,1,10), "unixepoch")<=?    group by 2,3 order by 1 desc ,2  desc',
+            [filter, month, year, from, to]);
       },
     );
   }

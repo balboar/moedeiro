@@ -177,12 +177,12 @@ class TransactionChartState extends State<TransactionChart> {
     if (y2 == null) y2 = 0;
     return BarChartGroupData(barsSpace: 4, x: x, barRods: [
       BarChartRodData(
-        y: y1,
+        toY: y1,
         colors: [leftBarColor],
         width: width,
       ),
       BarChartRodData(
-        y: y2,
+        toY: y2,
         colors: [rightBarColor],
         width: width,
       ),
@@ -251,7 +251,7 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
       x: x,
       barRods: [
         BarChartRodData(
-          y: y1,
+          toY: y1,
           colors: [
             Colors.red,
           ],
@@ -292,7 +292,7 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
                         int rodIndex,
                       ) {
                         return BarTooltipItem(
-                          formatCurrency(context, rod.y),
+                          formatCurrency(context, rod.toY),
                           TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,

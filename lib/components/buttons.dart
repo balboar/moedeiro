@@ -17,9 +17,10 @@ class MainButtonMoedeiro extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        primary: Colors.white,
+        primary: Theme.of(context).brightness == Brightness.light
+            ? Colors.white
+            : Colors.black,
         backgroundColor: Theme.of(context).colorScheme.secondary,
-        onSurface: Colors.grey,
         padding: EdgeInsets.symmetric(
           vertical: 12,
           horizontal: 30,
@@ -45,9 +46,6 @@ class SecondaryButtonMoedeiro extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        // primary: Colors.white,
-        //   backgroundColor: Theme.of(context).colorScheme.secondary,
-        onSurface: Colors.grey,
         padding: EdgeInsets.symmetric(
           vertical: 12,
           horizontal: 30,

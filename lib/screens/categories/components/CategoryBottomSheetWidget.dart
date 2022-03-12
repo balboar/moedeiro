@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moedeiro/components/buttonBarForBottomSheet.dart';
-import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/dialogs/InfoDialog.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
@@ -191,7 +190,7 @@ class CategoryBottomSheetState extends State<CategoryBottomSheet> {
                   },
                 ),
                 ButtonBarMoedeiro(
-                  category.uuid != null,
+                  category.uuid == null,
                   onPressedButton1: () {
                     _submitForm();
                   },

@@ -29,7 +29,7 @@ class AppTheme {
       headline6: TextStyle(color: Colors.black),
       bodyText1: TextStyle(color: Colors.black),
     ),
-
+    brightness: Brightness.light,
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
     ),
@@ -57,6 +57,7 @@ class AppTheme {
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
     ),
+    brightness: Brightness.dark,
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: Color(0xFF1f2732), // Color(0xFF293342),
     ),

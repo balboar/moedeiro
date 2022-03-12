@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:moedeiro/components/buttonBarForBottomSheet.dart';
-import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/components/showBottomSheet.dart';
 import 'package:moedeiro/models/recurrences.dart';
@@ -107,28 +106,6 @@ class _RecurrenceBottomSheetState extends State<RecurrenceBottomSheet> {
     );
     if (picked != null && picked != _date) {
       return Future.value(picked.millisecondsSinceEpoch);
-    }
-  }
-
-  // ignore: missing_return
-  Future<int?> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(
-        DateTime.fromMillisecondsSinceEpoch(_data['timestamp']),
-      ),
-    );
-
-    if (picked != null) {
-      setState(() {
-        DateTime _fecha =
-            DateTime.fromMillisecondsSinceEpoch(_data['timestamp']);
-        int fecha = DateTime(_fecha.year, _fecha.month, _fecha.day, picked.hour,
-                picked.minute)
-            .millisecondsSinceEpoch;
-        _data['timestamp'] = fecha;
-      });
-      return Future.value(_data['timestamp']);
     }
   }
 

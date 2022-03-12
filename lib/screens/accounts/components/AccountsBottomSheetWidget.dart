@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/components/buttonBarForBottomSheet.dart';
-import 'package:moedeiro/components/buttons.dart';
 import 'package:moedeiro/components/dialogs/InfoDialog.dart';
 import 'package:moedeiro/components/dialogs/confirmDeleteDialog.dart';
 import 'package:moedeiro/models/accounts.dart';
@@ -201,7 +200,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
                 },
               ),
               ButtonBarMoedeiro(
-                activeAccount.uuid != null,
+                activeAccount.uuid == null,
                 onPressedButton1: () {
                   _submitForm();
                 },

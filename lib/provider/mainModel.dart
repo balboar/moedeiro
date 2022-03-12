@@ -266,7 +266,7 @@ class AnalyticsModel extends ChangeNotifier {
     transactionsSummary = value.reversed.toList();
     currentMonth = transactionsSummary[selectedIndex]['monthofyear'];
     currentYear = transactionsSummary[selectedIndex]['year'];
-    await _getTrasactionsByMonthAndCategory();
+    await _getTrasactionsByMonthAndCategoryInDateRange();
     notifyListeners();
     return Future.value(true);
   }
@@ -278,6 +278,23 @@ class AnalyticsModel extends ChangeNotifier {
     currentYear = transactionsSummary[selectedIndex]['year'];
     await _getTrasactionsByYearAndCategory();
     notifyListeners();
+    return Future.value(true);
+  }
+
+  Future<bool> _getTrasactionsByMonthAndCategoryInDateRange() async {
+    totalExpenses = transactionsSummary[selectedIndex]['amount'];
+    totalExpensesAbs = transactionsSummary[selectedIndex]['amount_abs'];
+    currentMonth = transactionsSummary[selectedIndex]['monthofyear'];
+    currentYear = transactionsSummary[selectedIndex]['year'];
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String date1 = formatter.format(_transactionsDateFilter['Date1']);
+    String date2 = formatter.format(_transactionsDateFilter['Date2']);
+    await DB
+        .getTrasactionsByMonthAndCategoryInDateRange(
+            currentMonth!, currentYear, _transactionTypeFilter, date1, date2)
+        .then((value) {
+      transactionsGrouped = value;
+    });
     return Future.value(true);
   }
 

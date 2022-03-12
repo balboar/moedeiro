@@ -6,8 +6,7 @@ class MonthDetail extends StatelessWidget {
   final double amount;
   final String? month;
   final String year;
-  Color activeColor = Colors.white;
-  Color disabledColor = Colors.grey;
+
   MonthDetail(this.amount, this.month, this.year);
 
   String returnDate() {

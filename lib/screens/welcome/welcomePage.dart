@@ -8,10 +8,8 @@ import 'package:moedeiro/main.dart';
 import 'package:moedeiro/models/settings.dart';
 import 'package:moedeiro/screens/accounts/components/AccountsBottomSheetWidget.dart';
 import 'package:moedeiro/screens/settings/components/languageSelectionDialog.dart';
-import 'package:moedeiro/util/countries.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:moedeiro/generated/l10n.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({

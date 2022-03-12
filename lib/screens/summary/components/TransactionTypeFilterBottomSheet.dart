@@ -41,18 +41,6 @@ class _TransactionTypeFilterBottomSheetState
     super.didChangeDependencies();
   }
 
-  Future<int?> _selectDate(BuildContext context, DateTime _date) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _date,
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != _date) {
-      return Future.value(picked.millisecondsSinceEpoch);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

@@ -38,7 +38,6 @@ class _AccountBalanceChartState extends State<AccountBalanceChart> {
         .accounts
         .forEach((element) {
       _total = _total + element.initialAmount!;
-      print(_total);
     });
     for (var i = 1; i <= chartData.length; i++) {
       spots.clear();
@@ -46,7 +45,7 @@ class _AccountBalanceChartState extends State<AccountBalanceChart> {
       //  if (i == 1) _total = widget.account.initialAmount!;
       _total = _total + chartData[i - 1]['amount'];
       el['amount'] = _total;
-      print(_total);
+
       chartDataParsed.add(Map.from(el));
       maxX = double.parse(i.toString());
     }

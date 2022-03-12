@@ -103,9 +103,7 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-  Icon _searchIcon = Icon(
-    Icons.search,
-  );
+
   bool isSearchClicked = true;
   final TextEditingController _filter = new TextEditingController();
 

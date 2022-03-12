@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:archive/archive_io.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moedeiro/components/dialogs/InfoDialog.dart';
@@ -24,7 +25,6 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart' as db;
 import 'package:path/path.dart' as p;
 import 'package:moedeiro/generated/l10n.dart';
-import 'package:device_info/device_info.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key? key}) : super(key: key);
@@ -132,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
     PermissionStatus status;
     DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     final androidInfo = await deviceInfoPlugin.androidInfo;
-    if (androidInfo.version.sdkInt > 25) {
+    if (androidInfo.version.sdkInt! > 25) {
       status = await Permission.manageExternalStorage.status;
       if (!status.isGranted) {
         await Permission.manageExternalStorage.request();
@@ -210,8 +210,6 @@ class _SettingsPageState extends State<SettingsPage> {
           income.add(row[2].toString().replaceAll('"', ''));
         else
           expense.add(row[2].toString().replaceAll('"', ''));
-
-        print(row);
       });
 
       accounts.forEach((element) async {
@@ -304,8 +302,6 @@ class _SettingsPageState extends State<SettingsPage> {
               account: account,
               category: cat),
         );
-
-        print(row);
       });
     } else {
       // User canceled the picker
