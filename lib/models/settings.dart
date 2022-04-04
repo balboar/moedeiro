@@ -91,6 +91,12 @@ class SettingsModel extends ChangeNotifier {
     setActiveTheme(value);
   }
 
+  setSelectedThemeMode(ThemeMode _themeMode) {
+    themeMode = _themeMode;
+    prefs.setString('theme', _activeTheme.toString());
+    notifyListeners();
+  }
+
   void setActiveTheme(String value) {
     _activeTheme = value;
     switch (value) {

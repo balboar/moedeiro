@@ -17,6 +17,7 @@ import 'package:moedeiro/screens/lockScreen/components/passwordBottomSheet.dart'
 import 'package:moedeiro/screens/settings/components/appThemeSelectionDialog.dart';
 import 'package:moedeiro/screens/settings/components/languageSelectionDialog.dart';
 import 'package:moedeiro/screens/settings/components/settingsWidgets.dart';
+import 'package:moedeiro/screens/settings/components/themeSwitcher.dart';
 import 'package:moedeiro/util/utils.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
@@ -371,6 +372,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
                 },
               ),
+              // ThemeSwitcher(),
               ListTile(
                 title: Text(S.of(context).theme),
                 subtitle: Text(_activeThemeLabel),
