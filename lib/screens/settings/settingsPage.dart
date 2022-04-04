@@ -332,7 +332,7 @@ class _SettingsPageState extends State<SettingsPage> {
       return S.of(context).systemDefaultTitle;
     } else {
       var activeAheme =
-          themeOptions.firstWhere((element) => element.key == theme);
+          themeOptions(context).firstWhere((element) => element.key == theme);
       return activeAheme.value;
     }
   }

@@ -53,8 +53,27 @@ class AppThemeValue {
   AppThemeValue(this.key, this.value);
 }
 
-List<AppThemeValue> themeOptions = [
-  AppThemeValue('system', 'Usar tema del sistema'),
+List<AppThemeValue> themeOptionsEng = [
+  AppThemeValue('system', 'System default'),
   AppThemeValue('light', 'Light'),
   AppThemeValue('dark', 'Dark')
 ];
+
+List<AppThemeValue> themeOptionsEsp = [
+  AppThemeValue('system', 'Usar tema del sistema'),
+  AppThemeValue('light', 'Claro'),
+  AppThemeValue('dark', 'Oscuro')
+];
+
+List<AppThemeValue> themeOptions(
+  BuildContext context,
+) {
+  Locale locale = Localizations.localeOf(context);
+  switch (locale.languageCode) {
+    case 'es':
+      return themeOptionsEsp;
+
+    default:
+      return themeOptionsEng;
+  }
+}

@@ -58,7 +58,7 @@ class _RadioButtonsState extends State<RadioButtons> {
   @override
   Widget build(BuildContext context) {
     return ListBody(
-      children: themeOptions
+      children: themeOptions(context)
           .map(
             (AppThemeValue e) => RadioListTile(
               title: Text(e.value),
