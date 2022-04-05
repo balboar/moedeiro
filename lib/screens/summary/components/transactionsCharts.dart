@@ -164,6 +164,8 @@ class TransactionChartState extends State<TransactionChart> {
                     ),
                     barGroups: showingBarGroups,
                     gridData: FlGridData(show: false)),
+                swapAnimationDuration: Duration(milliseconds: 500), // Optional
+                swapAnimationCurve: Curves.easeInOutCubicEmphasized, // Optional
               ),
             ),
           ),
@@ -351,6 +353,8 @@ class ExpensesByMonthChartState extends State<ExpensesByMonthChart> {
                   barGroups: showingBarGroups,
                   gridData: FlGridData(show: false),
                 ),
+                swapAnimationDuration: Duration(milliseconds: 500), // Optional
+                swapAnimationCurve: Curves.easeInOutCubicEmphasized, // Optional
               ),
             ),
           ),

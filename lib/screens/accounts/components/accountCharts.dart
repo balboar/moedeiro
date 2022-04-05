@@ -84,10 +84,13 @@ class _AccountBalanceChartState extends State<AccountBalanceChart> {
     return Container(
       width: spots.length * 5,
       height: 250,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Padding(
         padding: const EdgeInsets.only(top: 24, bottom: 12),
         child: LineChart(
           mainData(),
+          swapAnimationDuration: Duration(milliseconds: 500), // Optional
+          swapAnimationCurve: Curves.linear, // Optional
         ),
       ),
     );
@@ -95,17 +98,19 @@ class _AccountBalanceChartState extends State<AccountBalanceChart> {
 
   LineChartData mainData() {
     return LineChartData(
+      lineTouchData: LineTouchData(enabled: true),
       gridData: FlGridData(
-        show: false,
+        show: true,
       ),
       titlesData: FlTitlesData(
+        rightTitles: SideTitles(showTitles: false),
         topTitles: SideTitles(showTitles: false),
         leftTitles: SideTitles(showTitles: false),
         bottomTitles: SideTitles(
             showTitles: true,
             interval: spots.length / 20,
             getTitles: (index) {
-              return DateFormat('MMMM').format(DateTime(
+              return DateFormat('MMM').format(DateTime(
                   0, int.parse(chartData[index.toInt()]['monthofyear'])));
             }),
         // show: false,
